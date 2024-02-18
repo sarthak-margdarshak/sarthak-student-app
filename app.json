@@ -1,13 +1,21 @@
 {
   "expo": {
-    "name": "sarthak-student-app",
+    "name": "Sarthak",
+    "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
     "slug": "sarthak-student-app",
+    "owner": "sarthakmargdarshak",
     "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "githubUrl": "https://github.com/sarthak-margdarshak/sarthak",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/favicon/favicon-1024x1024.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash/splash-192x192.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,16 +23,62 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/favicon/favicon-1024x1024.png",
+      "userInterfaceStyle": "automatic",
+      "splash": {
+        "backgroundColor": "#FFFFE0",
+        "resizeMode": "contain",
+        "image": "./assets/splash/splash-1024x1024.png",
+        "dark": {
+          "backgroundColor": "#181a20",
+          "resizeMode": "contain",
+          "image": "./assets/splash/splash-1024x1024.png"
+        }
+      }
     },
     "android": {
+      "userInterfaceStyle": "automatic",
+      "icon": "./assets/favicon/favicon-1024x1024.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/favicon/favicon-1024x1024.png",
+      },
+      "splash": {
+        "backgroundColor": "#FFFFE0",
+        "resizeMode": "contain",
+        "image": "./assets/splash/splash-192x192.png",
+        "mdpi": "./assets/splash/splash-128x128.png",
+        "hdpi": "./assets/splash/splash-180x180.png",
+        "xhdpi": "./assets/splash/splash-256x256.png",
+        "xxhdpi": "./assets/splash/splash-512x512.png",
+        "xxxhdpi": "./assets/splash/splash-1024x1024.png",
+        "dark": {
+          "backgroundColor": "#181a20",
+          "resizeMode": "contain",
+          "image": "./assets/splash/splash-192x192.png",
+          "mdpi": "./assets/splash/splash-128x128.png",
+          "hdpi": "./assets/splash/splash-180x180.png",
+          "xhdpi": "./assets/splash/splash-256x256.png",
+          "xxhdpi": "./assets/splash/splash-512x512.png",
+          "xxxhdpi": "./assets/splash/splash-1024x1024.png"
+        }
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon/favicon-192x192.png",
+      "themeColor": "#FF5630",
+      "backgroundColor": "#FFFFE0",
+      "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
+      "barStyle": "default",
+      "splash": {
+        "backgroundColor": "#FFFFE0",
+        "resizeMode": "contain",
+        "image": "./assets/splash/splash-192x192.png"
+      }
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "scheme": "your-app-scheme"
   }
 }
