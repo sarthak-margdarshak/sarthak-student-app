@@ -1,12 +1,20 @@
 import { Account, Client, Databases, Functions, ID, Storage } from "appwrite";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { SnackbarContext } from "../hooks/useSnackbar";
-import { APPWRITE_PROJECT_ID, BACKEND_URL } from "@env"
+import { APPWRITE_PROJECT_ID, BACKEND_URL, LOCATION_HOST } from "@env"
+
+export const client = new Client().setEndpoint(BACKEND_URL).setProject(APPWRITE_PROJECT_ID);
+export const account = new Account(client);
+export const storage = new Storage(client);
+export const databases = new Databases(client);
+export const functions = new Functions(client);
 
 export const AuthContext = createContext({
   user: null,
   isAuthenticated: false,
   isInitiated: false,
+  currentDashboardIndex: 0,
+  setCurrentDashboardIndex: () => {},
   /**
    * 
    * @param {string} email 
@@ -25,7 +33,7 @@ export const AuthContext = createContext({
    * 
    * @param {string} email 
    */
-  forgetPassword: async (email) => {},
+  forgetPassword: async (email) => { },
   /**
    * 
    * @param {string} userId 
@@ -33,32 +41,30 @@ export const AuthContext = createContext({
    * @param {string} newPassword 
    * @param {string} confirmPassword 
    */
-  resetPassword: async (userId, secret, newPassword, confirmPassword) => {},
+  resetPassword: async (userId, secret, newPassword, confirmPassword) => { },
 });
 
 export function AuthProvider({ children }) {
-  const client = new Client().setEndpoint(BACKEND_URL).setProject(APPWRITE_PROJECT_ID);
-  const account = new Account(client);
-  const storage = new Storage(client);
-  const databases = new Databases(client);
-  const functions = new Functions(client);
 
   const { showSnackbar } = useContext(SnackbarContext);
 
   const [user, setUser] = useState(null);
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [isInitiated, setIsInitiated] = useState(false);
+  const [currentDashboardIndex, setCurrentDashboardIndex] = useState(0);
 
   const init = useCallback(async () => {
     try {
       const x = await account.get();
       setUser(x);
       setAuthenticated(true);
+      showSnackbar('Welcome back, '+x?.name)
     } catch (error) {
       setUser(null);
       setAuthenticated(false);
       showSnackbar(error.message);
     }
+    setCurrentDashboardIndex(0);
     setIsInitiated(true);
   }, [])
 
@@ -76,6 +82,7 @@ export function AuthProvider({ children }) {
       );
       setUser(x);
       setAuthenticated(true);
+      showSnackbar('Successfully signed up')
     } catch (error) {
       showSnackbar(error.message);
     }
@@ -87,21 +94,26 @@ export function AuthProvider({ children }) {
       const x = await account.get();
       setUser(x);
       setAuthenticated(true);
+      showSnackbar('Successfully logged In')
     } catch (error) {
       showSnackbar(error.message);
     }
   }, [])
 
   const logout = useCallback(async () => {
-    await account.deleteSessions();
-    setAuthenticated(false);
-    setUser(null);
+    try {
+      await account.deleteSessions();
+      showSnackbar('Successfully logged out.');
+      setAuthenticated(false);
+      setUser(null);
+    } catch (error) {
+      showSnackbar(error.message);
+    }
   }, [])
 
   const forgetPassword = useCallback(async (email) => {
     try {
-      console.log(email)
-      await account.createRecovery(email, location.origin+'/auth/reset-password');
+      await account.createRecovery(email, LOCATION_HOST + 'auth/reset-password');
       showSnackbar('Password reset link has been sent to your email. Happy to help you');
     } catch (error) {
       showSnackbar(error.message);
@@ -127,6 +139,8 @@ export function AuthProvider({ children }) {
       user: user,
       isAuthenticated: isAuthenticated,
       isInitiated: isInitiated,
+      currentDashboardIndex: currentDashboardIndex,
+      setCurrentDashboardIndex: setCurrentDashboardIndex,
       // auth functions
       signup,
       login,
@@ -134,7 +148,7 @@ export function AuthProvider({ children }) {
       forgetPassword,
       resetPassword,
     }),
-    [user, isAuthenticated, isInitiated, signup, login, logout, forgetPassword, resetPassword]
+    [user, isAuthenticated, isInitiated, currentDashboardIndex, setCurrentDashboardIndex, signup, login, logout, forgetPassword, resetPassword]
   );
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
 }

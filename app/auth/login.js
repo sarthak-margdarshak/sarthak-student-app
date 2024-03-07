@@ -20,7 +20,6 @@ export default function LogInPage() {
     setSubmitting(true)
     try {
       await login(email, password)
-      showSnackbar('Successfully Logged In');
     } catch (error) {
       showSnackbar(error);
     }

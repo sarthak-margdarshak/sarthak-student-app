@@ -6,7 +6,7 @@ export default function LoadingScreen() {
 
   return (
     <View style={{
-      height: Dimensions.get('window').height,
+      height: 400,
       justifyContent: 'center',
       alignItems: 'center'
     }}>

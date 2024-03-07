@@ -129,7 +129,7 @@ export default function ForgotPasswordPage() {
           textColor={theme.colors.onPrimary}
           onPress={submit}
         >
-          Verify Yourself
+          Send Reset Link
         </Button>
       </Surface>
     </>
