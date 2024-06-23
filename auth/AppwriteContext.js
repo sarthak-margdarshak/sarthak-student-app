@@ -1,74 +1,71 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 import { Account, Client, Databases, Functions, ID, Storage } from "appwrite";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { SnackbarContext } from "../hooks/useSnackbar";
-import { APPWRITE_PROJECT_ID, BACKEND_URL } from "@env"
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { APPWRITE_PROJECT_ID, BACKEND_URL } from "@env";
+import { ToastAndroid, useColorScheme } from "react-native";
+import { useTheme } from "react-native-paper";
+import { lightTheme } from "../theme/lightTheme";
+import { darkTheme } from "../theme/darkTheme";
+
+export const appwriteClient = new Client()
+  .setEndpoint(BACKEND_URL)
+  .setProject(APPWRITE_PROJECT_ID);
+export const appwriteAccount = new Account(appwriteClient);
+export const appwriteStorage = new Storage(appwriteClient);
+export const appwriteDatabases = new Databases(appwriteClient);
+export const appwriteFunctions = new Functions(appwriteClient);
 
 export const AuthContext = createContext({
   user: null,
   isAuthenticated: false,
   isInitiated: false,
-  /**
-   * 
-   * @param {string} email 
-   * @param {string} password 
-   * @param {string} name 
-   */
-  signup: async (email, password, name) => { },
-  /**
-   * 
-   * @param {string} email 
-   * @param {string} password 
-   */
-  login: async (email, password) => { },
-  logout: async () => { },
-  /**
-   * 
-   * @param {string} email 
-   */
-  forgetPassword: async (email) => {},
-  /**
-   * 
-   * @param {string} userId 
-   * @param {string} secret 
-   * @param {string} newPassword 
-   * @param {string} confirmPassword 
-   */
-  resetPassword: async (userId, secret, newPassword, confirmPassword) => {},
+  signup: async (email, password, name) => {},
+  login: async (email, password) => {},
+  logout: async () => {},
 });
 
 export function AuthProvider({ children }) {
-  const client = new Client().setEndpoint(BACKEND_URL).setProject(APPWRITE_PROJECT_ID);
-  const account = new Account(client);
-  const storage = new Storage(client);
-  const databases = new Databases(client);
-  const functions = new Functions(client);
-
-  const { showSnackbar } = useContext(SnackbarContext);
-
   const [user, setUser] = useState(null);
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [isInitiated, setIsInitiated] = useState(false);
 
   const init = useCallback(async () => {
     try {
-      const x = await account.get();
+      const x = await appwriteAccount.get();
       setUser(x);
       setAuthenticated(true);
+      ToastAndroid.show("Welcome back, " + x?.name, ToastAndroid.SHORT);
     } catch (error) {
       setUser(null);
       setAuthenticated(false);
-      showSnackbar(error.message);
     }
     setIsInitiated(true);
-  }, [])
+  }, []);
 
   useEffect(() => {
     init();
-  }, [init])
+  }, [init]);
 
   const signup = useCallback(async (email, password, name) => {
     try {
-      const x = await account.create(
+      const x = await appwriteAccount.create(
         ID.unique(),
         email,
         password,
@@ -76,51 +73,34 @@ export function AuthProvider({ children }) {
       );
       setUser(x);
       setAuthenticated(true);
+      ToastAndroid.show("Successfully signed up", ToastAndroid.SHORT);
     } catch (error) {
-      showSnackbar(error.message);
+      ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
-  }, [])
+  }, []);
 
   const login = useCallback(async (email, password) => {
     try {
-      await account.createEmailSession(email, password);
-      const x = await account.get();
+      await appwriteAccount.createEmailSession(email, password);
+      const x = await appwriteAccount.get();
       setUser(x);
       setAuthenticated(true);
+      ToastAndroid.show("Successfully logged In", ToastAndroid.SHORT);
     } catch (error) {
-      showSnackbar(error.message);
+      ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
-  }, [])
+  }, []);
 
   const logout = useCallback(async () => {
-    await account.deleteSessions();
-    setAuthenticated(false);
-    setUser(null);
-  }, [])
-
-  const forgetPassword = useCallback(async (email) => {
     try {
-      console.log(email)
-      await account.createRecovery(email, location.origin+'/auth/reset-password');
-      showSnackbar('Password reset link has been sent to your email. Happy to help you');
+      await appwriteAccount.deleteSessions();
+      ToastAndroid.show("Successfully logged out.", ToastAndroid.SHORT);
+      setAuthenticated(false);
+      setUser(null);
     } catch (error) {
-      showSnackbar(error.message);
+      ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
-  })
-
-  const resetPassword = useCallback(async (userId, secret, newPassword, confirmPassword) => {
-    try {
-      await account.updateRecovery(
-        userId,
-        secret,
-        newPassword,
-        confirmPassword
-      )
-      showSnackbar('Password Reset Successfully')
-    } catch (error) {
-      showSnackbar(error.message);
-    }
-  })
+  }, []);
 
   const memoizedValue = useMemo(
     () => ({
@@ -131,10 +111,12 @@ export function AuthProvider({ children }) {
       signup,
       login,
       logout,
-      forgetPassword,
-      resetPassword,
     }),
-    [user, isAuthenticated, isInitiated, signup, login, logout, forgetPassword, resetPassword]
+    [user, isAuthenticated, isInitiated, signup, login, logout]
   );
-  return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={memoizedValue}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

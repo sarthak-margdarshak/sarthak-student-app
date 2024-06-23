@@ -1,64 +1,38 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 import { Slot } from "expo-router";
-import SarthakAppBackground from "../components/SarthakAppBackground";
-import { Snackbar } from "react-native-paper";
-import { SnackbarContext } from "../hooks/useSnackbar";
-import { useState } from "react";
+import { PaperProvider, useTheme } from "react-native-paper";
 import { AuthProvider } from "../auth/AppwriteContext";
+import { useColorScheme } from "react-native";
+import { lightTheme } from "../theme/lightTheme";
+import { darkTheme } from "../theme/darkTheme";
 
 export default function AppLayout() {
+  const theme = useTheme();
+  const defaultColorScheme = useColorScheme();
 
-  const [visible, setVisible] = useState(false);
-  const [error, setError] = useState([]);
-  const [currentError, setCurrentError] = useState("");
-
-  const showSnackbar = async (errorMessage) => {
-    var newError = error;
-    newError.push(errorMessage)
-    if (newError.length === 1) {
-      setVisible(true);
-    }
-    setCurrentError(newError.at(0))
-    setError(newError)
-  }
-
-  const hideSnackbar = async () => {
-    setVisible(false)
-    setCurrentError("")
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    var newError = error;
-    newError.splice(0, 1);
-    if (newError.length === 0) {
-      setError([])
-    } else {
-      setCurrentError(newError.at(0))
-      setError(newError)
-      setVisible(true)
-    }
+  if (defaultColorScheme === "dark") {
+    theme.colors = darkTheme.colors;
+    theme.dark = true;
+  } else {
+    theme.colors = lightTheme.colors;
   }
 
   return (
-    <SarthakAppBackground>
-      <SnackbarContext.Provider value={{
-        error: error,
-        showSnackbar: showSnackbar,
-        hideSnackbar: hideSnackbar
-      }}>
-        <AuthProvider>
-          <Slot />
-        </AuthProvider>
-        <Snackbar
-          visible={visible}
-          onDismiss={hideSnackbar}
-          duration={3000}
-          elevation={5}
-          style={{
-            margin: 5
-          }}
-          icon='close'
-          onIconPress={hideSnackbar}>
-          {currentError}
-        </Snackbar>
-      </SnackbarContext.Provider>
-    </SarthakAppBackground>
+    <PaperProvider theme={theme}>
+      <AuthProvider>
+        <Slot />
+      </AuthProvider>
+    </PaperProvider>
   );
 }
