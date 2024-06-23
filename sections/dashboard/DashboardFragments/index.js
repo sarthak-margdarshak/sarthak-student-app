@@ -10,21 +10,7 @@
  *
  */
 
-import { Dimensions, View } from "react-native";
-import LogoSingle from "../assets/logo/logo_single.svg";
-import { ActivityIndicator } from "react-native-paper";
-
-export default function LoadingScreen() {
-  return (
-    <View
-      style={{
-        height: 400,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <LogoSingle width={100} height={100} />
-      <ActivityIndicator animating={true} />
-    </View>
-  );
-}
+export { default as MockTestSeriesFragment } from "./MockTestSeriesFragment";
+export { default as ProfileFragment } from "./ProfileFragment";
+export { default as PurchasedProductFragment } from "./PurchasedProductFragment";
+export { default as SettingsFragment } from "./SettingsFragment";

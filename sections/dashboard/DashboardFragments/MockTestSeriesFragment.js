@@ -10,21 +10,21 @@
  *
  */
 
-import { Dimensions, View } from "react-native";
-import LogoSingle from "../assets/logo/logo_single.svg";
-import { ActivityIndicator } from "react-native-paper";
+import { RefreshControl, ScrollView } from "react-native";
+import MotivationBox from "../MotivationBox";
 
-export default function LoadingScreen() {
+export default function MockTestSeriesFragment() {
   return (
-    <View
+    <ScrollView
       style={{
-        height: 400,
-        justifyContent: "center",
-        alignItems: "center",
+        margin: 10,
       }}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={false} onRefresh={() => {}} />
+      }
     >
-      <LogoSingle width={100} height={100} />
-      <ActivityIndicator animating={true} />
-    </View>
+      <MotivationBox />
+    </ScrollView>
   );
 }
