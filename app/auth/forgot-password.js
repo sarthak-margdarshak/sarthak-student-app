@@ -22,7 +22,9 @@ import {
   useTheme,
 } from "react-native-paper";
 import FootComponent from "../../sections/auth/FootComponent";
-import { appwriteAccount } from "../../auth/AppwriteContext";
+import { appwriteAccount, appwriteDatabases } from "../../auth/AppwriteContext";
+import { APPWRITE_API } from "../../config-global";
+import { Query } from "appwrite";
 
 export default function ForgotPasswordPage() {
   const theme = useTheme();
@@ -32,13 +34,27 @@ export default function ForgotPasswordPage() {
   const submit = async () => {
     try {
       // Check for only student emails
-      appwriteAccount.createRecovery(emailId);
+      const y = await appwriteDatabases.listDocuments(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.adminUsers,
+        [Query.equal("email", emailId)]
+      );
+      if (y.total !== 0) {
+        throw new Error(
+          "You are an admin user of this platform. You can't reset your password on this app."
+        );
+      }
+      await appwriteAccount.createRecovery(
+        emailId,
+        APPWRITE_API.adminHostOrigin + "/auth/new-password"
+      );
       ToastAndroid.show(
         "Password reset link has been sent to your email. Happy to help you",
         ToastAndroid.LONG
       );
     } catch (error) {
       ToastAndroid.show(error.message, ToastAndroid.LONG);
+      console.log(error.message);
     }
   };
 

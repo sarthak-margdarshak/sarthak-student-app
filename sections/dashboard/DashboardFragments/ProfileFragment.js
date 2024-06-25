@@ -11,11 +11,12 @@
  */
 
 import { ScrollView } from "react-native";
-import { Divider, Text, TextInput } from "react-native-paper";
+import { Button, Divider, Text, TextInput, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 
 export default function ProfileFragment() {
-  const { user } = useAuthContext();
+  const { user, logout } = useAuthContext();
+  const theme = useTheme();
 
   return (
     <ScrollView
@@ -108,6 +109,21 @@ export default function ProfileFragment() {
         left={<TextInput.Icon icon="email" />}
         keyboardType="email-address"
       />
+
+      <Button
+        style={{
+          marginLeft: 20,
+          marginBottom: 40,
+          marginRight: 20,
+          marginTop: 40,
+        }}
+        mode="elevated"
+        buttonColor={theme.colors.primary}
+        textColor={theme.colors.onPrimary}
+        onPress={logout}
+      >
+        Log Out
+      </Button>
     </ScrollView>
   );
 }

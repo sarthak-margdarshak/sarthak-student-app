@@ -14,9 +14,9 @@ import { Card, Icon, Text } from "react-native-paper";
 import { useAuthContext } from "../../auth/useAuthContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { NINJAS_API } from "@env";
 import { View } from "react-native";
 import greetingTime from "greeting-time";
+import { NINJA_API } from "../../config-global";
 
 const categries_english = [
   "courage",
@@ -41,7 +41,7 @@ const options_english = {
     "https://api.api-ninjas.com/v1/quotes?category=" +
     categries_english[parseInt(Math.random() * 100) % categries_english.length],
   headers: {
-    "X-Api-Key": NINJAS_API,
+    "X-Api-Key": NINJA_API.key,
   },
 };
 
