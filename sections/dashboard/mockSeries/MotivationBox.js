@@ -11,12 +11,12 @@
  */
 
 import { Card, Icon, Text } from "react-native-paper";
-import { useAuthContext } from "../../auth/useAuthContext";
+import { useAuthContext } from "../../../auth/useAuthContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { View } from "react-native";
 import greetingTime from "greeting-time";
-import { NINJA_API } from "../../config-global";
+import { NINJA_API } from "../../../config-global";
 
 const categries_english = [
   "courage",

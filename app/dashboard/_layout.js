@@ -37,6 +37,27 @@ export default function DashboardLayout() {
             title: "Sarthak Margdarshak",
           }}
         />
+
+        <Stack.Screen
+          name="standards"
+          options={{
+            title: "Class",
+          }}
+        />
+
+        <Stack.Screen
+          name="subjects"
+          options={{
+            title: "Subjects",
+          }}
+        />
+
+        <Stack.Screen
+          name="chapters"
+          options={{
+            title: "Chapters",
+          }}
+        />
       </Stack>
     </AuthGuard>
   );
