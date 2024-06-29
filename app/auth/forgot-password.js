@@ -10,7 +10,7 @@
  *
  */
 
-import { Link } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { useState } from "react";
 import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
 import {
@@ -59,142 +59,149 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <ScrollView
-      style={{
-        height: Dimensions.get("window").height,
-        backgroundColor: theme.colors.background,
-      }}
-    >
-      <View
+    <View>
+      <Stack.Screen
+        options={{
+          title: "Forgot Password",
+        }}
+      />
+      <ScrollView
         style={{
-          justifyContent: "center",
-          paddingTop: 60,
+          height: Dimensions.get("window").height,
+          backgroundColor: theme.colors.background,
         }}
       >
         <View
           style={{
-            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: 60,
           }}
         >
-          <Text
-            style={{
-              fontSize: 60,
-              marginLeft: 20,
-              fontWeight: "bold",
-              color: theme.colors.secondary,
-            }}
-          >
-            F
-          </Text>
-          <Text
-            style={{
-              fontSize: 35,
-              top: 18,
-              fontWeight: "bold",
-              textDecorationLine: "underline",
-              color: theme.colors.secondary,
-              marginRight: 10,
-            }}
-          >
-            orgot
-          </Text>
-          <Text
-            style={{
-              fontSize: 60,
-              color: theme.colors.secondary,
-              fontWeight: "bold",
-            }}
-          >
-            P
-          </Text>
-          <Text
-            style={{
-              fontSize: 35,
-              top: 18,
-              fontWeight: "bold",
-              color: theme.colors.secondary,
-              textDecorationLine: "underline",
-            }}
-          >
-            assword
-          </Text>
-        </View>
-
-        <Surface
-          elevation={1}
-          style={{
-            marginBottom: 40,
-            marginLeft: 10,
-            marginRight: 10,
-            borderRadius: 10,
-          }}
-        >
-          <TextInput
-            inputMode="email"
-            style={{
-              margin: 10,
-            }}
-            value={emailId}
-            onChangeText={(e) => setEmailId(e)}
-            label="Email"
-          />
-          <HelperText type="info">
-            We will send a magic URL for resetting your password to your Email,
-            which can be used to reset your password.
-          </HelperText>
-
           <View
             style={{
               flexDirection: "row",
-              alignItems: "center",
             }}
           >
             <Text
               style={{
-                width: 100,
-                marginLeft: 10,
+                fontSize: 60,
+                marginLeft: 20,
                 fontWeight: "bold",
-                textDecorationLine: "underline",
-                color: theme.colors.tertiary,
-                flex: 1,
-                flexDirection: "row",
+                color: theme.colors.secondary,
               }}
             >
-              <Link href="/auth/login">Already a member</Link>
+              F
             </Text>
             <Text
               style={{
-                textAlign: "right",
-                marginRight: 10,
+                fontSize: 35,
+                top: 18,
                 fontWeight: "bold",
                 textDecorationLine: "underline",
-                color: theme.colors.tertiary,
-                justifyContent: "space-evenly",
-                marginVertical: 10,
+                color: theme.colors.secondary,
+                marginRight: 10,
               }}
             >
-              <Link href="/auth/sign-up">New here?</Link>
+              orgot
+            </Text>
+            <Text
+              style={{
+                fontSize: 60,
+                color: theme.colors.secondary,
+                fontWeight: "bold",
+              }}
+            >
+              P
+            </Text>
+            <Text
+              style={{
+                fontSize: 35,
+                top: 18,
+                fontWeight: "bold",
+                color: theme.colors.secondary,
+                textDecorationLine: "underline",
+              }}
+            >
+              assword
             </Text>
           </View>
 
-          <Button
+          <Surface
+            elevation={1}
             style={{
-              marginLeft: 20,
               marginBottom: 40,
-              marginRight: 20,
-              marginTop: 40,
+              marginLeft: 10,
+              marginRight: 10,
+              borderRadius: 10,
             }}
-            mode="elevated"
-            buttonColor={theme.colors.primary}
-            textColor={theme.colors.onPrimary}
-            onPress={submit}
           >
-            Send Reset Link
-          </Button>
-        </Surface>
+            <TextInput
+              inputMode="email"
+              style={{
+                margin: 10,
+              }}
+              value={emailId}
+              onChangeText={(e) => setEmailId(e)}
+              label="Email"
+            />
+            <HelperText type="info">
+              We will send a magic URL for resetting your password to your
+              Email, which can be used to reset your password.
+            </HelperText>
 
-        <FootComponent />
-      </View>
-    </ScrollView>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  width: 100,
+                  marginLeft: 10,
+                  fontWeight: "bold",
+                  textDecorationLine: "underline",
+                  color: theme.colors.tertiary,
+                  flex: 1,
+                  flexDirection: "row",
+                }}
+              >
+                <Link href="/auth/login">Already a member</Link>
+              </Text>
+              <Text
+                style={{
+                  textAlign: "right",
+                  marginRight: 10,
+                  fontWeight: "bold",
+                  textDecorationLine: "underline",
+                  color: theme.colors.tertiary,
+                  justifyContent: "space-evenly",
+                  marginVertical: 10,
+                }}
+              >
+                <Link href="/auth/sign-up">New here?</Link>
+              </Text>
+            </View>
+
+            <Button
+              style={{
+                marginLeft: 20,
+                marginBottom: 40,
+                marginRight: 20,
+                marginTop: 40,
+              }}
+              mode="elevated"
+              buttonColor={theme.colors.primary}
+              textColor={theme.colors.onPrimary}
+              onPress={submit}
+            >
+              Send Reset Link
+            </Button>
+          </Surface>
+
+          <FootComponent />
+        </View>
+      </ScrollView>
+    </View>
   );
 }

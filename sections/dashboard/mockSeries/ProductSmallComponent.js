@@ -2,6 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { Image, ImageBackground, View } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
+import { PATH_DASHBOARD } from "../../../routes/paths";
 
 export default function ProductSmallComponent({ product }) {
   const theme = useTheme();
@@ -9,7 +10,7 @@ export default function ProductSmallComponent({ product }) {
     <Card
       mode="contained"
       style={{ margin: 5 }}
-      onPress={() => router.push("/dashboard/product/view/" + product?.$id)}
+      onPress={() => router.push(PATH_DASHBOARD.product.view(product?.$id))}
     >
       <View style={styles.article}>
         <ImageBackground
