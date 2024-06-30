@@ -33,6 +33,7 @@ export const PATH_AUTH = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
+  preferences: path(ROOTS_DASHBOARD, "/preferences"),
   category: {
     root: path(ROOTS_DASHBOARD, "/category"),
     standards: path(ROOTS_DASHBOARD, "/category/standards"),

@@ -1,3 +1,15 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 import { Link } from "expo-router";
 import { ToastAndroid, View } from "react-native";
 import { FAB, Icon, Surface, Text, useTheme } from "react-native-paper";
@@ -103,7 +115,7 @@ export default function ChapterWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
 
@@ -113,7 +125,7 @@ export default function ChapterWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
 
@@ -123,7 +135,7 @@ export default function ChapterWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
 
@@ -133,7 +145,7 @@ export default function ChapterWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
           </Row>

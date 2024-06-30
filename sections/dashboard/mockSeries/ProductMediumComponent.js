@@ -1,9 +1,13 @@
 import { router } from "expo-router";
 import { View } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Button, Card, Text } from "react-native-paper";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 
-export default function ProductMediumComponent({ product }) {
+export default function ProductMediumComponent({
+  product,
+  cardePage,
+  onRemove,
+}) {
   return (
     <Card
       style={{ margin: 5 }}
@@ -47,27 +51,29 @@ export default function ProductMediumComponent({ product }) {
               alignItems: "flex-end",
             }}
           >
-            <View style={{ flexDirection: "row" }}>
-              <Text variant="headlineLarge" style={{ fontWeight: "bold" }}>
-                {"₹" + product?.sellPrice}
-              </Text>
-            </View>
+            <Text variant="headlineLarge" style={{ fontWeight: "bold" }}>
+              {"₹" + product?.sellPrice}
+            </Text>
 
-            <View style={{ flexDirection: "row" }}>
-              <Text
-                variant="bodySmall"
-                style={{
-                  fontWeight: "bold",
-                  textDecorationLine: "line-through",
-                }}
-              >
-                {"₹" + product?.mrp}
-              </Text>
-            </View>
-            <Text></Text>
+            <Text
+              variant="bodySmall"
+              style={{
+                fontWeight: "bold",
+                textDecorationLine: "line-through",
+              }}
+            >
+              {"₹" + product?.mrp}
+            </Text>
           </View>
         </View>
       </Card.Content>
+      {cardePage && (
+        <Card.Actions>
+          <Button icon="delete" onPress={onRemove}>
+            Remove from Cart
+          </Button>
+        </Card.Actions>
+      )}
     </Card>
   );
 }

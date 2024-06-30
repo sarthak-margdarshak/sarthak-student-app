@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { Image, ImageBackground, View } from "react-native";
+import { ImageBackground, View } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 

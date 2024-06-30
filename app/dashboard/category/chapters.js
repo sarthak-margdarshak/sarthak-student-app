@@ -1,3 +1,15 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 import { Fragment, useEffect, useState } from "react";
 import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
 import { Divider, List, Text, useTheme } from "react-native-paper";
@@ -76,7 +88,11 @@ export default function chapters() {
             >
               List of all Chapters
             </Text>
-            <Skeleton height={50} count={5} color={theme.colors.onBackground} />
+            <Skeleton
+              height={50}
+              count={5}
+              color={theme.colors.inverseOnSurface}
+            />
           </View>
         ) : (
           <List.Section>

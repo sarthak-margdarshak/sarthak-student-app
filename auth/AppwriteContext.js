@@ -41,15 +41,18 @@ export const appwriteFunctions = new Functions(appwriteClient);
 
 export const AuthContext = createContext({
   user: null,
+  studentProfile: null,
   isAuthenticated: false,
   isInitiated: false,
   signup: async (email, password, name) => {},
   login: async (email, password) => {},
   logout: async () => {},
+  updateCart: async (id, action) => {},
 });
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [studentProfile, setStudentProfile] = useState(null);
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [isInitiated, setIsInitiated] = useState(false);
 
@@ -57,10 +60,19 @@ export function AuthProvider({ children }) {
     try {
       const x = await appwriteAccount.get();
       setUser(x);
+      // setStudentProfile(
+      const y = await appwriteDatabases.getDocument(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.students,
+        x.$id
+      );
+      setStudentProfile(y);
+      // );
       setAuthenticated(true);
       ToastAndroid.show("Welcome back, " + x?.name, ToastAndroid.SHORT);
     } catch (error) {
       setUser(null);
+      setStudentProfile(null);
       setAuthenticated(false);
     }
     setIsInitiated(true);
@@ -76,7 +88,7 @@ export function AuthProvider({ children }) {
       await appwriteAccount.createEmailSession(email, password);
       const x = await appwriteAccount.get();
       // Create student document in database
-      await appwriteDatabases.createDocument(
+      const y = await appwriteDatabases.createDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.students,
         x.$id,
@@ -87,6 +99,7 @@ export function AuthProvider({ children }) {
         [Permission.update(Role.user(x.$id))]
       );
       setUser(x);
+      setStudentProfile(y);
       setAuthenticated(true);
       ToastAndroid.show("Successfully signed up", ToastAndroid.SHORT);
     } catch (error) {
@@ -126,6 +139,13 @@ export function AuthProvider({ children }) {
       await appwriteAccount.createEmailSession(email, password);
       const x = await appwriteAccount.get();
       setUser(x);
+      setStudentProfile(
+        await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.students,
+          x.$id
+        )
+      );
       setAuthenticated(true);
       ToastAndroid.show("Successfully logged In", ToastAndroid.SHORT);
     } catch (error) {
@@ -139,22 +159,83 @@ export function AuthProvider({ children }) {
       ToastAndroid.show("Successfully logged out.", ToastAndroid.SHORT);
       setAuthenticated(false);
       setUser(null);
+      setStudentProfile(null);
     } catch (error) {
       ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
   }, []);
 
+  const updateCart = useCallback(
+    async (id, action) => {
+      var cart = studentProfile?.cart;
+      var changesRequired = false;
+      var message = "";
+      var index = cart.findIndex((value) => value === id);
+      if (action >= 0) {
+        if (index === -1) {
+          cart.push(id);
+          changesRequired = true;
+          message = "Successfully Added to cart.";
+        } else {
+          ToastAndroid.show(
+            "Cannot add. Already exists in your card",
+            ToastAndroid.LONG
+          );
+        }
+      } else {
+        if (index !== -1) {
+          cart.splice(index, 1);
+          changesRequired = true;
+          message = "Successfully removed from cart.";
+        } else {
+          ToastAndroid.show(
+            "Cannot remove. Does not exists in card",
+            ToastAndroid.LONG
+          );
+        }
+      }
+      if (changesRequired) {
+        try {
+          const x = await appwriteDatabases.updateDocument(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.students,
+            user?.$id,
+            {
+              cart: cart,
+            }
+          );
+          setStudentProfile(x);
+          ToastAndroid.show(message, ToastAndroid.LONG);
+        } catch (error) {
+          ToastAndroid.show(error.message, ToastAndroid.LONG);
+        }
+      }
+    },
+    [studentProfile]
+  );
+
   const memoizedValue = useMemo(
     () => ({
       user: user,
+      studentProfile: studentProfile,
       isAuthenticated: isAuthenticated,
       isInitiated: isInitiated,
       // auth functions
       signup,
       login,
       logout,
+      updateCart,
     }),
-    [user, isAuthenticated, isInitiated, signup, login, logout]
+    [
+      user,
+      studentProfile,
+      isAuthenticated,
+      isInitiated,
+      signup,
+      login,
+      logout,
+      updateCart,
+    ]
   );
   return (
     <AuthContext.Provider value={memoizedValue}>

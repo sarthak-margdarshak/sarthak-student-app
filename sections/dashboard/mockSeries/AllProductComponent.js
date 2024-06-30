@@ -1,3 +1,15 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ToastAndroid, View } from "react-native";
@@ -99,7 +111,7 @@ export default function AllProductComponent() {
                 height={110}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
 
@@ -109,7 +121,7 @@ export default function AllProductComponent() {
                 height={110}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
           </Row>

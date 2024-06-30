@@ -103,7 +103,7 @@ export default function SubjectWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
 
@@ -113,7 +113,7 @@ export default function SubjectWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
 
@@ -123,7 +123,7 @@ export default function SubjectWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
 
@@ -133,7 +133,7 @@ export default function SubjectWiseComponent() {
                 height={60}
                 width="95%"
                 count={2}
-                color={theme.colors.onBackground}
+                color={theme.colors.inverseOnSurface}
               />
             </Col>
           </Row>

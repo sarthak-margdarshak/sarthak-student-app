@@ -13,6 +13,8 @@
 import { ScrollView } from "react-native";
 import { Button, Divider, Text, TextInput, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
+import { router } from "expo-router";
+import { PATH_DASHBOARD } from "../../../routes/paths";
 
 export default function ProfileFragment() {
   const { user, logout } = useAuthContext();
@@ -109,6 +111,20 @@ export default function ProfileFragment() {
         left={<TextInput.Icon icon="email" />}
         keyboardType="email-address"
       />
+
+      <Button
+        icon="cog"
+        mode="outlined"
+        onPress={() => router.push(PATH_DASHBOARD.preferences)}
+        style={{
+          marginLeft: 10,
+          marginBottom: 20,
+          marginRight: 10,
+          marginTop: 20,
+        }}
+      >
+        Preferences
+      </Button>
 
       <Button
         style={{

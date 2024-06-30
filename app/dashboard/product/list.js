@@ -1,7 +1,19 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   appwriteDatabases,
   appwriteStorage,
@@ -9,8 +21,8 @@ import {
 import { APPWRITE_API } from "../../../config-global";
 import { Query } from "appwrite";
 import ProductMediumComponent from "../../../sections/dashboard/mockSeries/ProductMediumComponent";
-import LoadingScreen from "../../../components/LoadingScreen";
 import { Stack, useLocalSearchParams } from "expo-router";
+import ProductMediumComponentLoading from "../../../sections/dashboard/mockSeries/ProductMediumComponentLoading";
 
 export default function ProductList() {
   const theme = useTheme();
@@ -73,22 +85,6 @@ export default function ProductList() {
               x.documents[i].subjects[j]
             );
           }
-
-          for (let j in x.documents[i].chapters) {
-            x.documents[i].chapters[j] = await appwriteDatabases.getDocument(
-              APPWRITE_API.databaseId,
-              APPWRITE_API.collections.chapters,
-              x.documents[i].chapters[j]
-            );
-          }
-
-          for (let j in x.documents[i].concepts) {
-            x.documents[i].concepts[j] = await appwriteDatabases.getDocument(
-              APPWRITE_API.databaseId,
-              APPWRITE_API.collections.concepts,
-              x.documents[i].concepts[j]
-            );
-          }
         }
         setProductList(x.documents);
       } catch (error) {
@@ -98,10 +94,6 @@ export default function ProductList() {
     };
     fetchData();
   }, [user]);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <View>
@@ -123,15 +115,21 @@ export default function ProductList() {
           backgroundColor: theme.colors.surface,
         }}
         contentContainerStyle={{
-          paddingBottom: 20,
+          paddingBottom: 60,
           // paddingTop: 80,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
       >
-        {ProductList.map((product) => (
-          <ProductMediumComponent key={product?.$id} product={product} />
-        ))}
+        {loading ? (
+          <ProductMediumComponentLoading count={4} />
+        ) : (
+          <>
+            {ProductList.map((product) => (
+              <ProductMediumComponent key={product?.$id} product={product} />
+            ))}
+          </>
+        )}
       </ScrollView>
       {/* <FAB
         icon="filter"

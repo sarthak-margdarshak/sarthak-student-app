@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { RefreshControl, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import LoadingScreen from "../../../components/LoadingScreen";
 
@@ -37,9 +37,7 @@ export default function PurchasedProductFragment() {
         margin: 10,
       }}
       showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl refreshing={loading} onRefresh={loadData} />
-      }
+      automaticallyAdjustKeyboardInsets={true}
     ></ScrollView>
   );
 }

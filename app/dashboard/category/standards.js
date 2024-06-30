@@ -87,7 +87,11 @@ export default function standards() {
             >
               List of all Classes
             </Text>
-            <Skeleton height={50} count={5} color={theme.colors.onBackground} />
+            <Skeleton
+              height={50}
+              count={5}
+              color={theme.colors.inverseOnSurface}
+            />
           </View>
         ) : (
           <List.Section>
