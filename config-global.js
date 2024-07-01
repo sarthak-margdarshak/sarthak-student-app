@@ -16,6 +16,8 @@ import {
   APPWRITE_COLLECTION_STUDENTS,
   APPWRITE_BUCKET_QUESTION_FILES,
   APPWRITE_BUCKET_PRODUCT_FILES,
+  RAZORPAY_KEY_ID,
+  RAZORPAY_SECRET,
 } from "@env";
 
 export const APPWRITE_API = {
@@ -43,4 +45,9 @@ export const APPWRITE_API = {
 
 export const NINJA_API = {
   key: NINJAS_API,
+};
+
+export const RAZORPAY_API = {
+  keyId: RAZORPAY_KEY_ID,
+  secret: RAZORPAY_SECRET,
 };

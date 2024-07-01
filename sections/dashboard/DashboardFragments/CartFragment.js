@@ -7,10 +7,11 @@ import {
   appwriteDatabases,
   appwriteStorage,
 } from "../../../auth/AppwriteContext";
-import { APPWRITE_API } from "../../../config-global";
+import { APPWRITE_API, RAZORPAY_API } from "../../../config-global";
 import ProductMediumComponent from "../mockSeries/ProductMediumComponent";
 import { router } from "expo-router";
 import { PATH_DASHBOARD } from "../../../routes/paths";
+import RazorpayCheckout from "react-native-razorpay";
 
 export default function CartFragment() {
   const theme = useTheme();
@@ -71,6 +72,31 @@ export default function CartFragment() {
     };
     fetchData();
   }, [studentProfile]);
+
+  const placeOrder = async () => {
+    var options = {
+      description: "Credits towards consultation",
+      currency: "INR",
+      key: RAZORPAY_API.keyId,
+      amount: 5000,
+      name: "Sarthak Margarshak",
+      prefill: {
+        email: "gaurav.kumar@example.com",
+        contact: "9191919191",
+        name: "Gaurav Kumar",
+      },
+      theme: { color: theme.colors.surface },
+    };
+    RazorpayCheckout.open(options)
+      .then((data) => {
+        // handle success
+        alert(`Success: ${data.razorpay_payment_id}`);
+      })
+      .catch((error) => {
+        // handle failure
+        alert(`Error: ${error}`);
+      });
+  };
 
   return (
     <ScrollView
@@ -151,7 +177,11 @@ export default function CartFragment() {
                   </View>
 
                   <View style={{ justifyContent: "center" }}>
-                    <Button mode="contained" icon="cart-check">
+                    <Button
+                      mode="contained"
+                      icon="cart-check"
+                      onPress={placeOrder}
+                    >
                       Buy
                     </Button>
                   </View>
