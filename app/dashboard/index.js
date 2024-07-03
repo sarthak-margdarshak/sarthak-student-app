@@ -19,14 +19,16 @@ import {
   PurchasedProductFragment,
 } from "../../sections/dashboard/DashboardFragments";
 import { useLocalSearchParams } from "expo-router";
+import { useAuthContext } from "../../auth/useAuthContext";
 
 export default function DashboardPage() {
   const { pagesIndex } = useLocalSearchParams();
+  const { studentProfile } = useAuthContext();
   const [index, setIndex] = useState(
     pagesIndex === undefined ? 0 : parseInt(pagesIndex)
   );
 
-  const [routes] = useState([
+  const [routes, setRoutes] = useState([
     {
       key: "mockSeries",
       title: "Mock Series",
@@ -38,12 +40,14 @@ export default function DashboardPage() {
       title: "Purchased",
       focusedIcon: "badge-account-horizontal",
       unfocusedIcon: "badge-account-horizontal-outline",
+      badge: studentProfile?.purchased?.length || 0,
     },
     {
       key: "cart",
       title: "Cart",
       focusedIcon: "cart",
       unfocusedIcon: "cart-outline",
+      badge: studentProfile?.cart?.length || 0,
     },
     {
       key: "profile",
@@ -70,6 +74,10 @@ export default function DashboardPage() {
       navigationState={{ index, routes }}
       onIndexChange={(i) => {
         setIndex(i);
+        var tmpRoutes = routes;
+        tmpRoutes[1].badge = studentProfile?.purchased?.length || 0;
+        tmpRoutes[2].badge = studentProfile?.cart?.length || 0;
+        setRoutes(tmpRoutes);
       }}
       sceneAnimationEnabled
       sceneAnimationType="shifting"

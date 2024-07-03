@@ -113,6 +113,20 @@ export default function ProfileFragment() {
       />
 
       <Button
+        icon="cart-arrow-up"
+        mode="outlined"
+        onPress={() => router.push(PATH_DASHBOARD.orders.list)}
+        style={{
+          marginLeft: 10,
+          marginBottom: 20,
+          marginRight: 10,
+          marginTop: 20,
+        }}
+      >
+        Your Orders
+      </Button>
+
+      <Button
         icon="cog"
         mode="outlined"
         onPress={() => router.push(PATH_DASHBOARD.preferences)}
@@ -123,7 +137,7 @@ export default function ProfileFragment() {
           marginTop: 20,
         }}
       >
-        Preferences
+        Your Preferences
       </Button>
 
       <Button

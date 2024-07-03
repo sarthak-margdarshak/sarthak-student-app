@@ -1,3 +1,15 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
@@ -7,17 +19,18 @@ import {
   appwriteDatabases,
   appwriteStorage,
 } from "../../../auth/AppwriteContext";
-import { APPWRITE_API, RAZORPAY_API } from "../../../config-global";
+import { APPWRITE_API } from "../../../config-global";
 import ProductMediumComponent from "../mockSeries/ProductMediumComponent";
 import { router } from "expo-router";
 import { PATH_DASHBOARD } from "../../../routes/paths";
-import RazorpayCheckout from "react-native-razorpay";
+import { ID } from "appwrite";
 
 export default function CartFragment() {
   const theme = useTheme();
   const { studentProfile, updateCart } = useAuthContext();
 
   const [loading, setLoading] = useState(false);
+  const [placingOrder, setPlacingOrder] = useState(false);
   const [products, setProducts] = useState([]);
   const [totalBill, setTotalBill] = useState(0);
 
@@ -74,28 +87,29 @@ export default function CartFragment() {
   }, [studentProfile]);
 
   const placeOrder = async () => {
-    var options = {
-      description: "Credits towards consultation",
-      currency: "INR",
-      key: RAZORPAY_API.keyId,
-      amount: 5000,
-      name: "Sarthak Margarshak",
-      prefill: {
-        email: "gaurav.kumar@example.com",
-        contact: "9191919191",
-        name: "Gaurav Kumar",
-      },
-      theme: { color: theme.colors.surface },
-    };
-    RazorpayCheckout.open(options)
-      .then((data) => {
-        // handle success
-        alert(`Success: ${data.razorpay_payment_id}`);
-      })
-      .catch((error) => {
-        // handle failure
-        alert(`Error: ${error}`);
-      });
+    setPlacingOrder(true);
+    try {
+      const x = await appwriteDatabases.createDocument(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.orders,
+        ID.unique(),
+        {
+          amount_total: totalBill * 100,
+          amount_to_be_paid: totalBill * 100,
+          studentId: studentProfile.$id,
+          products: products.map((value) => value.$id),
+          status: "created",
+        }
+      );
+      for (let i in products) {
+        updateCart(products[i].$id, -1);
+      }
+      router.push(PATH_DASHBOARD.orders.view(x.$id));
+    } catch (error) {
+      ToastAndroid.show(error.message, ToastAndroid.LONG);
+      console.log(error.message);
+    }
+    setPlacingOrder(false);
   };
 
   return (
@@ -181,8 +195,9 @@ export default function CartFragment() {
                       mode="contained"
                       icon="cart-check"
                       onPress={placeOrder}
+                      loading={placingOrder}
                     >
-                      Buy
+                      Checkout
                     </Button>
                   </View>
                 </View>

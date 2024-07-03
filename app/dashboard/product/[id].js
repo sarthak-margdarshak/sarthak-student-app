@@ -39,12 +39,19 @@ export default function productView() {
   const [product, setProduct] = useState({});
   const [addedToCart, setAddedToCart] = useState(false);
   const [purchased, setPurchased] = useState(false);
-  const [currPic, setCurrPic] = useState(undefined);
+  const [currPic, setCurrPic] = useState(
+    "https://api.sarthakmargdarshak.in/v1/storage/buckets/66831750aac03d4d2f6e/files/6685c28dcbdbebdf0c91/view?project=6639f48744439b98db71&mode=admin"
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        if (
+          studentProfile.purchased.findIndex((value) => value === id) !== -1
+        ) {
+          setPurchased(true);
+        }
         const x = await appwriteDatabases.getDocument(
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.products,
@@ -227,7 +234,7 @@ export default function productView() {
 
             <Divider bold style={{ margin: 15 }} />
 
-            <Surface style={{ borderRadius: 15 }}>
+            <Surface style={{ borderRadius: 15, padding: 5 }}>
               <View
                 style={{
                   flexDirection: "row",

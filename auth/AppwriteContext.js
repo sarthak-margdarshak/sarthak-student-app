@@ -30,6 +30,11 @@ import {
 } from "react";
 import { ToastAndroid } from "react-native";
 import { APPWRITE_API } from "../config-global";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+
+TimeAgo.addDefaultLocale(en);
+export const timeAgo = new TimeAgo("en-US");
 
 export const appwriteClient = new Client()
   .setEndpoint(APPWRITE_API.backendUrl)
@@ -48,6 +53,7 @@ export const AuthContext = createContext({
   login: async (email, password) => {},
   logout: async () => {},
   updateCart: async (id, action) => {},
+  updateStudentProfile: async () => {},
 });
 
 export function AuthProvider({ children }) {
@@ -60,14 +66,12 @@ export function AuthProvider({ children }) {
     try {
       const x = await appwriteAccount.get();
       setUser(x);
-      // setStudentProfile(
       const y = await appwriteDatabases.getDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.students,
         x.$id
       );
       setStudentProfile(y);
-      // );
       setAuthenticated(true);
       ToastAndroid.show("Welcome back, " + x?.name, ToastAndroid.SHORT);
     } catch (error) {
@@ -165,54 +169,47 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const updateCart = useCallback(
-    async (id, action) => {
-      var cart = studentProfile?.cart;
-      var changesRequired = false;
-      var message = "";
-      var index = cart.findIndex((value) => value === id);
-      if (action >= 0) {
-        if (index === -1) {
-          cart.push(id);
-          changesRequired = true;
-          message = "Successfully Added to cart.";
-        } else {
-          ToastAndroid.show(
-            "Cannot add. Already exists in your card",
-            ToastAndroid.LONG
-          );
-        }
-      } else {
-        if (index !== -1) {
-          cart.splice(index, 1);
-          changesRequired = true;
-          message = "Successfully removed from cart.";
-        } else {
-          ToastAndroid.show(
-            "Cannot remove. Does not exists in card",
-            ToastAndroid.LONG
-          );
-        }
+  const updateCart = async (id, action) => {
+    var cart = studentProfile?.cart;
+    var changesRequired = false;
+    var index = cart?.findIndex((value) => value === id);
+    if (action >= 0) {
+      if (index === -1) {
+        cart.push(id);
+        changesRequired = true;
       }
-      if (changesRequired) {
-        try {
-          const x = await appwriteDatabases.updateDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.students,
-            user?.$id,
-            {
-              cart: cart,
-            }
-          );
-          setStudentProfile(x);
-          ToastAndroid.show(message, ToastAndroid.LONG);
-        } catch (error) {
-          ToastAndroid.show(error.message, ToastAndroid.LONG);
-        }
+    } else {
+      if (index !== -1) {
+        cart.splice(index, 1);
+        changesRequired = true;
       }
-    },
-    [studentProfile]
-  );
+    }
+    if (changesRequired) {
+      try {
+        const x = await appwriteDatabases.updateDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.students,
+          user?.$id,
+          {
+            cart: cart,
+          }
+        );
+        setStudentProfile(x);
+      } catch (error) {
+        ToastAndroid.show(error.message, ToastAndroid.LONG);
+      }
+    }
+  };
+
+  const updateStudentProfile = async () => {
+    console.log(studentProfile);
+    const x = await appwriteDatabases.getDocument(
+      APPWRITE_API.databaseId,
+      APPWRITE_API.collections.students,
+      studentProfile?.$id
+    );
+    setStudentProfile(x);
+  };
 
   const memoizedValue = useMemo(
     () => ({
@@ -225,6 +222,7 @@ export function AuthProvider({ children }) {
       login,
       logout,
       updateCart,
+      updateStudentProfile,
     }),
     [
       user,
@@ -235,8 +233,10 @@ export function AuthProvider({ children }) {
       login,
       logout,
       updateCart,
+      updateStudentProfile,
     ]
   );
+
   return (
     <AuthContext.Provider value={memoizedValue}>
       {children}
