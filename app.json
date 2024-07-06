@@ -2,9 +2,18 @@
   "expo": {
     "name": "Sarthak",
     "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
+    "name": "Sarthak",
+    "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
     "slug": "sarthak-student-app",
     "owner": "sarthakmargdarshak",
+    "owner": "sarthakmargdarshak",
     "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "githubUrl": "https://github.com/sarthak-margdarshak/sarthak",
     "platforms": [
       "ios",
       "android",
@@ -14,7 +23,10 @@
     "orientation": "portrait",
     "icon": "./assets/favicon/favicon-1024x1024.png",
     "userInterfaceStyle": "automatic",
+    "icon": "./assets/favicon/favicon-1024x1024.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./assets/splash/splash-192x192.png",
       "image": "./assets/splash/splash-192x192.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
@@ -36,8 +48,23 @@
           "image": "./assets/splash/splash-1024x1024.png"
         }
       }
+      "supportsTablet": true,
+      "icon": "./assets/favicon/favicon-1024x1024.png",
+      "userInterfaceStyle": "automatic",
+      "splash": {
+        "backgroundColor": "#FFFFE0",
+        "resizeMode": "contain",
+        "image": "./assets/splash/splash-1024x1024.png",
+        "dark": {
+          "backgroundColor": "#181a20",
+          "resizeMode": "contain",
+          "image": "./assets/splash/splash-1024x1024.png"
+        }
+      }
     },
     "android": {
+      "userInterfaceStyle": "automatic",
+      "icon": "./assets/favicon/favicon-1024x1024.png",
       "userInterfaceStyle": "automatic",
       "icon": "./assets/favicon/favicon-1024x1024.png",
       "adaptiveIcon": {
