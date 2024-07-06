@@ -1,0 +1,307 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
+import { Link } from "expo-router";
+import { ToastAndroid, View } from "react-native";
+import { FAB, Icon, Surface, Text, useTheme } from "react-native-paper";
+import BoxTextComponent from "./BoxTextComponent";
+import { useAuthContext } from "../../../auth/useAuthContext";
+import { useEffect, useState } from "react";
+import { appwriteDatabases } from "../../../auth/AppwriteContext";
+import { APPWRITE_API } from "../../../config-global";
+import { Query } from "appwrite";
+import { PATH_DASHBOARD } from "../../../routes/paths";
+import { Skeleton } from "react-native-skeletons";
+
+export default function ChapterWiseComponent() {
+  const theme = useTheme();
+  const { user } = useAuthContext();
+  const [chaptersList, setChaptersList] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const x = await appwriteDatabases.listDocuments(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.products,
+          [
+            Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
+            Query.equal("published", true),
+            Query.select(["chapters"]),
+            Query.limit(5),
+          ]
+        );
+
+        var chapters = new Map();
+        for (let i in x.documents) {
+          for (j in x.documents[i].chapters) {
+            const y = await appwriteDatabases.getDocument(
+              APPWRITE_API.databaseId,
+              APPWRITE_API.collections.chapters,
+              x.documents[i].chapters[j]
+            );
+            if (!chapters.has(y.$id)) {
+              chapters.set(y.$id, y.name);
+            }
+          }
+        }
+        var z = [];
+        chapters.forEach((value, key) => z.push({ $id: key, name: value }));
+        setChaptersList(z);
+      } catch (error) {
+        ToastAndroid.show(error.message, ToastAndroid.LONG);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [user]);
+
+  return (
+    <Surface
+      style={{ padding: 8, width: "100%", borderRadius: 10, marginTop: 5 }}
+      mode="flat"
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            width: 100,
+            marginLeft: 2,
+            fontWeight: "bold",
+            flex: 1,
+            flexDirection: "row",
+          }}
+          variant="titleLarge"
+        >
+          Chapters
+        </Text>
+        <Text
+          style={{
+            textAlign: "right",
+            marginRight: 2,
+            fontWeight: "bold",
+            textDecorationLine: "underline",
+            color: theme.colors.tertiary,
+            justifyContent: "space-evenly",
+            marginTop: -3,
+          }}
+          variant="titleMedium"
+        >
+          <Link href={PATH_DASHBOARD.category.chapters}>see more</Link>
+        </Text>
+        <Icon source="arrow-right-drop-circle" />
+      </View>
+
+      {loading ? (
+        <View style={styles.app}>
+          <Row>
+            <Col numRows={1}>
+              <Skeleton
+                style={{ margin: 5 }}
+                height={60}
+                width="95%"
+                count={2}
+                color={theme.colors.inverseOnSurface}
+              />
+            </Col>
+
+            <Col numRows={1}>
+              <Skeleton
+                style={{ margin: 5 }}
+                height={60}
+                width="95%"
+                count={2}
+                color={theme.colors.inverseOnSurface}
+              />
+            </Col>
+
+            <Col numRows={1}>
+              <Skeleton
+                style={{ margin: 5 }}
+                height={60}
+                width="95%"
+                count={2}
+                color={theme.colors.inverseOnSurface}
+              />
+            </Col>
+
+            <Col numRows={1}>
+              <Skeleton
+                style={{ margin: 5 }}
+                height={60}
+                width="95%"
+                count={2}
+                color={theme.colors.inverseOnSurface}
+              />
+            </Col>
+          </Row>
+        </View>
+      ) : (
+        <View style={styles.app}>
+          <Row>
+            <Col numRows={1}>
+              {chaptersList.length >= 1 && (
+                <BoxTextComponent
+                  title={chaptersList[0].name}
+                  link={
+                    PATH_DASHBOARD.product.list +
+                    "?chapters=" +
+                    chaptersList[0]?.$id
+                  }
+                />
+              )}
+            </Col>
+            <Col numRows={1}>
+              {chaptersList.length >= 2 && (
+                <BoxTextComponent
+                  title={chaptersList[1].name}
+                  link={
+                    PATH_DASHBOARD.product.list +
+                    "?chapters=" +
+                    chaptersList[1]?.$id
+                  }
+                />
+              )}
+            </Col>
+            <Col numRows={1}>
+              {chaptersList.length >= 3 && (
+                <BoxTextComponent
+                  title={chaptersList[2].name}
+                  link={
+                    PATH_DASHBOARD.product.list +
+                    "?chapters=" +
+                    chaptersList[2]?.$id
+                  }
+                />
+              )}
+            </Col>
+            <Col numRows={1}>
+              {chaptersList.length >= 4 && (
+                <BoxTextComponent
+                  title={chaptersList[3].name}
+                  link={
+                    PATH_DASHBOARD.product.list +
+                    "?chapters=" +
+                    chaptersList[3]?.$id
+                  }
+                />
+              )}
+            </Col>
+          </Row>
+
+          {chaptersList.length >= 5 && (
+            <Row>
+              <Col numRows={1}>
+                {chaptersList.length >= 5 && (
+                  <BoxTextComponent
+                    title={chaptersList[4].name}
+                    link={
+                      PATH_DASHBOARD.product.list +
+                      "?chapters=" +
+                      chaptersList[4]?.$id
+                    }
+                  />
+                )}
+              </Col>
+              <Col numRows={1}>
+                {chaptersList.length >= 6 && (
+                  <BoxTextComponent
+                    title={chaptersList[5].name}
+                    link={
+                      PATH_DASHBOARD.product.list +
+                      "?chapters=" +
+                      chaptersList[5]?.$id
+                    }
+                  />
+                )}
+              </Col>
+              <Col numRows={1}>
+                {chaptersList.length >= 7 && (
+                  <BoxTextComponent
+                    title={chaptersList[6].name}
+                    link={
+                      PATH_DASHBOARD.product.list +
+                      "?chapters=" +
+                      chaptersList[6]?.$id
+                    }
+                  />
+                )}
+              </Col>
+              <Col numRows={1}>
+                {chaptersList.length === 8 && (
+                  <BoxTextComponent
+                    title={chaptersList[7].name}
+                    link={
+                      PATH_DASHBOARD.product.list +
+                      "?chapters=" +
+                      chaptersList[7]?.$id
+                    }
+                  />
+                )}
+                {chaptersList.length >= 9 && (
+                  <FAB
+                    icon="arrow-right-drop-circle"
+                    style={{
+                      margin: 3,
+                      justifyContent: "center",
+                      borderRadius: 5,
+                    }}
+                    customSize={70}
+                    onPress={() =>
+                      router.push(PATH_DASHBOARD.category.chapters)
+                    }
+                  />
+                )}
+              </Col>
+            </Row>
+          )}
+        </View>
+      )}
+    </Surface>
+  );
+}
+
+const styles = {
+  app: {
+    flex: 4, // the number of columns you want to devide the screen into
+    marginHorizontal: "auto",
+    width: "auto",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  "1col": {
+    flex: 1,
+  },
+  "2col": {
+    flex: 2,
+  },
+  "3col": {
+    flex: 3,
+  },
+  "4col": {
+    flex: 4,
+  },
+};
+
+// RN Code
+const Col = ({ numRows, children }) => {
+  return <View style={styles[`${numRows}col`]}>{children}</View>;
+};
+
+const Row = ({ children }) => <View style={styles.row}>{children}</View>;

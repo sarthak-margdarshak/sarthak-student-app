@@ -11,7 +11,11 @@
  */
 
 import { RefreshControl, ScrollView } from "react-native";
-import MotivationBox from "../MotivationBox";
+import MotivationBox from "../mockSeries/MotivationBox";
+import AllProductComponent from "../mockSeries/AllProductComponent";
+import ClasswiseComponent from "../mockSeries/ClasswiseComponent";
+import SubjectWiseComponent from "../mockSeries/SubjectWiseComponent";
+import ChapterWiseComponent from "../mockSeries/ChapterWiseComponent";
 
 export default function MockTestSeriesFragment() {
   return (
@@ -25,6 +29,14 @@ export default function MockTestSeriesFragment() {
       }
     >
       <MotivationBox />
+
+      <AllProductComponent />
+
+      <ClasswiseComponent />
+
+      <SubjectWiseComponent />
+
+      <ChapterWiseComponent />
     </ScrollView>
   );
 }

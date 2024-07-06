@@ -44,25 +44,6 @@ export default function AuthLayout() {
         },
         headerShadowVisible: true,
       }}
-    >
-      <Stack.Screen
-        name="login"
-        options={{
-          title: "Log In",
-        }}
-      />
-      <Stack.Screen
-        name="sign-up"
-        options={{
-          title: "Sign Up",
-        }}
-      />
-      <Stack.Screen
-        name="forgot-password"
-        options={{
-          title: "Forgot Password",
-        }}
-      />
-    </Stack>
+    />
   );
 }

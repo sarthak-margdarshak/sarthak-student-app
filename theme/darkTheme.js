@@ -1,44 +1,68 @@
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
 export const darkTheme = {
-  "colors": {
-    "primary": "rgb(255, 180, 163)",
-    "onPrimary": "rgb(99, 15, 0)",
-    "primaryContainer": "rgb(139, 26, 0)",
-    "onPrimaryContainer": "rgb(255, 218, 210)",
-    "secondary": "rgb(0, 229, 69)",
-    "onSecondary": "rgb(0, 57, 10)",
-    "secondaryContainer": "rgb(0, 83, 19)",
-    "onSecondaryContainer": "rgb(112, 255, 118)",
-    "tertiary": "rgb(199, 191, 255)",
-    "onTertiary": "rgb(42, 0, 159)",
-    "tertiaryContainer": "rgb(62, 0, 221)",
-    "onTertiaryContainer": "rgb(228, 223, 255)",
-    "error": "rgb(255, 180, 171)",
-    "onError": "rgb(105, 0, 5)",
-    "errorContainer": "rgb(147, 0, 10)",
-    "onErrorContainer": "rgb(255, 180, 171)",
-    "background": "rgb(32, 26, 25)",
-    "onBackground": "rgb(237, 224, 221)",
-    "surface": "rgb(32, 26, 25)",
-    "onSurface": "rgb(237, 224, 221)",
-    "surfaceVariant": "rgb(83, 67, 64)",
-    "onSurfaceVariant": "rgb(216, 194, 189)",
-    "outline": "rgb(160, 140, 136)",
-    "outlineVariant": "rgb(83, 67, 64)",
-    "shadow": "rgb(0, 0, 0)",
-    "scrim": "rgb(0, 0, 0)",
-    "inverseSurface": "rgb(237, 224, 221)",
-    "inverseOnSurface": "rgb(54, 47, 45)",
-    "inversePrimary": "rgb(182, 37, 0)",
-    "elevation": {
-      "level0": "transparent",
-      "level1": "rgb(43, 34, 32)",
-      "level2": "rgb(50, 38, 36)",
-      "level3": "rgb(57, 43, 40)",
-      "level4": "rgb(59, 45, 42)",
-      "level5": "rgb(63, 48, 44)"
+  colors: {
+    primary: "rgb(255, 180, 163)",
+    onPrimary: "rgb(99, 15, 0)",
+    primaryContainer: "rgb(139, 26, 0)",
+    onPrimaryContainer: "rgb(255, 218, 210)",
+    secondary: "rgb(0, 229, 69)",
+    onSecondary: "rgb(0, 57, 10)",
+    secondaryContainer: "rgb(0, 83, 19)",
+    onSecondaryContainer: "rgb(112, 255, 118)",
+    tertiary: "rgb(199, 191, 255)",
+    onTertiary: "rgb(42, 0, 159)",
+    tertiaryContainer: "rgb(62, 0, 221)",
+    onTertiaryContainer: "rgb(228, 223, 255)",
+    error: "rgb(255, 180, 170)",
+    onError: "rgb(105, 0, 3)",
+    errorContainer: "rgb(147, 0, 7)",
+    onErrorContainer: "rgb(255, 218, 213)",
+    background: "rgb(32, 26, 25)",
+    onBackground: "rgb(237, 224, 221)",
+    surface: "rgb(32, 26, 25)",
+    onSurface: "rgb(237, 224, 221)",
+    surfaceVariant: "rgb(83, 67, 64)",
+    onSurfaceVariant: "rgb(216, 194, 189)",
+    outline: "rgb(160, 140, 136)",
+    outlineVariant: "rgb(83, 67, 64)",
+    shadow: "rgb(0, 0, 0)",
+    scrim: "rgb(0, 0, 0)",
+    inverseSurface: "rgb(237, 224, 221)",
+    inverseOnSurface: "rgb(54, 47, 45)",
+    inversePrimary: "rgb(182, 37, 0)",
+    elevation: {
+      level0: "transparent",
+      level1: "rgb(43, 34, 32)",
+      level2: "rgb(50, 38, 36)",
+      level3: "rgb(57, 43, 40)",
+      level4: "rgb(59, 45, 42)",
+      level5: "rgb(63, 48, 44)",
     },
-    "surfaceDisabled": "rgba(237, 224, 221, 0.12)",
-    "onSurfaceDisabled": "rgba(237, 224, 221, 0.38)",
-    "backdrop": "rgba(59, 45, 42, 0.4)"
-  }
-}
+    surfaceDisabled: "rgba(237, 224, 221, 0.12)",
+    onSurfaceDisabled: "rgba(237, 224, 221, 0.38)",
+    backdrop: "rgba(59, 45, 42, 0.4)",
+    warning: "rgb(255, 181, 158)",
+    onWarning: "rgb(94, 23, 0)",
+    warningContainer: "rgb(133, 36, 0)",
+    onWarningContainer: "rgb(255, 219, 208)",
+    info: "rgb(92, 213, 251)",
+    onInfo: "rgb(0, 53, 67)",
+    infoContainer: "rgb(0, 78, 96)",
+    onInfoContainer: "rgb(182, 234, 255)",
+    success: "rgb(100, 222, 128)",
+    onSuccess: "rgb(0, 57, 21)",
+    successContainer: "rgb(0, 83, 33)",
+    onSuccessContainer: "rgb(129, 252, 153)",
+  },
+};

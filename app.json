@@ -2,9 +2,18 @@
   "expo": {
     "name": "Sarthak",
     "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
+    "name": "Sarthak",
+    "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
     "slug": "sarthak-student-app",
     "owner": "sarthakmargdarshak",
+    "owner": "sarthakmargdarshak",
     "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "githubUrl": "https://github.com/sarthak-margdarshak/sarthak",
     "platforms": [
       "ios",
       "android",
@@ -14,7 +23,10 @@
     "orientation": "portrait",
     "icon": "./assets/favicon/favicon-1024x1024.png",
     "userInterfaceStyle": "automatic",
+    "icon": "./assets/favicon/favicon-1024x1024.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./assets/splash/splash-192x192.png",
       "image": "./assets/splash/splash-192x192.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
@@ -36,12 +48,27 @@
           "image": "./assets/splash/splash-1024x1024.png"
         }
       }
+      "supportsTablet": true,
+      "icon": "./assets/favicon/favicon-1024x1024.png",
+      "userInterfaceStyle": "automatic",
+      "splash": {
+        "backgroundColor": "#FFFFE0",
+        "resizeMode": "contain",
+        "image": "./assets/splash/splash-1024x1024.png",
+        "dark": {
+          "backgroundColor": "#181a20",
+          "resizeMode": "contain",
+          "image": "./assets/splash/splash-1024x1024.png"
+        }
+      }
     },
     "android": {
       "userInterfaceStyle": "automatic",
       "icon": "./assets/favicon/favicon-1024x1024.png",
+      "userInterfaceStyle": "automatic",
+      "icon": "./assets/favicon/favicon-1024x1024.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/favicon/favicon-1024x1024.png",
+        "foregroundImage": "./assets/favicon/favicon-1024x1024.png"
       },
       "splash": {
         "backgroundColor": "#FFFFE0",
@@ -62,7 +89,11 @@
           "xxhdpi": "./assets/splash/splash-512x512.png",
           "xxxhdpi": "./assets/splash/splash-1024x1024.png"
         }
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.sarthakmargdarshak.students"
     },
     "web": {
       "favicon": "./assets/favicon/favicon-192x192.png",
@@ -85,6 +116,14 @@
         }
       ]
     ],
-    "scheme": "your-app-scheme"
+    "scheme": "your-app-scheme",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "61bf7ff2-5ea3-4fb8-a087-d71f761a54ed"
+      }
+    }
   }
 }

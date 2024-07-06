@@ -11,11 +11,14 @@
  */
 
 import { ScrollView } from "react-native";
-import { Divider, Text, TextInput } from "react-native-paper";
+import { Button, Divider, Text, TextInput, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
+import { router } from "expo-router";
+import { PATH_DASHBOARD } from "../../../routes/paths";
 
 export default function ProfileFragment() {
-  const { user } = useAuthContext();
+  const { user, logout } = useAuthContext();
+  const theme = useTheme();
 
   return (
     <ScrollView
@@ -108,6 +111,49 @@ export default function ProfileFragment() {
         left={<TextInput.Icon icon="email" />}
         keyboardType="email-address"
       />
+
+      <Button
+        icon="cart-arrow-up"
+        mode="outlined"
+        onPress={() => router.push(PATH_DASHBOARD.orders.list)}
+        style={{
+          marginLeft: 10,
+          marginBottom: 20,
+          marginRight: 10,
+          marginTop: 20,
+        }}
+      >
+        Your Orders
+      </Button>
+
+      <Button
+        icon="cog"
+        mode="outlined"
+        onPress={() => router.push(PATH_DASHBOARD.preferences)}
+        style={{
+          marginLeft: 10,
+          marginBottom: 20,
+          marginRight: 10,
+          marginTop: 20,
+        }}
+      >
+        Your Preferences
+      </Button>
+
+      <Button
+        style={{
+          marginLeft: 20,
+          marginBottom: 40,
+          marginRight: 20,
+          marginTop: 40,
+        }}
+        mode="elevated"
+        buttonColor={theme.colors.primary}
+        textColor={theme.colors.onPrimary}
+        onPress={logout}
+      >
+        Log Out
+      </Button>
     </ScrollView>
   );
 }

@@ -1,4 +1,16 @@
-import React, { useEffect, useState } from "react";
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
+import React, { useEffect } from "react";
 import { Image, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";

@@ -10,7 +10,17 @@
  *
  */
 
-import { Account, Client, Databases, Functions, ID, Storage } from "appwrite";
+import {
+  Account,
+  Client,
+  Databases,
+  Functions,
+  ID,
+  Permission,
+  Query,
+  Role,
+  Storage,
+} from "appwrite";
 import {
   createContext,
   useCallback,
@@ -18,15 +28,17 @@ import {
   useMemo,
   useState,
 } from "react";
-import { APPWRITE_PROJECT_ID, BACKEND_URL } from "@env";
-import { ToastAndroid, useColorScheme } from "react-native";
-import { useTheme } from "react-native-paper";
-import { lightTheme } from "../theme/lightTheme";
-import { darkTheme } from "../theme/darkTheme";
+import { ToastAndroid } from "react-native";
+import { APPWRITE_API } from "../config-global";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+
+TimeAgo.addDefaultLocale(en);
+export const timeAgo = new TimeAgo("en-US");
 
 export const appwriteClient = new Client()
-  .setEndpoint(BACKEND_URL)
-  .setProject(APPWRITE_PROJECT_ID);
+  .setEndpoint(APPWRITE_API.backendUrl)
+  .setProject(APPWRITE_API.projectId);
 export const appwriteAccount = new Account(appwriteClient);
 export const appwriteStorage = new Storage(appwriteClient);
 export const appwriteDatabases = new Databases(appwriteClient);
@@ -34,15 +46,19 @@ export const appwriteFunctions = new Functions(appwriteClient);
 
 export const AuthContext = createContext({
   user: null,
+  studentProfile: null,
   isAuthenticated: false,
   isInitiated: false,
   signup: async (email, password, name) => {},
   login: async (email, password) => {},
   logout: async () => {},
+  updateCart: async (id, action) => {},
+  updateStudentProfile: async () => {},
 });
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [studentProfile, setStudentProfile] = useState(null);
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [isInitiated, setIsInitiated] = useState(false);
 
@@ -50,10 +66,17 @@ export function AuthProvider({ children }) {
     try {
       const x = await appwriteAccount.get();
       setUser(x);
+      const y = await appwriteDatabases.getDocument(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.students,
+        x.$id
+      );
+      setStudentProfile(y);
       setAuthenticated(true);
       ToastAndroid.show("Welcome back, " + x?.name, ToastAndroid.SHORT);
     } catch (error) {
       setUser(null);
+      setStudentProfile(null);
       setAuthenticated(false);
     }
     setIsInitiated(true);
@@ -65,29 +88,72 @@ export function AuthProvider({ children }) {
 
   const signup = useCallback(async (email, password, name) => {
     try {
-      const x = await appwriteAccount.create(
-        ID.unique(),
-        email,
-        password,
-        name
+      await appwriteAccount.create(ID.unique(), email, password, name);
+      await appwriteAccount.createEmailSession(email, password);
+      const x = await appwriteAccount.get();
+      // Create student document in database
+      const y = await appwriteDatabases.createDocument(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.students,
+        x.$id,
+        {
+          name: x.name,
+          email: x.email,
+        },
+        [Permission.update(Role.user(x.$id))]
       );
       setUser(x);
+      setStudentProfile(y);
       setAuthenticated(true);
       ToastAndroid.show("Successfully signed up", ToastAndroid.SHORT);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      if (error.code === 409) {
+        const y = await appwriteDatabases.listDocuments(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.adminUsers,
+          [Query.equal("email", email)]
+        );
+        if (y.total !== 0) {
+          ToastAndroid.show(
+            "You are already an admin user of this platform. You can't have a student account.",
+            ToastAndroid.SHORT
+          );
+        } else {
+          ToastAndroid.show(error.message, ToastAndroid.SHORT);
+        }
+      } else {
+        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      }
     }
   }, []);
 
   const login = useCallback(async (email, password) => {
     try {
+      // Check for only students
+      const y = await appwriteDatabases.listDocuments(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.adminUsers,
+        [Query.equal("email", email)]
+      );
+      if (y.total !== 0) {
+        throw new Error(
+          "You are an admin user of this platform. You can't login as a student."
+        );
+      }
       await appwriteAccount.createEmailSession(email, password);
       const x = await appwriteAccount.get();
       setUser(x);
+      setStudentProfile(
+        await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.students,
+          x.$id
+        )
+      );
       setAuthenticated(true);
       ToastAndroid.show("Successfully logged In", ToastAndroid.SHORT);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
   }, []);
 
@@ -97,23 +163,79 @@ export function AuthProvider({ children }) {
       ToastAndroid.show("Successfully logged out.", ToastAndroid.SHORT);
       setAuthenticated(false);
       setUser(null);
+      setStudentProfile(null);
     } catch (error) {
       ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
   }, []);
 
+  const updateCart = async (id, action) => {
+    var cart = studentProfile?.cart;
+    var changesRequired = false;
+    var index = cart?.findIndex((value) => value === id);
+    if (action >= 0) {
+      if (index === -1) {
+        cart.push(id);
+        changesRequired = true;
+      }
+    } else {
+      if (index !== -1) {
+        cart.splice(index, 1);
+        changesRequired = true;
+      }
+    }
+    if (changesRequired) {
+      try {
+        const x = await appwriteDatabases.updateDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.students,
+          user?.$id,
+          {
+            cart: cart,
+          }
+        );
+        setStudentProfile(x);
+      } catch (error) {
+        ToastAndroid.show(error.message, ToastAndroid.LONG);
+      }
+    }
+  };
+
+  const updateStudentProfile = async () => {
+    const x = await appwriteDatabases.getDocument(
+      APPWRITE_API.databaseId,
+      APPWRITE_API.collections.students,
+      studentProfile?.$id
+    );
+    setStudentProfile(x);
+  };
+
   const memoizedValue = useMemo(
     () => ({
       user: user,
+      studentProfile: studentProfile,
       isAuthenticated: isAuthenticated,
       isInitiated: isInitiated,
       // auth functions
       signup,
       login,
       logout,
+      updateCart,
+      updateStudentProfile,
     }),
-    [user, isAuthenticated, isInitiated, signup, login, logout]
+    [
+      user,
+      studentProfile,
+      isAuthenticated,
+      isInitiated,
+      signup,
+      login,
+      logout,
+      updateCart,
+      updateStudentProfile,
+    ]
   );
+
   return (
     <AuthContext.Provider value={memoizedValue}>
       {children}

@@ -11,19 +11,22 @@
  */
 
 import { useState } from "react";
-import { ScrollView, View } from "react-native";
-import { Divider, List, RadioButton, Text } from "react-native-paper";
+import { Dimensions, ScrollView, View } from "react-native";
+import { Divider, List, RadioButton, Text, useTheme } from "react-native-paper";
 
 export default function SettingsFragment() {
   const [preferenceLanguage, setPreferenceLanguage] = useState("en");
+  const theme = useTheme();
 
   return (
     <ScrollView
       style={{
-        margin: 10,
+        height: Dimensions.get("window").height,
+        backgroundColor: theme.colors.surface,
+        padding: 10,
       }}
       contentContainerStyle={{
-        paddingBottom: 100,
+        paddingBottom: 20,
       }}
       showsVerticalScrollIndicator={false}
       automaticallyAdjustKeyboardInsets={true}

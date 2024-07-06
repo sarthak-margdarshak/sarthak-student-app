@@ -11,138 +11,135 @@
  */
 
 import { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
-import { Button, Divider, List, Text } from "react-native-paper";
-import { databases } from "../../../auth/AppwriteContext";
 import {
-  APPWRITE_DATABASE,
-  APPWRITE_DATABASE_MOCK_TEST_PRICE_TAG,
-  APPWRITE_DATABASE_STANDARDS,
-} from "@env";
-import { Query } from "appwrite";
+  Dimensions,
+  RefreshControl,
+  ScrollView,
+  ToastAndroid,
+  View,
+} from "react-native";
 import { useAuthContext } from "../../../auth/useAuthContext";
-import LoadingScreen from "../../../components/LoadingScreen";
+import ProductMediumComponentLoading from "../mockSeries/ProductMediumComponentLoading";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
 import { router } from "expo-router";
+import { PATH_DASHBOARD } from "../../../routes/paths";
+import ProductMediumComponent from "../mockSeries/ProductMediumComponent";
+import {
+  appwriteDatabases,
+  appwriteStorage,
+} from "../../../auth/AppwriteContext";
+import { APPWRITE_API } from "../../../config-global";
 
 export default function PurchasedProductFragment() {
-  const [loading, setLoading] = useState(false);
-  const [standardList, setStandardList] = useState([]);
+  const { studentProfile } = useAuthContext();
+  const theme = useTheme();
 
-  const { user } = useAuthContext();
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      var ans = [];
-      const x = await databases.listDocuments(
-        APPWRITE_DATABASE,
-        APPWRITE_DATABASE_MOCK_TEST_PRICE_TAG,
-        [
-          Query.isNull("subjectId"),
-          Query.isNull("chapterId"),
-          Query.isNull("conceptId"),
-          Query.limit(100),
-        ]
-      );
-      for (let i in x.documents) {
-        const y = await databases.getDocument(
-          APPWRITE_DATABASE,
-          APPWRITE_DATABASE_STANDARDS,
-          x.documents[i].standardId
+      var tmpProducts = [];
+      for (let i in studentProfile?.purchased) {
+        var product = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.products,
+          studentProfile.purchased[i]
         );
-        ans.push({
-          title: y.name,
-          count: y.count,
-          sellPrice: x.documents[i].sell_price,
-          mrp: x.documents[i].mrp,
-          standardId: x.documents[i].standardId,
-          subjectCount: y.subjectIds.length,
-        });
+
+        for (let j in product.images) {
+          product.images[j] = appwriteStorage.getFilePreview(
+            APPWRITE_API.buckets.productFiles,
+            product.images[j],
+            undefined,
+            undefined,
+            undefined
+          ).href;
+        }
+
+        for (let j in product.standards) {
+          product.standards[j] = await appwriteDatabases.getDocument(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.standards,
+            product.standards[j]
+          );
+        }
+
+        for (let j in product.subjects) {
+          product.subjects[j] = await appwriteDatabases.getDocument(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.subjects,
+            product.subjects[j]
+          );
+        }
+
+        tmpProducts.push(product);
       }
-      setStandardList(ans);
+      setProducts(tmpProducts);
     } catch (error) {
-      // showSnackbar(error.message)
+      ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
     setLoading(false);
   };
 
-  const listItem = standardList.map((value) => (
-    <View key={value.standardId} style={{ marginTop: 5 }}>
-      <List.Accordion
-        description={
-          "Contains " +
-          value.count +
-          " mock tests in " +
-          value.subjectCount +
-          " subjects"
-        }
-        title={value.title}
-        titleNumberOfLines={1}
-        titleStyle={{
-          fontSize: 25,
-        }}
-        onPress={() => {}}
-        style={{ borderRadius: 20, paddingLeft: 10 }}
-      >
-        <View
-          style={{
-            marginLeft: 30,
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}
-          >
-            <View>
-              <Text style={{ fontWeight: "bold", fontSize: 40 }}>
-                {"₹" + value.sellPrice}
-              </Text>
-              <Text
-                style={{ textDecorationLine: "line-through", fontSize: 15 }}
-              >
-                {"₹" + value.mrp}
-              </Text>
-            </View>
-            <Button
-              mode="elevated"
-              onPress={() => router.push("/mockTests/" + value.standardId)}
-            >
-              Explore
-            </Button>
-            {/* TODO: Disable if already bought */}
-            <Button mode="contained" onPress={() => {}}>
-              Buy
-            </Button>
-          </View>
-        </View>
-      </List.Accordion>
-      <Divider style={{ marginTop: 5 }} />
-    </View>
-  ));
-
   useEffect(() => {
     loadData();
-  }, [user]);
+  }, [studentProfile]);
 
-  return loading ? (
-    <LoadingScreen />
-  ) : (
+  return (
     <ScrollView
       style={{
+        height: Dimensions.get("window").height,
+        backgroundColor: theme.colors.surface,
         margin: 10,
       }}
       showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets={true}
       refreshControl={
         <RefreshControl refreshing={loading} onRefresh={loadData} />
       }
     >
-      <List.Section title="All Mock Test &#x2022; Class wise">
-        {listItem}
-      </List.Section>
+      {loading ? (
+        <ProductMediumComponentLoading count={3} />
+      ) : (
+        <View>
+          {products.length === 0 ? (
+            <Surface style={{ borderRadius: 15 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  margin: 5,
+                  padding: 5,
+                }}
+              >
+                <View>
+                  <Text variant="headlineSmall" style={{ fontWeight: "bold" }}>
+                    No series
+                  </Text>
+                </View>
+
+                <View style={{ justifyContent: "center" }}>
+                  <Button
+                    mode="contained"
+                    icon="file-find"
+                    onPress={() => router.push(PATH_DASHBOARD.product.list)}
+                  >
+                    Explore Mock Series
+                  </Button>
+                </View>
+              </View>
+            </Surface>
+          ) : (
+            <View>
+              {products.map((product) => (
+                <ProductMediumComponent product={product} key={product?.$id} />
+              ))}
+            </View>
+          )}
+        </View>
+      )}
     </ScrollView>
   );
 }
