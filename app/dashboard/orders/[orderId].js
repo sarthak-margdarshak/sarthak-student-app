@@ -185,6 +185,7 @@ export default function orderPage() {
               {
                 status: "success",
                 last_payment_date: new Date(),
+                payment_id: data.razorpay_payment_id,
                 attempts: orderObj.attempts + 1,
               }
             );
@@ -192,6 +193,7 @@ export default function orderPage() {
             setOrderObj({
               ...orderObj,
               status: "success",
+              payment_id: data.razorpay_payment_id,
               last_payment_date: new Date(),
               attempts: orderObj.attempts + 1,
             });
@@ -504,6 +506,31 @@ export default function orderPage() {
                     </Text>
                   </View>
                 </View>
+
+                <Text
+                  variant="labelLarge"
+                  style={{
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginBottom: 5,
+                    fontWeight: "bold",
+                  }}
+                >
+                  NOTE : HOW TO ACCESS THIS PURCHASED MOCK TEST SERIES
+                </Text>
+                <Text
+                  variant="labelSmall"
+                  style={{ marginRight: 10, marginBottom: 5, marginLeft: 20 }}
+                >
+                  1. BY CLICKING THE MOCK TEST SERIES ON THE TOP OF THIS PAGE.
+                </Text>
+                <Text
+                  variant="labelSmall"
+                  style={{ marginRight: 10, marginBottom: 5, marginLeft: 20 }}
+                >
+                  2. YOU CAN FIND ALL PURCHASED ON THE `PURCHASED` TAB OF MAIN
+                  PAGE OF APP.
+                </Text>
               </Surface>
             )}
 
@@ -597,6 +624,13 @@ export default function orderPage() {
                   ? "Initiating Payment Gateway"
                   : "Pay Now"}
               </Button>
+            )}
+
+            {(backendValidating || creatingOrder) && (
+              <Text variant="labelSmall" style={{ margin: 10 }}>
+                *** PLEASE DO NOT PRESS BACK BUTTON WHILE PAYMENT VERIFICATION
+                IS IN PROGRESS ***
+              </Text>
             )}
           </View>
         )}

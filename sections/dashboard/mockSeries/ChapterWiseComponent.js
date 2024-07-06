@@ -36,6 +36,7 @@ export default function ChapterWiseComponent() {
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.products,
           [
+            Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("published", true),
             Query.select(["chapters"]),
             Query.limit(5),

@@ -15,6 +15,7 @@ import { Fragment, useEffect, useState } from "react";
 import {
   Dimensions,
   ImageBackground,
+  RefreshControl,
   ScrollView,
   ToastAndroid,
   View,
@@ -43,72 +44,71 @@ export default function productView() {
     "https://api.sarthakmargdarshak.in/v1/storage/buckets/66831750aac03d4d2f6e/files/6685c28dcbdbebdf0c91/view?project=6639f48744439b98db71&mode=admin"
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        if (
-          studentProfile.purchased.findIndex((value) => value === id) !== -1
-        ) {
-          setPurchased(true);
-        }
-        const x = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.products,
-          id
-        );
-        for (let j in x.images) {
-          x.images[j] = appwriteStorage.getFilePreview(
-            APPWRITE_API.buckets.productFiles,
-            x.images[j],
-            undefined,
-            undefined,
-            undefined
-          ).href;
-        }
-        setCurrPic(x?.images[0]);
-
-        for (let j in x.standards) {
-          x.standards[j] = await appwriteDatabases.getDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.standards,
-            x.standards[j]
-          );
-        }
-
-        for (let j in x.subjects) {
-          x.subjects[j] = await appwriteDatabases.getDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.subjects,
-            x.subjects[j]
-          );
-        }
-
-        for (let j in x.chapters) {
-          x.chapters[j] = await appwriteDatabases.getDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.chapters,
-            x.chapters[j]
-          );
-        }
-
-        for (let j in x.concepts) {
-          x.concepts[j] = await appwriteDatabases.getDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.concepts,
-            x.concepts[j]
-          );
-        }
-
-        setAddedToCart(
-          studentProfile?.cart.findIndex((value) => value === id) !== -1
-        );
-        setProduct(x);
-      } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      if (studentProfile.purchased.findIndex((value) => value === id) !== -1) {
+        setPurchased(true);
       }
-      setLoading(false);
-    };
+      const x = await appwriteDatabases.getDocument(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.products,
+        id
+      );
+      for (let j in x.images) {
+        x.images[j] = appwriteStorage.getFilePreview(
+          APPWRITE_API.buckets.productFiles,
+          x.images[j],
+          undefined,
+          undefined,
+          undefined
+        ).href;
+      }
+      setCurrPic(x?.images[0]);
+
+      for (let j in x.standards) {
+        x.standards[j] = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.standards,
+          x.standards[j]
+        );
+      }
+
+      for (let j in x.subjects) {
+        x.subjects[j] = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.subjects,
+          x.subjects[j]
+        );
+      }
+
+      for (let j in x.chapters) {
+        x.chapters[j] = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.chapters,
+          x.chapters[j]
+        );
+      }
+
+      for (let j in x.concepts) {
+        x.concepts[j] = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.concepts,
+          x.concepts[j]
+        );
+      }
+
+      setAddedToCart(
+        studentProfile?.cart.findIndex((value) => value === id) !== -1
+      );
+      setProduct(x);
+    } catch (error) {
+      ToastAndroid.show(error.message, ToastAndroid.LONG);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchData();
   }, [id]);
 
@@ -118,7 +118,7 @@ export default function productView() {
   };
 
   const attempt = async () => {
-    console.log("Attempting the series");
+    router.push(PATH_DASHBOARD.mockTest.list(id));
   };
 
   const goToCart = async () => {
@@ -136,14 +136,15 @@ export default function productView() {
         style={{
           height: Dimensions.get("window").height,
           backgroundColor: theme.colors.surface,
-          padding: 10,
         }}
         contentContainerStyle={{
           paddingBottom: 20,
-          // paddingTop: 80,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={fetchData} />
+        }
       >
         {loading ? (
           <View>
@@ -179,7 +180,7 @@ export default function productView() {
           </View>
         ) : (
           <View>
-            <Surface style={{ borderRadius: 15, padding: 5 }}>
+            <Surface style={{ borderRadius: 15, padding: 5, margin: 5 }}>
               <ImageBackground
                 style={{
                   objectFit: "cover",
@@ -217,82 +218,91 @@ export default function productView() {
               </ScrollView>
             </Surface>
 
-            <Divider bold style={{ margin: 15 }} />
+            <Divider />
 
-            <Surface style={{ borderRadius: 15, padding: 5 }}>
+            <Surface
+              style={{
+                padding: 5,
+                marginTop: 5,
+                marginBottom: 5,
+                backgroundColor: theme.colors.infoContainer,
+              }}
+            >
               <Text
-                variant="headlineLarge"
-                style={{ fontWeight: "bold", margin: 5 }}
+                variant="headlineSmall"
+                style={{
+                  fontWeight: "bold",
+                  margin: 5,
+                  color: theme.colors.onInfoContainer,
+                }}
               >
                 {product?.name}
               </Text>
 
-              <Text variant="titleLarge" style={{ margin: 10 }}>
+              <Text
+                variant="labelLarge"
+                style={{ margin: 10, color: theme.colors.onInfoContainer }}
+              >
                 {product?.description}
               </Text>
             </Surface>
 
-            <Divider bold style={{ margin: 15 }} />
+            <Divider />
 
-            <Surface style={{ borderRadius: 15, padding: 5 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 5,
-                  padding: 5,
-                }}
-              >
-                <View>
-                  <Text variant="headlineLarge" style={{ fontWeight: "bold" }}>
-                    {"₹" + product?.sellPrice}
-                  </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 15,
+                marginTop: 5,
+                marginBottom: 5,
+              }}
+            >
+              <View>
+                <Text variant="headlineLarge" style={{ fontWeight: "bold" }}>
+                  {"₹" + product?.sellPrice}
+                </Text>
 
-                  <Text
-                    variant="headlineSmall"
-                    style={{
-                      fontWeight: "bold",
-                      textDecorationLine: "line-through",
-                      color: theme.colors.surfaceDisabled,
-                    }}
-                  >
-                    {"₹" + product?.mrp}
-                  </Text>
-                </View>
-
-                <View style={{ justifyContent: "center" }}>
-                  {purchased && (
-                    <Button mode="contained" icon="test-tube" onPress={attempt}>
-                      Attempt
-                    </Button>
-                  )}
-
-                  {addedToCart && (
-                    <Button
-                      mode="contained"
-                      icon="cart-arrow-right"
-                      onPress={goToCart}
-                    >
-                      Go to Cart
-                    </Button>
-                  )}
-
-                  {!addedToCart && !purchased && (
-                    <Button
-                      icon="cart-plus"
-                      mode="contained"
-                      onPress={addToCart}
-                    >
-                      Add to Cart
-                    </Button>
-                  )}
-                </View>
+                <Text
+                  variant="headlineSmall"
+                  style={{
+                    fontWeight: "bold",
+                    textDecorationLine: "line-through",
+                    color: theme.colors.surfaceDisabled,
+                  }}
+                >
+                  {"₹" + product?.mrp}
+                </Text>
               </View>
-            </Surface>
 
-            <Divider bold style={{ margin: 15 }} />
+              <View style={{ justifyContent: "center" }}>
+                {purchased && (
+                  <Button mode="contained" icon="test-tube" onPress={attempt}>
+                    Attempt
+                  </Button>
+                )}
 
-            <Surface style={{ borderRadius: 15, padding: 5 }}>
+                {addedToCart && (
+                  <Button
+                    mode="contained"
+                    icon="cart-arrow-right"
+                    onPress={goToCart}
+                  >
+                    Go to Cart
+                  </Button>
+                )}
+
+                {!addedToCart && !purchased && (
+                  <Button icon="cart-plus" mode="contained" onPress={addToCart}>
+                    Add to Cart
+                  </Button>
+                )}
+              </View>
+            </View>
+
+            <Divider />
+
+            <Surface style={{ borderRadius: 15, padding: 5, margin: 5 }}>
               <Text
                 variant="titleLarge"
                 style={{ margin: 5, marginTop: 15, fontWeight: "bold" }}

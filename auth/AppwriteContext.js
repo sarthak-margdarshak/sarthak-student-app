@@ -202,7 +202,6 @@ export function AuthProvider({ children }) {
   };
 
   const updateStudentProfile = async () => {
-    console.log(studentProfile);
     const x = await appwriteDatabases.getDocument(
       APPWRITE_API.databaseId,
       APPWRITE_API.collections.students,

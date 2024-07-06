@@ -34,7 +34,11 @@ export default function standards() {
         const x = await AppwriteHelper.listAllDocuments(
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.products,
-          [Query.equal("published", true), Query.select(["standards"])]
+          [
+            Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
+            Query.equal("published", true),
+            Query.select(["standards"]),
+          ]
         );
 
         var standards = new Map();

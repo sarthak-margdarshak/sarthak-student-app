@@ -47,4 +47,14 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, "/orders/order-list"),
     view: (id) => path(ROOTS_DASHBOARD, `/orders/${id}`),
   },
+  mockTest: {
+    list: (productId) =>
+      path(ROOTS_DASHBOARD, `/mockTest/list/product/${productId}`),
+    attempts: (mockTestId) =>
+      path(ROOTS_DASHBOARD, `/mockTest/attempt/list/${mockTestId}`),
+    attempReport: (attemptId) =>
+      path(ROOTS_DASHBOARD, `/mockTest/attempt/report/${attemptId}`),
+    appear: (attemptId) =>
+      path(ROOTS_DASHBOARD, `/mockTest/appear/${attemptId}`),
+  },
 };

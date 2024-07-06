@@ -38,6 +38,7 @@ export default function ProductList() {
       setLoading(true);
       try {
         var query = [
+          Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
           Query.equal("published", true),
           Query.orderDesc("$updatedAt"),
           Query.limit(100),

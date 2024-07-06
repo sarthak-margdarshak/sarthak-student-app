@@ -35,7 +35,11 @@ export default function chapters() {
         const x = await AppwriteHelper.listAllDocuments(
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.products,
-          [Query.equal("published", true), Query.select(["chapters"])]
+          [
+            Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
+            Query.equal("published", true),
+            Query.select(["chapters"]),
+          ]
         );
 
         var chapters = new Map();

@@ -10,7 +10,13 @@
  *
  */
 
-import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
+import {
+  Dimensions,
+  RefreshControl,
+  ScrollView,
+  ToastAndroid,
+  View,
+} from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { useEffect, useState } from "react";
@@ -34,55 +40,56 @@ export default function CartFragment() {
   const [products, setProducts] = useState([]);
   const [totalBill, setTotalBill] = useState(0);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        var tmpProducts = [];
-        var tmpBill = 0;
-        for (let i in studentProfile?.cart) {
-          var product = await appwriteDatabases.getDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.products,
-            studentProfile.cart[i]
-          );
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      var tmpProducts = [];
+      var tmpBill = 0;
+      for (let i in studentProfile?.cart) {
+        var product = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.products,
+          studentProfile.cart[i]
+        );
 
-          for (let j in product.images) {
-            product.images[j] = appwriteStorage.getFilePreview(
-              APPWRITE_API.buckets.productFiles,
-              product.images[j],
-              undefined,
-              undefined,
-              undefined
-            ).href;
-          }
-
-          for (let j in product.standards) {
-            product.standards[j] = await appwriteDatabases.getDocument(
-              APPWRITE_API.databaseId,
-              APPWRITE_API.collections.standards,
-              product.standards[j]
-            );
-          }
-
-          for (let j in product.subjects) {
-            product.subjects[j] = await appwriteDatabases.getDocument(
-              APPWRITE_API.databaseId,
-              APPWRITE_API.collections.subjects,
-              product.subjects[j]
-            );
-          }
-
-          tmpProducts.push(product);
-          tmpBill += product.sellPrice;
+        for (let j in product.images) {
+          product.images[j] = appwriteStorage.getFilePreview(
+            APPWRITE_API.buckets.productFiles,
+            product.images[j],
+            undefined,
+            undefined,
+            undefined
+          ).href;
         }
-        setProducts(tmpProducts);
-        setTotalBill(tmpBill);
-      } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+
+        for (let j in product.standards) {
+          product.standards[j] = await appwriteDatabases.getDocument(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.standards,
+            product.standards[j]
+          );
+        }
+
+        for (let j in product.subjects) {
+          product.subjects[j] = await appwriteDatabases.getDocument(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.subjects,
+            product.subjects[j]
+          );
+        }
+
+        tmpProducts.push(product);
+        tmpBill += product.sellPrice;
       }
-      setLoading(false);
-    };
+      setProducts(tmpProducts);
+      setTotalBill(tmpBill);
+    } catch (error) {
+      ToastAndroid.show(error.message, ToastAndroid.LONG);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchData();
   }, [studentProfile]);
 
@@ -121,6 +128,9 @@ export default function CartFragment() {
       }}
       showsVerticalScrollIndicator={false}
       automaticallyAdjustKeyboardInsets={true}
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={fetchData} />
+      }
     >
       {loading ? (
         <ProductMediumComponentLoading count={3} />
@@ -137,7 +147,7 @@ export default function CartFragment() {
                 }}
               >
                 <View>
-                  <Text variant="headlineLarge" style={{ fontWeight: "bold" }}>
+                  <Text variant="headlineSmall" style={{ fontWeight: "bold" }}>
                     Empty Cart
                   </Text>
                 </View>

@@ -45,7 +45,11 @@ export default function orderList() {
           x[i].products = await AppwriteHelper.listAllDocuments(
             APPWRITE_API.databaseId,
             APPWRITE_API.collections.products,
-            [Query.equal("$id", x[i].products), Query.select(["name"])]
+            [
+              Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
+              Query.equal("$id", x[i].products),
+              Query.select(["name"]),
+            ]
           );
         }
         setOrdersList(x);

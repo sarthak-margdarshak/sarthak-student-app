@@ -36,6 +36,7 @@ export default function SubjectWiseComponent() {
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.products,
           [
+            Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("published", true),
             Query.select(["subjects"]),
             Query.limit(5),

@@ -39,7 +39,11 @@ export default function AllProductComponent() {
         var x = await appwriteDatabases.listDocuments(
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.products,
-          [Query.equal("published", true), Query.limit(5)]
+          [
+            Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
+            Query.equal("published", true),
+            Query.limit(5),
+          ]
         );
 
         for (let i in x.documents) {

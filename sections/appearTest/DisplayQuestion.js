@@ -11,7 +11,15 @@
  */
 
 import { useState } from "react";
-import { Card, Text } from "react-native-paper";
+import { View } from "react-native";
+import {
+  Card,
+  Divider,
+  Icon,
+  Surface,
+  Text,
+  useTheme,
+} from "react-native-paper";
 
 export default function DisplayQuestion({
   sn,
@@ -20,59 +28,110 @@ export default function DisplayQuestion({
   optionB,
   optionC,
   optionD,
+  status,
+  optionMarked,
+  changeOption,
 }) {
+  const theme = useTheme();
+
   const [options, setOptions] = useState({
-    a: "outlined",
-    b: "outlined",
-    c: "outlined",
-    d: "outlined",
+    a: optionMarked === "A" ? "contained" : "outlined",
+    b: optionMarked === "B" ? "contained" : "outlined",
+    c: optionMarked === "C" ? "contained" : "outlined",
+    d: optionMarked === "D" ? "contained" : "outlined",
   });
 
-  const changeOption = (option) => {
-    if (option === "a") {
+  const changeOptionLocal = (option) => {
+    if (option === "A") {
       setOptions({
-        a: "contained",
+        a: options.a === "contained" ? "outlined" : "contained",
         b: "outlined",
         c: "outlined",
         d: "outlined",
       });
-    } else if (option === "b") {
+    } else if (option === "B") {
       setOptions({
         a: "outlined",
-        b: "contained",
+        b: options.b === "contained" ? "outlined" : "contained",
         c: "outlined",
         d: "outlined",
       });
-    } else if (option === "c") {
+    } else if (option === "C") {
       setOptions({
         a: "outlined",
         b: "outlined",
-        c: "contained",
+        c: options.c === "contained" ? "outlined" : "contained",
         d: "outlined",
       });
-    } else if (option === "d") {
+    } else if (option === "D") {
       setOptions({
         a: "outlined",
         b: "outlined",
         c: "outlined",
-        d: "contained",
+        d: options.d === "contained" ? "outlined" : "contained",
       });
     }
   };
 
   return (
-    <>
-      <Text style={{ marginLeft: 15 }} variant="headlineSmall">
-        Q. {sn}
-      </Text>
+    <Surface
+      elevation={1}
+      style={{
+        margin: 10,
+        marginTop: 20,
+        borderRadius: 10,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          padding: 10,
+          paddingStart: 15,
+          paddingEnd: 15,
+          backgroundColor:
+            status === "answered"
+              ? theme.colors.successContainer
+              : status === "marked"
+              ? theme.colors.warningContainer
+              : theme.colors.infoContainer,
+          color:
+            status === "answered"
+              ? theme.colors.onSuccessContainer
+              : status === "marked"
+              ? theme.colors.onWarningContainer
+              : theme.colors.onInfoContainer,
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}
+      >
+        <View style={{ justifyContent: "center" }}>
+          <Text variant="headlineSmall">Question No: {sn}</Text>
+        </View>
+
+        <View style={{ justifyContent: "center" }}>
+          <Text variant="labelLarge">Marking: +1, -0</Text>
+        </View>
+      </View>
+
+      <Divider style={{ marginBottom: 20 }} />
+
       <Text
-        style={{ marginLeft: 20, marginRight: 20, marginBottom: 10 }}
-        variant="titleMedium"
+        style={{
+          marginLeft: 20,
+          marginRight: 20,
+          marginBottom: 10,
+          fontWeight: "bold",
+        }}
+        variant="headlineSmall"
       >
         {question}
       </Text>
       <Card
-        onPress={() => changeOption("a")}
+        onPress={() => {
+          changeOption("A");
+          changeOptionLocal("A");
+        }}
         mode={options.a}
         style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
       >
@@ -82,7 +141,10 @@ export default function DisplayQuestion({
       </Card>
 
       <Card
-        onPress={() => changeOption("b")}
+        onPress={() => {
+          changeOption("B");
+          changeOptionLocal("B");
+        }}
         mode={options.b}
         style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
       >
@@ -92,7 +154,10 @@ export default function DisplayQuestion({
       </Card>
 
       <Card
-        onPress={() => changeOption("c")}
+        onPress={() => {
+          changeOption("C");
+          changeOptionLocal("C");
+        }}
         mode={options.c}
         style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
       >
@@ -102,14 +167,17 @@ export default function DisplayQuestion({
       </Card>
 
       <Card
-        onPress={() => changeOption("d")}
+        onPress={() => {
+          changeOption("D");
+          changeOptionLocal("D");
+        }}
         mode={options.d}
-        style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
+        style={{ marginLeft: 10, marginRight: 10, marginBottom: 15 }}
       >
         <Card.Content>
           <Text variant="bodyMedium">{optionD}</Text>
         </Card.Content>
       </Card>
-    </>
+    </Surface>
   );
 }
