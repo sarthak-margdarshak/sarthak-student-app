@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "sarthak-margdarshak",
+  "private_key_id": "b4ba0cd883c4c26ae31b2d8bbc18576bb27cfe23",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD9fswnLtOZk73V\nBPXO3safvIsKWweIaD9BkXaUvfqn8+QU4APPsLh1M+vQ9LZvRqd8PpdvmVDLGOBZ\nQWXZy2FHZ3/SPhFd+YsdikbWgO28n/XCAAjDXYjz6s/RptbzzUEu4kzmH/T9c0jT\nuF1HnevbcENuJcjplL8IYVZ/DcV297vhRpODdOcPvBQQ4huFqsJ+GpbNo1Rh5yzS\nK+BLlV1DDCCenEoN7NBZugySKNT5cxndZZfav8XUL1GI8o8K+f9Ta1P3V+LmNlkX\nxOiErZlx4kzNJ/KLQZyBFL0+WQXuVaJilXpopC4EyssMp+GaeUQ9cZpaZpmteAvb\n30ZTHKwRAgMBAAECggEAIPnK+kM6fifx8dwLUzXiW1/eK81bqtWkz5Vp+j9xyUIO\nJt5dSznkmkUpeq0wGO71VVGZxt1dh+Nci+qDTVRfpeJDhnNR3wpZ8SXOa+j/BCKV\niFRoz2vuJ4zMLAGqxLGsC7qfNkXB9kEg9X8Y41Aadm6hgZqjYCoGum2vICgHyp8n\n0oKBDyPup+DNQaEreHruupRSBgv7AxAVzmkmGXDSXNTZh8PNN921qcT1KxsZKmy/\n9Y2xtWlerknDV1n1fxdLy5AV4hxgpKfijCYvxAMaN3w3/JSIx6vdsOEz7LEVC0u4\nm4WaLCgNQRdb04Up3A8P1N+UuGh/iP5jjw7ld2raYQKBgQD/hpRAUZZvuznZbrmW\ntDV2Lv92Ffe5l+Cpp5AEqEe3A5gwXzXTaPaGRy7KyqJt+k1Y9DV5zoWwV5K2/3J+\nYn+PYNNo8iPKx6U15po3SQCiOKBbgs6nAQx71EzQ+YO5F6SNEwIdkty3PIc8Mk/4\nLPBRTdvDyV0hNkYepr/nFcOAAwKBgQD990DpXcKqizddZKC378ZHGUi2YwLGTHRt\n6WEHCnjvlkclR2hlUW+Y4ceV2zco7stv90WFAtiCeq012WqKGbh9J3yRq7EWuiMO\n5FpMrEFRY/wNiG5vIIdxpgH+RNfPeEKfYgvx4c2/YEScihQWO7NaHVNodrIcQSBp\n4YfQb7S5WwKBgQCiC12O4G6vkqMgEYjeWpAgz7Mv1sSPzRIrZNj/Kxy3oi7sViTT\nWhgklZXGAvU5G2fbxpr3ERJU/2RKavrXzW0ppvTK8+vg1/Uclo4sCz68oX6IKg8V\nd6PMD5lbWTDAu46d7HUF/jG8fkUg1qNCNnV8igyZP+SwgDO9km/Wg0XEswKBgQC2\nVWoZIeO9Ja5eMvzgkhk8un5l07gOPp3ou4GZ2H7zJGV38kiVVV5V2OO+R2DW1nrg\nrBsRX/Wp2AG7g5jmBYla8ZqRyz6dHo5FBtV97r4GfU5dOPJwfl4/zfvoXezDW4gZ\nff8tbfyVxbv813WMcNhXfm5/tZgyiN+IpQ8pKsoJuQKBgB02ku4a2EYA2L4ov827\nqWZ9Keg5fFWAVQsPu66yhoNG56nhTPUzKEcLrNuglnOFb7a/tB+MXVmCbRssOXRV\nK2wvSBEJ0hhXcnrU4lag6hCxS7q0jnHiNXt0hRveWwY0hVqobVmV2Q7eG2yk13dl\nBSEfReMqcXmmGcDc16vtWbIs\n-----END PRIVATE KEY-----\n",
+  "client_email": "sarthak-margdarshak@sarthak-margdarshak.iam.gserviceaccount.com",
+  "client_id": "108564205650335788383",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sarthak-margdarshak%40sarthak-margdarshak.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
