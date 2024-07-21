@@ -4,25 +4,19 @@
     "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
     "slug": "sarthak-student-app",
     "owner": "sarthakmargdarshak",
-    "owner": "sarthakmargdarshak",
     "version": "1.0.0",
     "platforms": ["ios", "android", "web"],
     "githubUrl": "https://github.com/sarthak-margdarshak/sarthak-student-app",
     "orientation": "portrait",
     "icon": "./assets/favicon/favicon-1024x1024.png",
     "userInterfaceStyle": "automatic",
-    "icon": "./assets/favicon/favicon-1024x1024.png",
-    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash/splash-192x192.png",
       "image": "./assets/splash/splash-192x192.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "userInterfaceStyle": "automatic",
-      "icon": "./assets/favicon/favicon-1024x1024.png",
       "userInterfaceStyle": "automatic",
       "icon": "./assets/favicon/favicon-1024x1024.png",
       "adaptiveIcon": {
