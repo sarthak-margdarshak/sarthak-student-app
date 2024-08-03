@@ -21,8 +21,8 @@ export default function LoadingScreen() {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        height: Dimensions.get("window").height,
-        width: Dimensions.get("window").width,
+        height: Dimensions.get("screen").height,
+        width: Dimensions.get("screen").width,
         backgroundColor: theme.colors.background,
       }}
     >

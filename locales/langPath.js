@@ -37,6 +37,13 @@ const langPath = {
             dark: `section_dashboard_settings_td`,
           },
         },
+        ProfileFragments: {
+          pers_info: `section_dashboard_profile_personalInfo`,
+          fullName: `section_dashboard_profile_fullName`,
+          contactInfo: `section_dashboard_profile_contactInfo`,
+          emailId: `section_dashboard_profile_emailID`,
+          yourOrders: `section_dashboard_profile_yourOrders`,
+        },
         purchased: {
           noData: {
             title: `section_dashboard_purchased_title`,
@@ -46,6 +53,9 @@ const langPath = {
         exploreMockBtn: `section_dashboard_exploreMockBtn`,
       },
     },
+  },
+  auth: {
+    logOut: `auth_logOut`,
   },
 };
 

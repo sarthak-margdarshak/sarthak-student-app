@@ -15,7 +15,15 @@ const en = {
 
   app_dashboard_preferences_title: `Preferences`,
 
+  auth_logOut: `Log Out`,
+
   section_dashboard_exploreMockBtn: `Explore Mock Test Series`,
+
+  section_dashboard_profile_personalInfo: `Personal Information`,
+  section_dashboard_profile_fullName: `Full Name`,
+  section_dashboard_profile_contactInfo: `Contact Information`,
+  section_dashboard_profile_emailID: `Email ID`,
+  section_dashboard_profile_yourOrders: `Your Orders`,
 
   section_dashboard_purchased_title: `No Data`,
   section_dashboard_purchased_description: `There is no purchased mock test series by you.`,

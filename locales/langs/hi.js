@@ -15,7 +15,15 @@ const hi = {
 
   app_dashboard_preferences_title: `प्राथमिकताएँ`,
 
+  auth_logOut: `लॉग आउट`,
+
   section_dashboard_exploreMockBtn: `मॉक टेस्ट सीरीज देखें`,
+
+  section_dashboard_profile_personalInfo: `निजी जानकारी`,
+  section_dashboard_profile_fullName: `पूरा नाम`,
+  section_dashboard_profile_contactInfo: `संपर्क जानकारी`,
+  section_dashboard_profile_emailID: `ई-मेल`,
+  section_dashboard_profile_yourOrders: `तुम्हारे ऑर्डर`,
 
   section_dashboard_purchased_title: `कोई डाटा नहीं`,
   section_dashboard_purchased_description: `आपके द्वारा कोई मॉक टेस्ट सीरीज़ नहीं खरीदी गई है।`,

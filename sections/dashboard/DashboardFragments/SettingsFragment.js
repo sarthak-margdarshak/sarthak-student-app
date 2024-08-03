@@ -19,13 +19,13 @@ import { useAuthContext } from "../../../auth/useAuthContext";
 import { useThemeContext } from "../../../theme/useThemeContext";
 
 export default function SettingsFragment() {
-  const { updateTheme } = useThemeContext();
+  const { customTheme, updateTheme } = useThemeContext();
   const theme = useTheme();
   const { translate, allLangs, currentLang, onChangeLang } = useLocales();
   const { user } = useAuthContext();
 
   const [preferenceLanguage, setPreferenceLanguage] = useState(currentLang);
-  const [preferenceTheme, setPreferenceTheme] = useState("system_default");
+  const [preferenceTheme, setPreferenceTheme] = useState(customTheme);
 
   return (
     <ScrollView
@@ -47,7 +47,6 @@ export default function SettingsFragment() {
               .language
           )}
           id="1"
-          theme={theme}
           left={() => <List.Icon icon="alphabet-greek" />}
           style={{ borderRadius: 10, paddingLeft: 5 }}
         >
@@ -64,7 +63,6 @@ export default function SettingsFragment() {
                 label={lang.label}
                 value={lang.value}
                 key={lang.value}
-                theme={theme}
               />
             ))}
           </RadioButton.Group>
@@ -75,7 +73,6 @@ export default function SettingsFragment() {
             langPath.section.dashboard.dashboardFragments.settingsFragments
               .theme
           )}
-          theme={theme}
           id="2"
           left={() => <List.Icon icon="theme-light-dark" />}
           style={{ borderRadius: 10, paddingLeft: 5 }}
@@ -93,7 +90,6 @@ export default function SettingsFragment() {
                 langPath.section.dashboard.dashboardFragments.settingsFragments
                   .themeType.system_default
               )}
-              theme={theme}
               value="system_default"
             />
             <RadioButton.Item
@@ -101,7 +97,6 @@ export default function SettingsFragment() {
                 langPath.section.dashboard.dashboardFragments.settingsFragments
                   .themeType.light
               )}
-              theme={theme}
               value="light"
             />
             <RadioButton.Item
@@ -109,13 +104,12 @@ export default function SettingsFragment() {
                 langPath.section.dashboard.dashboardFragments.settingsFragments
                   .themeType.dark
               )}
-              theme={theme}
               value="dark"
             />
           </RadioButton.Group>
         </List.Accordion>
 
-        <Divider style={{ marginTop: 5 }} theme={theme} />
+        <Divider style={{ marginTop: 5 }} />
 
         <List.Item
           left={() => <List.Icon icon="star-outline" />}
@@ -124,8 +118,7 @@ export default function SettingsFragment() {
             langPath.section.dashboard.dashboardFragments.settingsFragments
               .rate_app
           )}
-          theme={theme}
-          onPress={() => console.log("Rate")}
+          onPress={() => console.log("Rate")} // TODO: Provide the link of rating the app
           style={{ paddingLeft: 5, marginTop: 5 }}
         />
 
@@ -136,7 +129,6 @@ export default function SettingsFragment() {
             langPath.section.dashboard.dashboardFragments.settingsFragments
               .send_feedback
           )}
-          theme={theme}
           onPress={() =>
             Linking.openURL("https://www.sarthakmargdarshak.in/contact-us")
           }
@@ -150,7 +142,6 @@ export default function SettingsFragment() {
             langPath.section.dashboard.dashboardFragments.settingsFragments
               .help_center
           )}
-          theme={theme}
           onPress={() =>
             Linking.openURL("https://www.sarthakmargdarshak.in/faqs")
           }
@@ -164,7 +155,6 @@ export default function SettingsFragment() {
             langPath.section.dashboard.dashboardFragments.settingsFragments
               .about
           )}
-          theme={theme}
           onPress={() =>
             Linking.openURL("https://www.sarthakmargdarshak.in/about-us")
           }

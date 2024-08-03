@@ -15,9 +15,11 @@ import { Button, Divider, List, Text, TextInput } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { router } from "expo-router";
 import { PATH_DASHBOARD } from "../../../routes/paths";
+import { langPath, useLocales } from "../../../locales";
 
 export default function ProfileFragment() {
   const { user, logout } = useAuthContext();
+  const { translate } = useLocales();
 
   return (
     <ScrollView
@@ -39,7 +41,10 @@ export default function ProfileFragment() {
         }}
         variant="labelLarge"
       >
-        Personal Information
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .pers_info
+        )}
       </Text>
 
       <Text
@@ -51,7 +56,10 @@ export default function ProfileFragment() {
         }}
         variant="labelMedium"
       >
-        Full Name
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .fullName
+        )}
       </Text>
 
       <TextInput
@@ -83,7 +91,10 @@ export default function ProfileFragment() {
         }}
         variant="labelLarge"
       >
-        Contact Information
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .contactInfo
+        )}
       </Text>
 
       <Text
@@ -95,7 +106,9 @@ export default function ProfileFragment() {
         }}
         variant="labelMedium"
       >
-        Email ID
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments.emailId
+        )}
       </Text>
 
       <TextInput
@@ -112,32 +125,6 @@ export default function ProfileFragment() {
         keyboardType="email-address"
       />
 
-      <Text
-        style={{
-          marginTop: 5,
-          marginBottom: 5,
-          marginLeft: 15,
-          marginRight: 15,
-        }}
-        variant="labelMedium"
-      >
-        Phone
-      </Text>
-
-      <TextInput
-        style={{
-          marginTop: 5,
-          marginBottom: 5,
-          marginLeft: 15,
-          marginRight: 15,
-        }}
-        mode="outlined"
-        value={"+91 7645935519"}
-        readOnly
-        left={<TextInput.Icon icon="phone" />}
-        keyboardType="email-address"
-      />
-
       <Divider
         style={{
           marginTop: 5,
@@ -146,14 +133,17 @@ export default function ProfileFragment() {
       />
 
       <List.Item
-        title="Your Orders"
+        title={translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .yourOrders
+        )}
         left={(props) => <List.Icon {...props} icon="cart-arrow-up" />}
         right={() => <List.Icon icon="chevron-right" />}
         onPress={() => router.push(PATH_DASHBOARD.orders.list)}
       />
 
       <List.Item
-        title="Preferences"
+        title={translate(langPath.app.dashboard.preferences.title)}
         left={(props) => <List.Icon {...props} icon="cog" />}
         right={() => <List.Icon icon="chevron-right" />}
         onPress={() => router.push(PATH_DASHBOARD.preferences)}
@@ -171,7 +161,7 @@ export default function ProfileFragment() {
         mode="elevated"
         onPress={logout}
       >
-        Log Out
+        {translate(langPath.auth.logOut)}
       </Button>
     </ScrollView>
   );
