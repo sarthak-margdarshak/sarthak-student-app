@@ -17,6 +17,7 @@ import axios from "axios";
 import { NINJAS_API } from "@env";
 import { View } from "react-native";
 import greetingTime from "greeting-time";
+import { useLocales } from "../../locales";
 
 const categries_english = [
   "courage",
@@ -55,6 +56,8 @@ const options_hindi = {
 
 export default function MotivationBox() {
   const { user } = useAuthContext();
+  const { currentLang } = useLocales();
+
   const [quote, setQuote] = useState(
     "Dream no small dreams for they have no power to move the hearts of men."
   );
@@ -80,9 +83,12 @@ export default function MotivationBox() {
         console.error("Error", error);
       }
     };
-    fetch_hindi();
-    // fetch_english();
-  }, [user]);
+    if (currentLang === "hi") {
+      fetch_hindi();
+    } else {
+      fetch_english();
+    }
+  }, [user, currentLang]);
 
   return (
     <Card>

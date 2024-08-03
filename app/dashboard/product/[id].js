@@ -14,22 +14,28 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
 import {
   Dimensions,
-  ImageBackground,
   RefreshControl,
   ScrollView,
   ToastAndroid,
   View,
 } from "react-native";
-import { Button, Divider, Surface, Text, useTheme } from "react-native-paper";
+import {
+  Button,
+  Chip,
+  Divider,
+  Surface,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import {
   appwriteDatabases,
   appwriteStorage,
 } from "../../../auth/AppwriteContext";
 import { APPWRITE_API } from "../../../config-global";
-import { LinearGradient } from "expo-linear-gradient";
 import { Skeleton } from "react-native-skeletons";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { PATH_DASHBOARD } from "../../../routes/paths";
+import Carousel from "../../../components/Carousel";
 
 export default function productView() {
   const theme = useTheme();
@@ -40,9 +46,6 @@ export default function productView() {
   const [product, setProduct] = useState({});
   const [addedToCart, setAddedToCart] = useState(false);
   const [purchased, setPurchased] = useState(false);
-  const [currPic, setCurrPic] = useState(
-    "https://api.sarthakmargdarshak.in/v1/storage/buckets/66831750aac03d4d2f6e/files/6685c28dcbdbebdf0c91/view?project=6639f48744439b98db71&mode=admin"
-  );
 
   const fetchData = async () => {
     setLoading(true);
@@ -64,7 +67,6 @@ export default function productView() {
           undefined
         ).href;
       }
-      setCurrPic(x?.images[0]);
 
       for (let j in x.standards) {
         x.standards[j] = await appwriteDatabases.getDocument(
@@ -149,28 +151,22 @@ export default function productView() {
         {loading ? (
           <View>
             <Skeleton
-              height={300}
+              height={(Dimensions.get("window").width * 3) / 4}
               style={{ marginBottom: 10 }}
               color={theme.colors.inverseOnSurface}
             />
-
-            <Divider bold style={{ margin: 15 }} />
 
             <Skeleton
               height={100}
               style={{ marginBottom: 10 }}
-              color={theme.colors.inverseOnSurface}
+              color={theme.colors.infoContainer}
             />
-
-            <Divider bold style={{ margin: 15 }} />
 
             <Skeleton
               height={80}
               style={{ marginBottom: 10 }}
               color={theme.colors.inverseOnSurface}
             />
-
-            <Divider bold style={{ margin: 15 }} />
 
             <Skeleton
               height={300}
@@ -180,45 +176,7 @@ export default function productView() {
           </View>
         ) : (
           <View>
-            <Surface style={{ borderRadius: 15, padding: 5, margin: 5 }}>
-              <ImageBackground
-                style={{
-                  objectFit: "cover",
-                  width: "100%",
-                  height: 250,
-                }}
-                source={{ uri: currPic }}
-                alt="background"
-              />
-              <ScrollView horizontal>
-                {product?.images?.map((img) => (
-                  <View onTouchStart={() => setCurrPic(img)} key={img}>
-                    <ImageBackground
-                      style={{
-                        objectFit: "cover",
-                        width: img === currPic ? 70 : 60,
-                        height: img === currPic ? 50 : 40,
-                        margin: 5,
-                        borderStyle: "solid",
-                        borderWidth: img === currPic ? 1 : 0,
-                        borderColor: theme.colors.primary,
-                      }}
-                      source={{ uri: img }}
-                      alt="background"
-                    >
-                      {img !== currPic && (
-                        <LinearGradient
-                          colors={[theme.colors.inverseSurface, "#00000000"]}
-                          style={{ height: "100%", width: "100%" }}
-                        />
-                      )}
-                    </ImageBackground>
-                  </View>
-                ))}
-              </ScrollView>
-            </Surface>
-
-            <Divider />
+            <Carousel imagesList={product?.images} />
 
             <Surface
               style={{
@@ -247,15 +205,11 @@ export default function productView() {
               </Text>
             </Surface>
 
-            <Divider />
-
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 padding: 15,
-                marginTop: 5,
-                marginBottom: 5,
               }}
             >
               <View>
@@ -275,7 +229,7 @@ export default function productView() {
                 </Text>
               </View>
 
-              <View style={{ justifyContent: "center" }}>
+              <View style={{ justifyContent: "space-evenly", width: 200 }}>
                 {purchased && (
                   <Button mode="contained" icon="test-tube" onPress={attempt}>
                     Attempt
@@ -300,67 +254,93 @@ export default function productView() {
               </View>
             </View>
 
-            <Divider />
-
             <Surface style={{ borderRadius: 15, padding: 5, margin: 5 }}>
               <Text
                 variant="titleLarge"
                 style={{ margin: 5, marginTop: 15, fontWeight: "bold" }}
               >
-                Mock Test Series Details -
+                Mock Highlights
               </Text>
 
-              <Divider style={{ margin: 10 }} />
+              <Divider bold />
 
-              <View style={{ flexDirection: "row", margin: 5 }}>
-                <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                  {"Standard - "}
-                </Text>
+              <View
+                style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
+              >
+                <Chip
+                  style={{
+                    margin: 2,
+                    backgroundColor: theme.colors.errorContainer,
+                  }}
+                >
+                  {product?.mockTestIds?.length + " Mock Tests Available"}
+                </Chip>
+              </View>
+
+              {product?.standards?.length !== 0 && <Divider />}
+
+              <View
+                style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
+              >
                 {product?.standards?.map((standard) => (
-                  <Text key={standard?.$id} variant="titleSmall">
-                    {standard?.name + ", "}
-                  </Text>
+                  <Chip key={standard?.$id} style={{ margin: 2 }}>
+                    {standard?.name}
+                  </Chip>
                 ))}
               </View>
 
-              <View style={{ flexDirection: "row", margin: 5 }}>
-                <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                  {"Subjects - "}
-                </Text>
+              {product?.subjects?.length !== 0 && <Divider />}
+
+              <View
+                style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
+              >
                 {product?.subjects?.map((subject) => (
-                  <Text key={subject?.$id} variant="titleSmall">
-                    {subject?.name + ", "}
-                  </Text>
+                  <Chip
+                    key={subject?.$id}
+                    style={{
+                      margin: 2,
+                      backgroundColor: theme.colors.warningContainer,
+                    }}
+                  >
+                    {subject?.name}
+                  </Chip>
                 ))}
               </View>
 
-              <View style={{ flexDirection: "row", margin: 5 }}>
-                <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                  {"Chapters - "}
-                </Text>
+              {product?.chapters?.length !== 0 && <Divider />}
+
+              <View
+                style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
+              >
                 {product?.chapters?.map((chapter) => (
-                  <Text key={chapter?.$id} variant="titleSmall">
-                    {chapter?.name + ", "}
-                  </Text>
+                  <Chip
+                    key={chapter?.$id}
+                    style={{
+                      margin: 2,
+                      backgroundColor: theme.colors.inversePrimary,
+                    }}
+                  >
+                    {chapter?.name}
+                  </Chip>
                 ))}
               </View>
 
-              <View style={{ flexDirection: "row", margin: 5 }}>
-                <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                  {"Concepts - "}
-                </Text>
+              {product?.concepts?.length !== 0 && <Divider />}
+
+              <View
+                style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
+              >
                 {product?.concepts?.map((concept) => (
-                  <Text key={concept?.$id} variant="titleSmall">
-                    {concept?.name + ", "}
-                  </Text>
+                  <Chip
+                    key={concept?.$id}
+                    style={{
+                      margin: 2,
+                      backgroundColor: theme.colors.infoContainer,
+                    }}
+                  >
+                    {concept?.name}
+                  </Chip>
                 ))}
-              </View>
-
-              <View style={{ flexDirection: "row", margin: 5 }}>
-                <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                  {"Mock Tests Count - "}
-                </Text>
-                <Text variant="titleSmall">{product?.mockTestIds?.length}</Text>
               </View>
             </Surface>
           </View>

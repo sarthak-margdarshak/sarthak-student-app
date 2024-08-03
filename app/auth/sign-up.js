@@ -187,7 +187,9 @@ export default function SignUpPage() {
                 marginBottom: 40,
                 marginRight: 20,
                 marginTop: 40,
+                borderRadius: 10,
               }}
+              icon="account-plus-outline"
               mode="elevated"
               buttonColor={theme.colors.primary}
               textColor={theme.colors.onPrimary}

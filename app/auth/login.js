@@ -176,7 +176,9 @@ export default function LogInPage() {
                 marginBottom: 40,
                 marginRight: 20,
                 marginTop: 40,
+                borderRadius: 10,
               }}
+              icon="login"
               mode="elevated"
               buttonColor={theme.colors.primary}
               textColor={theme.colors.onPrimary}

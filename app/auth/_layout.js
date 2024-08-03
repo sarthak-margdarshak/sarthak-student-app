@@ -14,11 +14,21 @@ import { Redirect, Stack, useGlobalSearchParams } from "expo-router";
 import { useAuthContext } from "../../auth/useAuthContext";
 import { useTheme } from "react-native-paper";
 import LoadingScreen from "../../components/LoadingScreen";
+import { useColorScheme } from "react-native";
 
 export default function AuthLayout() {
   const { isAuthenticated, isInitiated, user } = useAuthContext();
   const { redirect } = useGlobalSearchParams();
   const theme = useTheme();
+  const defaultColorScheme = useColorScheme();
+
+  if (defaultColorScheme === "dark") {
+    theme.colors = darkTheme.colors;
+    theme.dark = true;
+  } else {
+    theme.colors = lightTheme.colors;
+    theme.dark = false;
+  }
 
   if (!isInitiated) {
     return <LoadingScreen />;

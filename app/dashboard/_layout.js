@@ -12,15 +12,40 @@
 
 import { Stack } from "expo-router";
 import AuthGuard from "../../auth/AuthGuard";
-import { useTheme } from "react-native-paper";
+import { PaperProvider, useTheme } from "react-native-paper";
 import NetInfo from "@react-native-community/netinfo";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../auth/useAuthContext";
-import { ToastAndroid } from "react-native";
+import { ToastAndroid, useColorScheme } from "react-native";
+import { langPath, useLocales } from "../../locales";
+import { useThemeContext } from "../../theme/useThemeContext";
+import { darkTheme } from "../../theme/darkTheme";
+import { lightTheme } from "../../theme/lightTheme";
+import { StatusBar } from "expo-status-bar";
 
 export default function DashboardLayout() {
   const theme = useTheme();
+  const { customTheme } = useThemeContext();
+  const defaultColorScheme = useColorScheme();
+  const { translate } = useLocales();
   const { user } = useAuthContext();
+
+  if (customTheme === "dark") {
+    theme.colors = darkTheme.colors;
+    theme.dark = true;
+  } else if (customTheme === "light") {
+    theme.colors = lightTheme.colors;
+    theme.dark = false;
+  } else {
+    if (defaultColorScheme === "dark") {
+      theme.colors = darkTheme.colors;
+      theme.dark = true;
+    } else {
+      theme.colors = lightTheme.colors;
+      theme.dark = false;
+    }
+  }
+
   const [isConnected, setConnected] = useState(true);
 
   useEffect(() => {
@@ -37,26 +62,29 @@ export default function DashboardLayout() {
   }, [user]);
 
   return (
-    <AuthGuard>
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.colors.primaryContainer,
-          },
-          headerTintColor: theme.colors.onPrimaryContainer,
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerShadowVisible: true,
-        }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{
-            title: "Sarthak Margdarshak",
+    <PaperProvider theme={theme}>
+      <StatusBar style={theme.dark ? "light" : "dark"} />
+      <AuthGuard>
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: theme.colors.primaryContainer,
+            },
+            headerTintColor: theme.colors.onPrimaryContainer,
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+            headerShadowVisible: true,
           }}
-        />
-      </Stack>
-    </AuthGuard>
+        >
+          <Stack.Screen
+            name="index"
+            options={{
+              title: translate(langPath.app.dashboard.layout.stackTitle),
+            }}
+          />
+        </Stack>
+      </AuthGuard>
+    </PaperProvider>
   );
 }

@@ -20,7 +20,7 @@ import {
 } from "react-native";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import ProductMediumComponentLoading from "../mockSeries/ProductMediumComponentLoading";
-import { Button, Surface, Text, useTheme } from "react-native-paper";
+import { Button, Text, useTheme } from "react-native-paper";
 import { router } from "expo-router";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 import ProductMediumComponent from "../mockSeries/ProductMediumComponent";
@@ -29,10 +29,14 @@ import {
   appwriteStorage,
 } from "../../../auth/AppwriteContext";
 import { APPWRITE_API } from "../../../config-global";
+import { NoDataFoundDark } from "../../../components/SVG/NoDataFoundDark";
+import { NoDataFoundLight } from "../../../components/SVG/NoDataFoundLight";
+import { langPath, useLocales } from "../../../locales";
 
 export default function PurchasedProductFragment() {
   const { studentProfile } = useAuthContext();
   const theme = useTheme();
+  const { translate } = useLocales();
 
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
@@ -105,32 +109,47 @@ export default function PurchasedProductFragment() {
       ) : (
         <View>
           {products.length === 0 ? (
-            <Surface style={{ borderRadius: 15 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 5,
-                  padding: 5,
-                }}
-              >
-                <View>
-                  <Text variant="headlineSmall" style={{ fontWeight: "bold" }}>
-                    No series
-                  </Text>
-                </View>
+            <View
+              style={{
+                height: 700,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {theme.dark ? <NoDataFoundDark /> : <NoDataFoundLight />}
 
-                <View style={{ justifyContent: "center" }}>
-                  <Button
-                    mode="contained"
-                    icon="file-find"
-                    onPress={() => router.push(PATH_DASHBOARD.product.list)}
-                  >
-                    Explore Mock Series
-                  </Button>
-                </View>
-              </View>
-            </Surface>
+              <Text
+                variant="bodyLarge"
+                style={{ color: theme.colors.onSurfaceDisabled, marginTop: 50 }}
+              >
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.purchased.noData
+                    .title
+                )}
+              </Text>
+
+              <Text
+                variant="bodySmall"
+                style={{ color: theme.colors.onSurfaceDisabled, marginTop: 10 }}
+              >
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.purchased.noData
+                    .description
+                )}
+              </Text>
+
+              <Button
+                mode="elevated"
+                icon="file-find"
+                onPress={() => router.push(PATH_DASHBOARD.product.list)}
+                style={{ marginTop: 40, borderRadius: 10 }}
+              >
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.exploreMockBtn
+                )}
+              </Button>
+            </View>
           ) : (
             <View>
               {products.map((product) => (

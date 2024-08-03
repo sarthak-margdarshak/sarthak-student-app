@@ -11,14 +11,13 @@
  */
 
 import { ScrollView } from "react-native";
-import { Button, Divider, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Divider, List, Text, TextInput } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { router } from "expo-router";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 
 export default function ProfileFragment() {
   const { user, logout } = useAuthContext();
-  const theme = useTheme();
 
   return (
     <ScrollView
@@ -34,7 +33,7 @@ export default function ProfileFragment() {
       <Text
         style={{
           marginTop: 10,
-          marginBottom: 10,
+          marginBottom: 5,
           marginLeft: 10,
           marginRight: 10,
         }}
@@ -54,10 +53,11 @@ export default function ProfileFragment() {
       >
         Full Name
       </Text>
+
       <TextInput
         style={{
           marginTop: 5,
-          marginBottom: 10,
+          marginBottom: 5,
           marginLeft: 15,
           marginRight: 15,
         }}
@@ -69,18 +69,17 @@ export default function ProfileFragment() {
 
       <Divider
         style={{
-          marginTop: 20,
-          marginBottom: 20,
-          marginLeft: 5,
-          marginRight: 5,
+          marginTop: 5,
+          marginBottom: 5,
         }}
       />
+
       <Text
         style={{
           marginTop: 10,
-          marginBottom: 20,
-          marginLeft: 5,
-          marginRight: 5,
+          marginBottom: 5,
+          marginLeft: 10,
+          marginRight: 10,
         }}
         variant="labelLarge"
       >
@@ -98,10 +97,11 @@ export default function ProfileFragment() {
       >
         Email ID
       </Text>
+
       <TextInput
         style={{
           marginTop: 5,
-          marginBottom: 10,
+          marginBottom: 5,
           marginLeft: 15,
           marginRight: 15,
         }}
@@ -112,44 +112,63 @@ export default function ProfileFragment() {
         keyboardType="email-address"
       />
 
-      <Button
-        icon="cart-arrow-up"
-        mode="outlined"
-        onPress={() => router.push(PATH_DASHBOARD.orders.list)}
+      <Text
         style={{
-          marginLeft: 10,
-          marginBottom: 20,
-          marginRight: 10,
-          marginTop: 20,
+          marginTop: 5,
+          marginBottom: 5,
+          marginLeft: 15,
+          marginRight: 15,
         }}
+        variant="labelMedium"
       >
-        Your Orders
-      </Button>
+        Phone
+      </Text>
 
-      <Button
-        icon="cog"
-        mode="outlined"
-        onPress={() => router.push(PATH_DASHBOARD.preferences)}
+      <TextInput
         style={{
-          marginLeft: 10,
-          marginBottom: 20,
-          marginRight: 10,
-          marginTop: 20,
+          marginTop: 5,
+          marginBottom: 5,
+          marginLeft: 15,
+          marginRight: 15,
         }}
-      >
-        Your Preferences
-      </Button>
+        mode="outlined"
+        value={"+91 7645935519"}
+        readOnly
+        left={<TextInput.Icon icon="phone" />}
+        keyboardType="email-address"
+      />
+
+      <Divider
+        style={{
+          marginTop: 5,
+          marginBottom: 5,
+        }}
+      />
+
+      <List.Item
+        title="Your Orders"
+        left={(props) => <List.Icon {...props} icon="cart-arrow-up" />}
+        right={() => <List.Icon icon="chevron-right" />}
+        onPress={() => router.push(PATH_DASHBOARD.orders.list)}
+      />
+
+      <List.Item
+        title="Preferences"
+        left={(props) => <List.Icon {...props} icon="cog" />}
+        right={() => <List.Icon icon="chevron-right" />}
+        onPress={() => router.push(PATH_DASHBOARD.preferences)}
+        style={{ borderRadius: 10 }}
+      />
 
       <Button
         style={{
           marginLeft: 20,
-          marginBottom: 40,
           marginRight: 20,
-          marginTop: 40,
+          marginTop: 10,
+          borderRadius: 10,
         }}
+        icon="logout"
         mode="elevated"
-        buttonColor={theme.colors.primary}
-        textColor={theme.colors.onPrimary}
         onPress={logout}
       >
         Log Out
