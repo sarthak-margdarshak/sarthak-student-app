@@ -253,7 +253,7 @@ export default function ChapterWiseComponent() {
                     }
                   />
                 )}
-                {chaptersList.length >= 9 && (
+                {/* {chaptersList.length >= 9 && (
                   <FAB
                     icon="arrow-right-drop-circle"
                     style={{
@@ -266,7 +266,7 @@ export default function ChapterWiseComponent() {
                       router.push(PATH_DASHBOARD.category.chapters)
                     }
                   />
-                )}
+                )} */}
               </Col>
             </Row>
           )}

@@ -253,7 +253,7 @@ export default function ClasswiseComponent() {
                     }
                   />
                 )}
-                {standardsList.length >= 9 && (
+                {/* {standardsList.length >= 9 && (
                   <FAB
                     icon="arrow-right-drop-circle"
                     style={{
@@ -266,7 +266,7 @@ export default function ClasswiseComponent() {
                       router.push(PATH_DASHBOARD.category.standards)
                     }
                   />
-                )}
+                )} */}
               </Col>
             </Row>
           )}

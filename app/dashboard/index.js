@@ -24,6 +24,7 @@ import { useAuthContext } from "../../auth/useAuthContext";
 export default function DashboardPage() {
   const { pagesIndex } = useLocalSearchParams();
   const { studentProfile } = useAuthContext();
+
   const [index, setIndex] = useState(
     pagesIndex === undefined ? 0 : parseInt(pagesIndex)
   );

@@ -10,17 +10,15 @@
  *
  */
 
-import { Slot } from "expo-router";
-import { AuthProvider } from "../auth/AppwriteContext";
-import "../locales/i18n";
-import { ThemeProvider } from "../theme/ThemeContext";
+export const allLangs = [
+  {
+    label: "English",
+    value: "en",
+  },
+  {
+    label: "हिंदी",
+    value: "hi",
+  },
+];
 
-export default function AppLayout() {
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Slot />
-      </AuthProvider>
-    </ThemeProvider>
-  );
-}
+export const defaultLang = allLangs[0]; // English

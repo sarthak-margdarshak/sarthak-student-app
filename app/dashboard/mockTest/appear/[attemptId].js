@@ -399,6 +399,7 @@ export default function AppearMockTest() {
                   mode="contained"
                   onPress={() => submitTest("user")}
                   disabled={testPage !== 1}
+                  style={{ borderRadius: 10 }}
                 >
                   SUBMIT TEST
                 </Button>
@@ -570,6 +571,7 @@ export default function AppearMockTest() {
                       icon="clock-start"
                       mode="contained-tonal"
                       onPress={startTest}
+                      style={{ borderRadius: 10 }}
                     >
                       {attempt.status === "in_progress"
                         ? "RESUME TEST"
@@ -593,6 +595,7 @@ export default function AppearMockTest() {
                       mode="elevated"
                       disabled={currQuestionIndex === 0}
                       onPress={previousQuestion}
+                      style={{ borderRadius: 10 }}
                     >
                       PREVIOUS
                     </Button>
@@ -606,6 +609,7 @@ export default function AppearMockTest() {
                       disabled={
                         currQuestionIndex === mockTest?.questions?.length - 1
                       }
+                      style={{ borderRadius: 10 }}
                     >
                       MARK & NEXT
                     </Button>
@@ -619,6 +623,7 @@ export default function AppearMockTest() {
                       disabled={
                         currQuestionIndex === mockTest?.questions?.length - 1
                       }
+                      style={{ borderRadius: 10 }}
                     >
                       NEXT
                     </Button>
@@ -671,7 +676,7 @@ export default function AppearMockTest() {
                   {arrChunk.map((currQuestionStatus, index2) => (
                     <Button
                       mode="contained"
-                      style={{ width: 10 }}
+                      style={{ width: 10, borderRadius: 10 }}
                       key={index + "_" + index2}
                       buttonColor={
                         currQuestionStatus === "answered"
@@ -733,10 +738,16 @@ export default function AppearMockTest() {
                 setBackDialogVisible(false);
                 navigation.dispatch(backAction);
               }}
+              style={{ borderRadius: 10 }}
             >
               SURE
             </Button>
-            <Button onPress={() => setBackDialogVisible(false)}>DISMISS</Button>
+            <Button
+              style={{ borderRadius: 10 }}
+              onPress={() => setBackDialogVisible(false)}
+            >
+              DISMISS
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

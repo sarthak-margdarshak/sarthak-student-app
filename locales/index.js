@@ -10,17 +10,9 @@
  *
  */
 
-import { Slot } from "expo-router";
-import { AuthProvider } from "../auth/AppwriteContext";
-import "../locales/i18n";
-import { ThemeProvider } from "../theme/ThemeContext";
+// EXPORT ---------------------------------------------------------------
 
-export default function AppLayout() {
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Slot />
-      </AuthProvider>
-    </ThemeProvider>
-  );
-}
+export * from "./config-lang";
+
+export { default as useLocales } from "./useLocales";
+export { default as langPath } from "./langPath";

@@ -253,7 +253,7 @@ export default function SubjectWiseComponent() {
                     }
                   />
                 )}
-                {subjectsList.length >= 9 && (
+                {/* {subjectsList.length >= 9 && (
                   <FAB
                     icon="arrow-right-drop-circle"
                     style={{
@@ -266,7 +266,7 @@ export default function SubjectWiseComponent() {
                       router.push(PATH_DASHBOARD.category.subjects)
                     }
                   />
-                )}
+                )} */}
               </Col>
             </Row>
           )}

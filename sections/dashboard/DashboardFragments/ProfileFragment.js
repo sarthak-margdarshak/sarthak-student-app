@@ -11,14 +11,15 @@
  */
 
 import { ScrollView } from "react-native";
-import { Button, Divider, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Divider, List, Text, TextInput } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { router } from "expo-router";
 import { PATH_DASHBOARD } from "../../../routes/paths";
+import { langPath, useLocales } from "../../../locales";
 
 export default function ProfileFragment() {
   const { user, logout } = useAuthContext();
-  const theme = useTheme();
+  const { translate } = useLocales();
 
   return (
     <ScrollView
@@ -34,13 +35,16 @@ export default function ProfileFragment() {
       <Text
         style={{
           marginTop: 10,
-          marginBottom: 10,
+          marginBottom: 5,
           marginLeft: 10,
           marginRight: 10,
         }}
         variant="labelLarge"
       >
-        Personal Information
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .pers_info
+        )}
       </Text>
 
       <Text
@@ -52,12 +56,16 @@ export default function ProfileFragment() {
         }}
         variant="labelMedium"
       >
-        Full Name
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .fullName
+        )}
       </Text>
+
       <TextInput
         style={{
           marginTop: 5,
-          marginBottom: 10,
+          marginBottom: 5,
           marginLeft: 15,
           marginRight: 15,
         }}
@@ -69,22 +77,24 @@ export default function ProfileFragment() {
 
       <Divider
         style={{
-          marginTop: 20,
-          marginBottom: 20,
-          marginLeft: 5,
-          marginRight: 5,
+          marginTop: 5,
+          marginBottom: 5,
         }}
       />
+
       <Text
         style={{
           marginTop: 10,
-          marginBottom: 20,
-          marginLeft: 5,
-          marginRight: 5,
+          marginBottom: 5,
+          marginLeft: 10,
+          marginRight: 10,
         }}
         variant="labelLarge"
       >
-        Contact Information
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .contactInfo
+        )}
       </Text>
 
       <Text
@@ -96,12 +106,15 @@ export default function ProfileFragment() {
         }}
         variant="labelMedium"
       >
-        Email ID
+        {translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments.emailId
+        )}
       </Text>
+
       <TextInput
         style={{
           marginTop: 5,
-          marginBottom: 10,
+          marginBottom: 5,
           marginLeft: 15,
           marginRight: 15,
         }}
@@ -112,47 +125,43 @@ export default function ProfileFragment() {
         keyboardType="email-address"
       />
 
-      <Button
-        icon="cart-arrow-up"
-        mode="outlined"
-        onPress={() => router.push(PATH_DASHBOARD.orders.list)}
+      <Divider
         style={{
-          marginLeft: 10,
-          marginBottom: 20,
-          marginRight: 10,
-          marginTop: 20,
+          marginTop: 5,
+          marginBottom: 5,
         }}
-      >
-        Your Orders
-      </Button>
+      />
 
-      <Button
-        icon="cog"
-        mode="outlined"
+      <List.Item
+        title={translate(
+          langPath.section.dashboard.dashboardFragments.ProfileFragments
+            .yourOrders
+        )}
+        left={(props) => <List.Icon {...props} icon="cart-arrow-up" />}
+        right={() => <List.Icon icon="chevron-right" />}
+        onPress={() => router.push(PATH_DASHBOARD.orders.list)}
+      />
+
+      <List.Item
+        title={translate(langPath.app.dashboard.preferences.title)}
+        left={(props) => <List.Icon {...props} icon="cog" />}
+        right={() => <List.Icon icon="chevron-right" />}
         onPress={() => router.push(PATH_DASHBOARD.preferences)}
-        style={{
-          marginLeft: 10,
-          marginBottom: 20,
-          marginRight: 10,
-          marginTop: 20,
-        }}
-      >
-        Your Preferences
-      </Button>
+        style={{ borderRadius: 10 }}
+      />
 
       <Button
         style={{
           marginLeft: 20,
-          marginBottom: 40,
           marginRight: 20,
-          marginTop: 40,
+          marginTop: 10,
+          borderRadius: 10,
         }}
+        icon="logout"
         mode="elevated"
-        buttonColor={theme.colors.primary}
-        textColor={theme.colors.onPrimary}
         onPress={logout}
       >
-        Log Out
+        {translate(langPath.auth.logOut)}
       </Button>
     </ScrollView>
   );
