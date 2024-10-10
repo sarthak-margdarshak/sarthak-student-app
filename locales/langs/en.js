@@ -13,9 +13,16 @@
 const en = {
   app_dashboard_layout_stackTitle: `Sarthak Margdarshak`,
 
+  app_dashboard_orders_title: `Orders`,
+  app_dashboard_orders_list_empty_title: `No Orders`,
+  app_dashboard_orders_list_empty_desc: `You do not have any orders yet.`,
+
   app_dashboard_preferences_title: `Preferences`,
 
   auth_logOut: `Log Out`,
+
+  section_dashboard_cart_title: `Empty Cart`,
+  section_dashboard_cart_description: `There is no mock test series in your cart.`,
 
   section_dashboard_exploreMockBtn: `Explore Mock Test Series`,
 

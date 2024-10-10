@@ -13,9 +13,16 @@
 const hi = {
   app_dashboard_layout_stackTitle: `सार्थक मार्गदर्शक`,
 
+  app_dashboard_orders_title: `ऑर्डर`,
+  app_dashboard_orders_list_empty_title: `कोई ऑर्डर नहीं`,
+  app_dashboard_orders_list_empty_desc: `आपके पास अभी तक कोई ऑर्डर नहीं है।`,
+
   app_dashboard_preferences_title: `प्राथमिकताएँ`,
 
   auth_logOut: `लॉग आउट`,
+
+  section_dashboard_cart_title: `खाली`,
+  section_dashboard_cart_description: `आपके कार्ट में कोई मॉक टेस्ट सीरीज़ नहीं है।`,
 
   section_dashboard_exploreMockBtn: `मॉक टेस्ट सीरीज देखें`,
 

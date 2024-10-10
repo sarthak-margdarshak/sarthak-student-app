@@ -32,10 +32,12 @@ import { PATH_DASHBOARD } from "../../../routes/paths";
 import { ID } from "appwrite";
 import { EmptyCartDark } from "../../../components/SVG/EmptyCartDark";
 import { EmptyCartLight } from "../../../components/SVG/EmptyCartLight";
+import { langPath, useLocales } from "../../../locales";
 
 export default function CartFragment() {
   const theme = useTheme();
   const { studentProfile, updateCart } = useAuthContext();
+  const { translate } = useLocales();
 
   const [loading, setLoading] = useState(false);
   const [placingOrder, setPlacingOrder] = useState(false);
@@ -153,14 +155,19 @@ export default function CartFragment() {
                 variant="bodyLarge"
                 style={{ color: theme.colors.onSurfaceDisabled, marginTop: 50 }}
               >
-                Empty Cart
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.cart.empty.title
+                )}
               </Text>
 
               <Text
                 variant="bodySmall"
                 style={{ color: theme.colors.onSurfaceDisabled, marginTop: 10 }}
               >
-                There is no mock test series in your cart.
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.cart.empty
+                    .description
+                )}
               </Text>
 
               <Button
@@ -169,7 +176,9 @@ export default function CartFragment() {
                 onPress={() => router.push(PATH_DASHBOARD.product.list)}
                 style={{ marginTop: 40, borderRadius: 10 }}
               >
-                Explore Mock Test Series
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.exploreMockBtn
+                )}
               </Button>
             </View>
           ) : (

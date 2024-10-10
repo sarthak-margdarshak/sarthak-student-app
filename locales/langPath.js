@@ -19,6 +19,15 @@ const langPath = {
       preferences: {
         title: `app_dashboard_preferences_title`,
       },
+      orders: {
+        title: `app_dashboard_orders_title`,
+        list: {
+          empty: {
+            title: `app_dashboard_orders_list_empty_title`,
+            description: `app_dashboard_orders_list_empty_desc`,
+          },
+        },
+      },
     },
   },
   section: {
@@ -48,6 +57,12 @@ const langPath = {
           noData: {
             title: `section_dashboard_purchased_title`,
             description: `section_dashboard_purchased_description`,
+          },
+        },
+        cart: {
+          empty: {
+            title: `section_dashboard_cart_title`,
+            description: `section_dashboard_cart_description`,
           },
         },
         exploreMockBtn: `section_dashboard_exploreMockBtn`,
