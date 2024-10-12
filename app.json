@@ -17,6 +17,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
+      "versionCode": 2,
       "userInterfaceStyle": "automatic",
       "icon": "./assets/favicon/favicon-1024x1024.png",
       "adaptiveIcon": {
