@@ -32,6 +32,8 @@ import { ToastAndroid } from "react-native";
 import { APPWRITE_API } from "../config-global";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
+import { useLocales } from "../locales";
+import { useThemeContext } from "../theme/useThemeContext";
 
 TimeAgo.addDefaultLocale(en);
 export const timeAgo = new TimeAgo("en-US");
@@ -57,6 +59,9 @@ export const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
+  const { currentLang, onChangeLang } = useLocales();
+  const { customTheme, updateTheme } = useThemeContext();
+
   const [user, setUser] = useState(null);
   const [studentProfile, setStudentProfile] = useState(null);
   const [isAuthenticated, setAuthenticated] = useState(false);
@@ -66,6 +71,8 @@ export function AuthProvider({ children }) {
     try {
       const x = await appwriteAccount.get();
       setUser(x);
+      onChangeLang(x.prefs?.lang || currentLang);
+      updateTheme(x.prefs?.theme || customTheme);
       const y = await appwriteDatabases.getDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.students,

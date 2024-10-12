@@ -189,7 +189,9 @@ export default function ForgotPasswordPage() {
                 marginBottom: 40,
                 marginRight: 20,
                 marginTop: 40,
+                borderRadius: 10,
               }}
+              icon="send"
               mode="elevated"
               buttonColor={theme.colors.primary}
               textColor={theme.colors.onPrimary}

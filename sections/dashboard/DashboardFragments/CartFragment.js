@@ -30,10 +30,14 @@ import ProductMediumComponent from "../mockSeries/ProductMediumComponent";
 import { router } from "expo-router";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 import { ID } from "appwrite";
+import { EmptyCartDark } from "../../../components/SVG/EmptyCartDark";
+import { EmptyCartLight } from "../../../components/SVG/EmptyCartLight";
+import { langPath, useLocales } from "../../../locales";
 
 export default function CartFragment() {
   const theme = useTheme();
   const { studentProfile, updateCart } = useAuthContext();
+  const { translate } = useLocales();
 
   const [loading, setLoading] = useState(false);
   const [placingOrder, setPlacingOrder] = useState(false);
@@ -137,32 +141,46 @@ export default function CartFragment() {
       ) : (
         <View>
           {products.length === 0 ? (
-            <Surface style={{ borderRadius: 15 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 5,
-                  padding: 5,
-                }}
-              >
-                <View>
-                  <Text variant="headlineSmall" style={{ fontWeight: "bold" }}>
-                    Empty Cart
-                  </Text>
-                </View>
+            <View
+              style={{
+                height: 700,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {theme.dark ? <EmptyCartDark /> : <EmptyCartLight />}
 
-                <View style={{ justifyContent: "center" }}>
-                  <Button
-                    mode="contained"
-                    icon="file-find"
-                    onPress={() => router.push(PATH_DASHBOARD.product.list)}
-                  >
-                    Explore Mock Series
-                  </Button>
-                </View>
-              </View>
-            </Surface>
+              <Text
+                variant="bodyLarge"
+                style={{ color: theme.colors.onSurfaceDisabled, marginTop: 50 }}
+              >
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.cart.empty.title
+                )}
+              </Text>
+
+              <Text
+                variant="bodySmall"
+                style={{ color: theme.colors.onSurfaceDisabled, marginTop: 10 }}
+              >
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.cart.empty
+                    .description
+                )}
+              </Text>
+
+              <Button
+                mode="elevated"
+                icon="file-find"
+                onPress={() => router.push(PATH_DASHBOARD.product.list)}
+                style={{ marginTop: 40, borderRadius: 10 }}
+              >
+                {translate(
+                  langPath.section.dashboard.dashboardFragments.exploreMockBtn
+                )}
+              </Button>
+            </View>
           ) : (
             <View>
               {products.map((product) => (

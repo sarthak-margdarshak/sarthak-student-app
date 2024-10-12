@@ -10,17 +10,14 @@
  *
  */
 
-import { Slot } from "expo-router";
-import { AuthProvider } from "../auth/AppwriteContext";
-import "../locales/i18n";
-import { ThemeProvider } from "../theme/ThemeContext";
+import { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
 
-export default function AppLayout() {
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Slot />
-      </AuthProvider>
-    </ThemeProvider>
-  );
-}
+export const useThemeContext = () => {
+  const themeContext = useContext(ThemeContext);
+  if (!themeContext)
+    throw new Error(
+      "useThemeContext context must be used inside ThemeProvider"
+    );
+  return themeContext;
+};
