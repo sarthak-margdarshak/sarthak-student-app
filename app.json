@@ -2,10 +2,14 @@
   "expo": {
     "name": "Sarthak Margdarshak",
     "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
-    "slug": "sarthak-student-app",
+    "slug": "sarthak-margdarshak-app",
     "owner": "sarthakmargdarshak",
     "version": "1.0.1",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "githubUrl": "https://github.com/sarthak-margdarshak/sarthak-student-app",
     "orientation": "portrait",
     "icon": "./assets/favicon/favicon-1024x1024.png",
@@ -15,7 +19,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "versionCode": 2,
       "userInterfaceStyle": "automatic",
@@ -43,7 +49,9 @@
           "xxxhdpi": "./assets/splash/splash-1024x1024.png"
         }
       },
-      "permissions": ["android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "com.sarthakmargdarshak.students"
     },
     "web": {
@@ -64,7 +72,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "61bf7ff2-5ea3-4fb8-a087-d71f761a54ed"
+        "projectId": "b9a4266f-8ca3-43c2-ba36-34fe4f3c7f03"
       }
     }
   }
