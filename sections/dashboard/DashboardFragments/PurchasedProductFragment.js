@@ -11,13 +11,7 @@
  */
 
 import { useEffect, useState } from "react";
-import {
-  Dimensions,
-  RefreshControl,
-  ScrollView,
-  ToastAndroid,
-  View,
-} from "react-native";
+import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import ProductMediumComponentLoading from "../mockSeries/ProductMediumComponentLoading";
 import { Button, Text, useTheme } from "react-native-paper";
@@ -82,7 +76,7 @@ export default function PurchasedProductFragment() {
       }
       setProducts(tmpProducts);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.LONG);
+      // ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
     setLoading(false);
   };

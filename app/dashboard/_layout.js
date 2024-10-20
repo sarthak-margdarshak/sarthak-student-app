@@ -16,12 +16,13 @@ import { PaperProvider, useTheme } from "react-native-paper";
 import NetInfo from "@react-native-community/netinfo";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../auth/useAuthContext";
-import { ToastAndroid, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import { langPath, useLocales } from "../../locales";
 import { useThemeContext } from "../../theme/useThemeContext";
 import { darkTheme } from "../../theme/darkTheme";
 import { lightTheme } from "../../theme/lightTheme";
 import { StatusBar } from "expo-status-bar";
+import { useToast } from "react-native-toast-notifications";
 
 export default function DashboardLayout() {
   const theme = useTheme();
@@ -47,12 +48,14 @@ export default function DashboardLayout() {
   }
 
   const [isConnected, setConnected] = useState(true);
+  const toast = useToast();
 
   useEffect(() => {
+    // toast.show("shjkdbcvdjsf");
     const unsubscribe = NetInfo.addEventListener((state) => {
       setConnected(state.isConnected);
       if (!state.isConnected) {
-        ToastAndroid.show("No Internet connection", ToastAndroid.LONG);
+        // ToastAndroid.show("No Internet connection", ToastAndroid.LONG);
       }
     });
 
@@ -67,6 +70,7 @@ export default function DashboardLayout() {
       <AuthGuard>
         <Stack
           screenOptions={{
+            headerTransparent: true,
             headerStyle: {
               backgroundColor: theme.colors.primaryContainer,
             },

@@ -12,13 +12,7 @@
 
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
-import {
-  Dimensions,
-  RefreshControl,
-  ScrollView,
-  ToastAndroid,
-  View,
-} from "react-native";
+import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
 import {
   Button,
   Chip,
@@ -105,7 +99,7 @@ export default function productView() {
       );
       setProduct(x);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.LONG);
+      // ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
     setLoading(false);
   };

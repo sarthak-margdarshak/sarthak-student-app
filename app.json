@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Sarthak Margdarshak",
-    "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
-    "slug": "sarthak-student-app",
+    "name": "Sarthak Margdarshak: Mock Test Guidance Guru",
+    "description": "An app for students to appear mock-test of any competitive exam.",
+    "slug": "sarthak-margdarshak-app",
     "owner": "sarthakmargdarshak",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "platforms": ["ios", "android", "web"],
     "githubUrl": "https://github.com/sarthak-margdarshak/sarthak-student-app",
     "orientation": "portrait",
@@ -13,18 +13,18 @@
     "splash": {
       "image": "./assets/splash/splash-192x192.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFBFF"
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "versionCode": 2,
+      "versionCode": 1,
       "userInterfaceStyle": "automatic",
       "icon": "./assets/favicon/favicon-1024x1024.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon/favicon-1024x1024.png"
       },
       "splash": {
-        "backgroundColor": "#FFFFE0",
+        "backgroundColor": "#FFFBFF",
         "resizeMode": "contain",
         "image": "./assets/splash/splash-192x192.png",
         "mdpi": "./assets/splash/splash-128x128.png",
@@ -43,14 +43,17 @@
           "xxxhdpi": "./assets/splash/splash-1024x1024.png"
         }
       },
-      "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "com.sarthakmargdarshak.students"
+      "package": "com.sarthak.margdarshak.guidance"
     },
     "web": {
+      "name": "Sarthak Margdarshak: Mock Test Guidance Guru",
+      "short_name": "Sarthak",
+      "display": "standalone",
+      "start_url": "/",
       "favicon": "./assets/favicon/favicon-192x192.png",
-      "themeColor": "#FF5630",
-      "backgroundColor": "#FFFFE0",
-      "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
+      "themeColor": "#B62500",
+      "backgroundColor": "#FFFBFF",
+      "description": "An app for students to appear mock-test of any competitive exam.",
       "barStyle": "default",
       "splash": {
         "backgroundColor": "#FFFFE0",
@@ -64,8 +67,22 @@
         "origin": false
       },
       "eas": {
-        "projectId": "61bf7ff2-5ea3-4fb8-a087-d71f761a54ed"
+        "projectId": "97d97eab-a0b1-4903-b6d8-80d7a84edd27"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Laila-Bold.ttf",
+            "./assets/fonts/Laila-Light.ttf",
+            "./assets/fonts/Laila-Medium.ttf",
+            "./assets/fonts/Laila-Regular.ttf",
+            "./assets/fonts/Laila-SemiBold.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }

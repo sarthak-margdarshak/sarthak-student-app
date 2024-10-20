@@ -28,7 +28,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { ToastAndroid } from "react-native";
 import { APPWRITE_API } from "../config-global";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
@@ -80,7 +79,6 @@ export function AuthProvider({ children }) {
       );
       setStudentProfile(y);
       setAuthenticated(true);
-      ToastAndroid.show("Welcome back, " + x?.name, ToastAndroid.SHORT);
     } catch (error) {
       setUser(null);
       setStudentProfile(null);
@@ -112,7 +110,7 @@ export function AuthProvider({ children }) {
       setUser(x);
       setStudentProfile(y);
       setAuthenticated(true);
-      ToastAndroid.show("Successfully signed up", ToastAndroid.SHORT);
+      // ToastAndroid.show("Successfully signed up", ToastAndroid.SHORT);
     } catch (error) {
       if (error.code === 409) {
         const y = await appwriteDatabases.listDocuments(
@@ -121,15 +119,15 @@ export function AuthProvider({ children }) {
           [Query.equal("email", email)]
         );
         if (y.total !== 0) {
-          ToastAndroid.show(
-            "You are already an admin user of this platform. You can't have a student account.",
-            ToastAndroid.SHORT
-          );
+          // ToastAndroid.show(
+          //   "You are already an admin user of this platform. You can't have a student account.",
+          //   ToastAndroid.SHORT
+          // );
         } else {
-          ToastAndroid.show(error.message, ToastAndroid.SHORT);
+          // ToastAndroid.show(error.message, ToastAndroid.SHORT);
         }
       } else {
-        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+        // ToastAndroid.show(error.message, ToastAndroid.SHORT);
       }
     }
   }, []);
@@ -158,21 +156,21 @@ export function AuthProvider({ children }) {
         )
       );
       setAuthenticated(true);
-      ToastAndroid.show("Successfully logged In", ToastAndroid.SHORT);
+      // ToastAndroid.show("Successfully logged In", ToastAndroid.SHORT);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.LONG);
+      // ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
   }, []);
 
   const logout = useCallback(async () => {
     try {
       await appwriteAccount.deleteSessions();
-      ToastAndroid.show("Successfully logged out.", ToastAndroid.SHORT);
+      // ToastAndroid.show("Successfully logged out.", ToastAndroid.SHORT);
       setAuthenticated(false);
       setUser(null);
       setStudentProfile(null);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      // ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
   }, []);
 
@@ -203,7 +201,7 @@ export function AuthProvider({ children }) {
         );
         setStudentProfile(x);
       } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+        // ToastAndroid.show(error.message, ToastAndroid.LONG);
       }
     }
   };

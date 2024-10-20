@@ -1,15 +1,3 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { Linking, Pressable, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import Logofull from "../../assets/logo/logo_full.svg";
@@ -22,7 +10,6 @@ export default function FootComponent() {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        margin: 10,
       }}
     >
       <Text style={{ margin: 1 }}>Designed By - Sarthak Margdarshak</Text>

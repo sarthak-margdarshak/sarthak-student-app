@@ -11,7 +11,7 @@
  */
 
 import { Fragment, useEffect, useState } from "react";
-import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { Divider, List, Text, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { appwriteDatabases } from "../../../auth/AppwriteContext";
@@ -59,7 +59,7 @@ export default function chapters() {
         chapters.forEach((value, key) => z.push({ $id: key, name: value }));
         setChapterList(z);
       } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+        // ToastAndroid.show(error.message, ToastAndroid.LONG);
       }
       setLoading(false);
     };

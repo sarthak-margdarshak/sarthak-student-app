@@ -12,13 +12,7 @@
 
 import { Stack, router } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
-import {
-  Dimensions,
-  RefreshControl,
-  ScrollView,
-  ToastAndroid,
-  View,
-} from "react-native";
+import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
 import { Button, Card, Icon, Text, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { AppwriteHelper } from "../../../auth/AppwriteHelper";
@@ -63,7 +57,7 @@ export default function orderList() {
       }
       setOrdersList(x);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      // ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
     setLoading(false);
   };

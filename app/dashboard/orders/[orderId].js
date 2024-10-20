@@ -12,7 +12,7 @@
 
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
-import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import {
   Button,
   Card,
@@ -70,7 +70,7 @@ export default function orderPage() {
         );
         setOrderObj(x);
       } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+        // ToastAndroid.show(error.message, ToastAndroid.SHORT);
       }
       setLoading(false);
     };
@@ -110,7 +110,7 @@ export default function orderPage() {
         }
       }
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.LONG);
+      // ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
     setCreatingOrder(false);
 
@@ -174,10 +174,10 @@ export default function orderPage() {
               attempts: orderObj.attempts + 1,
             });
           } else {
-            ToastAndroid.show(
-              "Payment verfication Successful",
-              ToastAndroid.LONG
-            );
+            // ToastAndroid.show(
+            //   "Payment verfication Successful",
+            //   ToastAndroid.LONG
+            // );
             appwriteDatabases.updateDocument(
               APPWRITE_API.databaseId,
               APPWRITE_API.collections.orders,
@@ -229,10 +229,10 @@ export default function orderPage() {
           });
         });
     } else {
-      ToastAndroid.show(
-        "Retry Payment by restarting the app",
-        ToastAndroid.SHORT
-      );
+      // ToastAndroid.show(
+      //   "Retry Payment by restarting the app",
+      //   ToastAndroid.SHORT
+      // );
     }
   };
 
@@ -254,7 +254,7 @@ export default function orderPage() {
         last_payment_date: new Date(),
       });
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      // ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
     setCreatingOrder(false);
 
@@ -297,7 +297,7 @@ export default function orderPage() {
         attempts: orderObj.attempts + 1,
       });
     } else {
-      ToastAndroid.show("Payment verfication Successful", ToastAndroid.LONG);
+      // ToastAndroid.show("Payment verfication Successful", ToastAndroid.LONG);
       appwriteDatabases.updateDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.orders,

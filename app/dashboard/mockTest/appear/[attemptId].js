@@ -3,7 +3,6 @@ import {
   Dimensions,
   ScrollView,
   StatusBar,
-  ToastAndroid,
   View,
 } from "react-native";
 import DisplayQuestion from "../../../../sections/appearTest/DisplayQuestion";
@@ -102,7 +101,7 @@ export default function AppearMockTest() {
 
         setMockTest(x);
       } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+        // ToastAndroid.show(error.message, ToastAndroid.LONG);
       }
       setLoading(false);
     };
@@ -153,14 +152,14 @@ export default function AppearMockTest() {
       );
 
       setTestPage(3);
-      ToastAndroid.show("Test Submitted Successfully", ToastAndroid.LONG);
+      // ToastAndroid.show("Test Submitted Successfully", ToastAndroid.LONG);
 
       setBackInitiatedBy("system");
       setTimeout(() => {
         router.replace(PATH_DASHBOARD.mockTest.attempReport(attemptId));
       }, 5000);
     } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.LONG);
+      // ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
   };
 

@@ -13,7 +13,14 @@
 import { Link, Stack } from "expo-router";
 import { useState } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
-import { Button, Surface, Text, TextInput, useTheme } from "react-native-paper";
+import {
+  Button,
+  HelperText,
+  Surface,
+  Text,
+  TextInput,
+  useTheme,
+} from "react-native-paper";
 import { useAuthContext } from "../../auth/useAuthContext";
 import FootComponent from "../../sections/auth/FootComponent";
 
@@ -33,18 +40,13 @@ export default function LogInPage() {
   };
 
   return (
-    <View>
-      <Stack.Screen
-        options={{
-          title: "Log In",
-        }}
-      />
-      <ScrollView
-        style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.background,
-        }}
-      >
+    <View
+      style={{
+        minWidth: Math.min(Dimensions.get("window").width, 400),
+        maxWidth: 700,
+      }}
+    >
+      <ScrollView>
         <View
           style={{
             justifyContent: "center",
@@ -62,6 +64,7 @@ export default function LogInPage() {
                 marginLeft: 20,
                 fontWeight: "bold",
                 color: theme.colors.secondary,
+                fontFamily: "Laila-Regular",
               }}
             >
               L
@@ -74,6 +77,7 @@ export default function LogInPage() {
                 textDecorationLine: "underline",
                 color: theme.colors.secondary,
                 marginRight: 10,
+                fontFamily: "Laila-Regular",
               }}
             >
               og
@@ -83,6 +87,7 @@ export default function LogInPage() {
                 fontSize: 60,
                 color: theme.colors.secondary,
                 fontWeight: "bold",
+                fontFamily: "Laila-Regular",
               }}
             >
               I
@@ -94,6 +99,7 @@ export default function LogInPage() {
                 fontWeight: "bold",
                 color: theme.colors.secondary,
                 textDecorationLine: "underline",
+                fontFamily: "Laila-Regular",
               }}
             >
               n
@@ -103,7 +109,7 @@ export default function LogInPage() {
           <Surface
             elevation={1}
             style={{
-              marginBottom: 40,
+              marginBottom: 20,
               marginLeft: 10,
               marginRight: 10,
               borderRadius: 10,
@@ -113,11 +119,16 @@ export default function LogInPage() {
               inputMode="email"
               style={{
                 margin: 10,
+                fontFamily: "Laila-Regular",
               }}
               value={email}
               onChangeText={(e) => setEmail(e)}
               label="email"
             />
+            <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
+              Enter your persional email-id, which you uses to sign in to
+              Sarthak-Margdarshak.
+            </HelperText>
 
             <TextInput
               secureTextEntry={hidePassword}
@@ -126,6 +137,7 @@ export default function LogInPage() {
               onChangeText={(e) => setPassword(e)}
               style={{
                 margin: 10,
+                fontFamily: "Laila-Regular",
               }}
               label="password"
               right={
@@ -135,6 +147,9 @@ export default function LogInPage() {
                 />
               }
             />
+            <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
+              Enter the correct password to sign in to Sarthak-Margdarshak.
+            </HelperText>
 
             <View
               style={{
@@ -151,6 +166,7 @@ export default function LogInPage() {
                   color: theme.colors.tertiary,
                   flex: 1,
                   flexDirection: "row",
+                  fontFamily: "Laila-Regular",
                 }}
               >
                 <Link href="/auth/sign-up">New Here?</Link>
@@ -164,6 +180,7 @@ export default function LogInPage() {
                   color: theme.colors.tertiary,
                   justifyContent: "space-evenly",
                   marginVertical: 10,
+                  fontFamily: "Laila-Regular",
                 }}
               >
                 <Link href="/auth/forgot-password">Forgot password?</Link>

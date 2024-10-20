@@ -10,7 +10,7 @@
  *
  */
 
-import { Dimensions, ScrollView, ToastAndroid, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { useEffect, useState } from "react";
@@ -89,7 +89,7 @@ export default function ProductList() {
         }
         setProductList(x.documents);
       } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+        // ToastAndroid.show(error.message, ToastAndroid.LONG);
       }
       setLoading(false);
     };

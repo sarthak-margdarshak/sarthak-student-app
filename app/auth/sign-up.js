@@ -1,19 +1,14 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { Link, Stack } from "expo-router";
 import { useState } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
-import { Button, Surface, Text, TextInput, useTheme } from "react-native-paper";
+import {
+  Button,
+  HelperText,
+  Surface,
+  Text,
+  TextInput,
+  useTheme,
+} from "react-native-paper";
 import { useAuthContext } from "../../auth/useAuthContext";
 import FootComponent from "../../sections/auth/FootComponent";
 
@@ -34,18 +29,19 @@ export default function SignUpPage() {
   };
 
   return (
-    <View>
+    <View
+      style={{
+        minWidth: Math.min(Dimensions.get("window").width, 400),
+        maxWidth: 700,
+      }}
+    >
       <Stack.Screen
         options={{
           title: "Sign Up",
+          presentation: "modal",
         }}
       />
-      <ScrollView
-        style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.background,
-        }}
-      >
+      <ScrollView>
         <View
           style={{
             justifyContent: "center",
@@ -119,6 +115,10 @@ export default function SignUpPage() {
               onChangeText={(e) => setName(e)}
               label="Name"
             />
+            <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
+              Enter your correct name, you will not be able to update your name
+              further.
+            </HelperText>
 
             <TextInput
               inputMode="email"
@@ -129,6 +129,10 @@ export default function SignUpPage() {
               onChangeText={(e) => setEmailId(e)}
               label="Email Id"
             />
+            <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
+              Enter your correct email-id, this will be used as id during the
+              login to the app.
+            </HelperText>
 
             <TextInput
               secureTextEntry={hidePassword}

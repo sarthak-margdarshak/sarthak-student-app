@@ -12,7 +12,7 @@
 
 import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ToastAndroid, View } from "react-native";
+import { View } from "react-native";
 import { FAB, Icon, Surface, Text, useTheme } from "react-native-paper";
 import {
   appwriteDatabases,
@@ -59,7 +59,7 @@ export default function AllProductComponent() {
         }
         setProductList(x.documents);
       } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+        // ToastAndroid.show(error.message, ToastAndroid.LONG);
       }
       setLoading(false);
     };

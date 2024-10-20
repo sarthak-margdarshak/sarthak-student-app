@@ -11,7 +11,7 @@
  */
 
 import { Link } from "expo-router";
-import { ToastAndroid, View } from "react-native";
+import { View } from "react-native";
 import { FAB, Icon, Surface, Text, useTheme } from "react-native-paper";
 import BoxTextComponent from "./BoxTextComponent";
 import { useAuthContext } from "../../../auth/useAuthContext";
@@ -60,7 +60,7 @@ export default function ChapterWiseComponent() {
         chapters.forEach((value, key) => z.push({ $id: key, name: value }));
         setChaptersList(z);
       } catch (error) {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+        // ToastAndroid.show(error.message, ToastAndroid.LONG);
       }
       setLoading(false);
     };
