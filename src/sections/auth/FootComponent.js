@@ -1,6 +1,6 @@
 import { Linking, Pressable, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
-import Logofull from "../../assets/logo/logo_full.svg";
+import Logofull from "../../../public/assets/logo/logo_full.svg";
 
 export default function FootComponent() {
   const theme = useTheme();

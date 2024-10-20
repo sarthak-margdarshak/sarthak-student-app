@@ -22,11 +22,11 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState("system_default");
 
   const [loaded, error] = useFonts({
-    "Laila-Bold": require("../assets/fonts/Laila-Bold.ttf"),
-    "Laila-Light": require("../assets/fonts/Laila-Light.ttf"),
-    "Laila-Medium": require("../assets/fonts/Laila-Medium.ttf"),
-    "Laila-Regular": require("../assets/fonts/Laila-Regular.ttf"),
-    "Laila-SemiBold": require("../assets/fonts/Laila-SemiBold.ttf"),
+    "Laila-Bold": require("../../public/assets/fonts/Laila-Bold.ttf"),
+    "Laila-Light": require("../../public/assets/fonts/Laila-Light.ttf"),
+    "Laila-Medium": require("../../public/assets/fonts/Laila-Medium.ttf"),
+    "Laila-Regular": require("../../public/assets/fonts/Laila-Regular.ttf"),
+    "Laila-SemiBold": require("../../public/assets/fonts/Laila-SemiBold.ttf"),
   });
 
   const updateTheme = useCallback((newTheme) => {

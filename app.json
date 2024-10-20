@@ -59,7 +59,8 @@
         "backgroundColor": "#FFFFE0",
         "resizeMode": "contain",
         "image": "./assets/splash/splash-192x192.png"
-      }
+      },
+      "bundler": "metro"
     },
     "scheme": "your-app-scheme",
     "extra": {
@@ -75,12 +76,18 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Laila-Bold.ttf",
-            "./assets/fonts/Laila-Light.ttf",
-            "./assets/fonts/Laila-Medium.ttf",
-            "./assets/fonts/Laila-Regular.ttf",
-            "./assets/fonts/Laila-SemiBold.ttf"
+            "./public/assets/fonts/Laila-Bold.ttf",
+            "./public/assets/fonts/Laila-Light.ttf",
+            "./public/assets/fonts/Laila-Medium.ttf",
+            "./public/assets/fonts/Laila-Regular.ttf",
+            "./public/assets/fonts/Laila-SemiBold.ttf"
           ]
+        }
+      ],
+      [
+        "expo-router",
+        {
+          "root": "./src/app"
         }
       ]
     ]

@@ -11,7 +11,7 @@
  */
 
 import { Dimensions, View } from "react-native";
-import LogoSingle from "../assets/logo/logo_single.svg";
+import LogoSingle from "../../public/assets/logo/logo_single.svg";
 import { ActivityIndicator, useTheme } from "react-native-paper";
 
 export default function LoadingScreen() {

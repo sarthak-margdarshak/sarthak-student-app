@@ -16,21 +16,21 @@ import { ImageBackground, View } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
 
 let images = [
-  require("../../../assets/images/books_0.jpg"),
-  require("../../../assets/images/books_1.jpg"),
-  require("../../../assets/images/books_2.jpg"),
-  require("../../../assets/images/books_3.jpg"),
-  require("../../../assets/images/books_4.jpg"),
-  require("../../../assets/images/books_5.jpg"),
-  require("../../../assets/images/books_6.jpg"),
-  require("../../../assets/images/books_7.jpg"),
-  require("../../../assets/images/books_8.jpg"),
-  require("../../../assets/images/books_9.jpg"),
-  require("../../../assets/images/books_1.jpg"),
-  require("../../../assets/images/books_11.jpg"),
-  require("../../../assets/images/books_12.jpg"),
-  require("../../../assets/images/books_13.jpg"),
-  require("../../../assets/images/books_14.jpg"),
+  require("../../../../public/assets/images/books_0.jpg"),
+  require("../../../../public/assets/images/books_1.jpg"),
+  require("../../../../public/assets/images/books_2.jpg"),
+  require("../../../../public/assets/images/books_3.jpg"),
+  require("../../../../public/assets/images/books_4.jpg"),
+  require("../../../../public/assets/images/books_5.jpg"),
+  require("../../../../public/assets/images/books_6.jpg"),
+  require("../../../../public/assets/images/books_7.jpg"),
+  require("../../../../public/assets/images/books_8.jpg"),
+  require("../../../../public/assets/images/books_9.jpg"),
+  require("../../../../public/assets/images/books_1.jpg"),
+  require("../../../../public/assets/images/books_11.jpg"),
+  require("../../../../public/assets/images/books_12.jpg"),
+  require("../../../../public/assets/images/books_13.jpg"),
+  require("../../../../public/assets/images/books_14.jpg"),
 ];
 
 export default function BoxTextComponent({ title, link }) {
