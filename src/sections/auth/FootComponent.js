@@ -12,9 +12,17 @@ export default function FootComponent() {
         alignItems: "center",
       }}
     >
-      <Text style={{ margin: 1 }}>Designed By - Sarthak Margdarshak</Text>
-      <Text style={{ margin: 1, fontWeight: "bold" }}>Having any trouble?</Text>
-      <Text style={{ margin: 1 }}>Contact Us At :-</Text>
+      <Text style={{ fontFamily: "Laila-Regular", margin: 1 }}>
+        Designed By - Sarthak Margdarshak
+      </Text>
+      <Text
+        style={{ fontFamily: "Laila-Regular", margin: 1, fontWeight: "bold" }}
+      >
+        Having any trouble?
+      </Text>
+      <Text style={{ fontFamily: "Laila-Regular", margin: 1 }}>
+        Contact Us At :-
+      </Text>
       <Pressable
         style={{ margin: 1 }}
         onPress={() => Linking.openURL("mailto:support@sarthakmargdarshak.in")}
@@ -25,6 +33,7 @@ export default function FootComponent() {
             color: theme.colors.secondary,
             textDecorationLine: "underline",
             margin: 1,
+            fontFamily: "Laila-Regular",
           }}
         >
           support@sarthakmargdarshak.in
@@ -39,12 +48,13 @@ export default function FootComponent() {
             fontWeight: "bold",
             color: theme.colors.secondary,
             textDecorationLine: "underline",
+            fontFamily: "Laila-Regular",
           }}
         >
           +91 834-037-8552
         </Text>
       </Pressable>
-      <Text style={{ margin: 3 }}>
+      <Text style={{ fontFamily: "Laila-Regular", margin: 3 }}>
         {"© " + new Date().getFullYear() + " | All rights reserved | SARTHAK"}
       </Text>
       <Logofull width={250} height={90} />
