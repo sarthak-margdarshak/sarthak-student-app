@@ -1,15 +1,3 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 // ----------------------------------------------------------------------
 function path(root, sublink) {
   return `${root}${sublink}`;
@@ -34,6 +22,9 @@ export const PATH_AUTH = {
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   preferences: path(ROOTS_DASHBOARD, "/preferences"),
+  profile: path(ROOTS_DASHBOARD, "/profile"),
+  purchased: path(ROOTS_DASHBOARD, "/purchased"),
+  cart: path(ROOTS_DASHBOARD, "/cart"),
   category: {
     standards: path(ROOTS_DASHBOARD, "/category/standards"),
     subjects: path(ROOTS_DASHBOARD, "/category/subjects"),

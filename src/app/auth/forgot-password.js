@@ -11,8 +11,8 @@ import {
   useTheme,
 } from "react-native-paper";
 import { appwriteAccount } from "../../auth/AppwriteContext";
-import { APPWRITE_API } from "../../config-global";
 import { Toast } from "react-native-toast-notifications";
+import { PATH_AUTH } from "../../routes/paths";
 
 export default function ForgotPasswordPage() {
   const theme = useTheme();
@@ -150,7 +150,7 @@ export default function ForgotPasswordPage() {
               fontFamily: "Laila-Regular",
             }}
           >
-            <Link href="/auth/login">Already a member</Link>
+            <Link href={PATH_AUTH.login}>Already a member</Link>
           </Text>
           <Text
             style={{
@@ -164,7 +164,7 @@ export default function ForgotPasswordPage() {
               fontFamily: "Laila-Regular",
             }}
           >
-            <Link href="/auth/sign-up">New here?</Link>
+            <Link href={PATH_AUTH.signUp}>New here?</Link>
           </Text>
         </View>
 

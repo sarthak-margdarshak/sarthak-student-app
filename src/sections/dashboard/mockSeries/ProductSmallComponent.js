@@ -1,15 +1,3 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { ImageBackground, View } from "react-native";
@@ -29,7 +17,7 @@ export default function ProductSmallComponent({ product }) {
           style={styles.image}
           source={{ uri: product?.images[0] }}
           alt="background"
-          blurRadius={5}
+          blurRadius={1}
         >
           <LinearGradient
             colors={[theme.colors.inverseSurface, "#00000000"]}
@@ -37,7 +25,7 @@ export default function ProductSmallComponent({ product }) {
           ></LinearGradient>
         </ImageBackground>
         <Text
-          variant="titleLarge"
+          variant="bodyMedium"
           style={{
             color: theme.colors.inverseOnSurface,
             textAlign: "center",
@@ -47,7 +35,7 @@ export default function ProductSmallComponent({ product }) {
             left: 0,
             right: 0,
             margin: "auto",
-            fontWeight: "bold",
+            fontFamily: "Laila-Regular",
           }}
         >
           {product?.name}

@@ -15,6 +15,7 @@ import { APPWRITE_API } from "../config-global";
 import { Toast } from "react-native-toast-notifications";
 import { Container, Navbar } from "react-bootstrap";
 import FootComponent from "../sections/auth/FootComponent";
+import { Helmet } from "react-helmet-async";
 
 export default function ResetPassword() {
   const theme = useTheme();
@@ -74,6 +75,10 @@ export default function ResetPassword() {
         alignItems: "center",
       }}
     >
+      <Helmet>
+        <title> Reset Password | Sarthak</title>
+      </Helmet>
+
       <Navbar
         style={{
           margin: 3,

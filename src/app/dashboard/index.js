@@ -1,88 +1,94 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
-import { BottomNavigation } from "react-native-paper";
+import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
+import MotivationBox from "../../sections/dashboard/MotivationBox";
+import AllProductComponent from "../../sections/dashboard/mockSeries/AllProductComponent";
+import ClasswiseComponent from "../../sections/dashboard/mockSeries/ClasswiseComponent";
+import SubjectWiseComponent from "../../sections/dashboard/mockSeries/SubjectWiseComponent";
+import ChapterWiseComponent from "../../sections/dashboard/mockSeries/ChapterWiseComponent";
+import { Appbar, Divider, Menu } from "react-native-paper";
+import { langPath, useLocales } from "../../locales";
+import { router } from "expo-router";
 import { useState } from "react";
-import {
-  CartFragment,
-  MockTestSeriesFragment,
-  ProfileFragment,
-  PurchasedProductFragment,
-} from "../../sections/dashboard/DashboardFragments";
-import { useLocalSearchParams } from "expo-router";
-import { useAuthContext } from "../../auth/useAuthContext";
+import { PATH_DASHBOARD } from "../../routes/paths";
 
 export default function DashboardPage() {
-  const { pagesIndex } = useLocalSearchParams();
-  const { studentProfile } = useAuthContext();
-
-  const [index, setIndex] = useState(
-    pagesIndex === undefined ? 0 : parseInt(pagesIndex)
-  );
-
-  const [routes, setRoutes] = useState([
-    {
-      key: "mockSeries",
-      title: "Mock Series",
-      focusedIcon: "book-open",
-      unfocusedIcon: "book-open-outline",
-    },
-    {
-      key: "purchased",
-      title: "Purchased",
-      focusedIcon: "badge-account-horizontal",
-      unfocusedIcon: "badge-account-horizontal-outline",
-      badge: studentProfile?.purchased?.length || 0,
-    },
-    {
-      key: "cart",
-      title: "Cart",
-      focusedIcon: "cart",
-      unfocusedIcon: "cart-outline",
-      badge: studentProfile?.cart?.length || 0,
-    },
-    {
-      key: "profile",
-      title: "Profile",
-      focusedIcon: "account",
-      unfocusedIcon: "account-outline",
-    },
-  ]);
-
-  const renderScene = BottomNavigation.SceneMap({
-    mockSeries: MockTestSeriesFragment,
-    purchased: PurchasedProductFragment,
-    cart: CartFragment,
-    profile: ProfileFragment,
-  });
+  const { translate } = useLocales();
+  const [visible, setVisible] = useState(false);
 
   return (
-    <BottomNavigation
-      style={{
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}
-      navigationState={{ index, routes }}
-      onIndexChange={(i) => {
-        setIndex(i);
-        var tmpRoutes = routes;
-        tmpRoutes[1].badge = studentProfile?.purchased?.length || 0;
-        tmpRoutes[2].badge = studentProfile?.cart?.length || 0;
-        setRoutes(tmpRoutes);
-      }}
-      sceneAnimationEnabled
-      sceneAnimationType="shifting"
-      renderScene={renderScene}
-    />
+    <View>
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title={translate(langPath.app.dashboard.layout.stackTitle)}
+        />
+        <Menu
+          visible={visible}
+          onDismiss={() => setVisible(false)}
+          anchor={
+            <Appbar.Action
+              icon="dots-vertical"
+              onPress={() => setVisible(true)}
+            />
+          }
+        >
+          <Menu.Item
+            leadingIcon="account"
+            onPress={() => {
+              setVisible(false);
+              router.push(PATH_DASHBOARD.profile);
+            }}
+            title="Profile"
+          />
+          <Divider />
+          <Menu.Item
+            leadingIcon="badge-account-horizontal"
+            onPress={() => {}}
+            title="Purchased"
+          />
+          <Menu.Item
+            leadingIcon="cart"
+            title="Cart"
+            onPress={() => {
+              setVisible(false);
+              router.push(PATH_DASHBOARD.cart);
+            }}
+          />
+        </Menu>
+      </Appbar.Header>
+
+      <ScrollView
+        style={{
+          margin: 2,
+          height: Dimensions.get("window").height,
+        }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={() => {}} />
+        }
+      >
+        <MotivationBox />
+
+        <AllProductComponent />
+
+        <ClasswiseComponent />
+
+        <SubjectWiseComponent />
+
+        <ChapterWiseComponent />
+      </ScrollView>
+    </View>
   );
 }

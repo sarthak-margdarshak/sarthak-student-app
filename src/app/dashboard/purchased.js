@@ -1,31 +1,16 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { useEffect, useState } from "react";
 import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
-import { useAuthContext } from "../../../auth/useAuthContext";
-import ProductMediumComponentLoading from "../mockSeries/ProductMediumComponentLoading";
+import { useAuthContext } from "../../auth/useAuthContext";
+import ProductMediumComponentLoading from "../../sections/dashboard/mockSeries/ProductMediumComponentLoading";
 import { Button, Text, useTheme } from "react-native-paper";
 import { router } from "expo-router";
-import { PATH_DASHBOARD } from "../../../routes/paths";
-import ProductMediumComponent from "../mockSeries/ProductMediumComponent";
-import {
-  appwriteDatabases,
-  appwriteStorage,
-} from "../../../auth/AppwriteContext";
-import { APPWRITE_API } from "../../../config-global";
-import { NoDataFoundDark } from "../../../components/SVG/NoDataFoundDark";
-import { NoDataFoundLight } from "../../../components/SVG/NoDataFoundLight";
-import { langPath, useLocales } from "../../../locales";
+import { PATH_DASHBOARD } from "../../routes/paths";
+import { appwriteDatabases, appwriteStorage } from "../../auth/AppwriteContext";
+import { APPWRITE_API } from "../../config-global";
+import { NoDataFoundDark } from "../../components/SVG/NoDataFoundDark";
+import { NoDataFoundLight } from "../../components/SVG/NoDataFoundLight";
+import { langPath, useLocales } from "../../locales";
+import ProductSmallComponent from "../../sections/dashboard/mockSeries/ProductSmallComponent";
 
 export default function PurchasedProductFragment() {
   const { studentProfile } = useAuthContext();
@@ -147,7 +132,7 @@ export default function PurchasedProductFragment() {
           ) : (
             <View>
               {products.map((product) => (
-                <ProductMediumComponent product={product} key={product?.$id} />
+                <ProductSmallComponent product={product} key={product?.$id} />
               ))}
             </View>
           )}

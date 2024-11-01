@@ -1,19 +1,7 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { FAB, Icon, Surface, Text, useTheme } from "react-native-paper";
+import { Divider, Icon, Surface, Text, useTheme } from "react-native-paper";
 import {
   appwriteDatabases,
   appwriteStorage,
@@ -22,8 +10,10 @@ import { APPWRITE_API } from "../../../config-global";
 import { Query } from "appwrite";
 import ProductSmallComponent from "./ProductSmallComponent";
 import { useAuthContext } from "../../../auth/useAuthContext";
-import { Skeleton } from "react-native-skeletons";
 import { PATH_DASHBOARD } from "../../../routes/paths";
+import { Toast } from "react-native-toast-notifications";
+import { Col, Container, Row } from "react-bootstrap";
+import { Skeleton } from "react-native-skeletons";
 
 export default function AllProductComponent() {
   const theme = useTheme();
@@ -42,7 +32,7 @@ export default function AllProductComponent() {
           [
             Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("published", true),
-            Query.limit(5),
+            Query.limit(4),
           ]
         );
 
@@ -59,7 +49,10 @@ export default function AllProductComponent() {
         }
         setProductList(x.documents);
       } catch (error) {
-        // ToastAndroid.show(error.message, ToastAndroid.LONG);
+        Toast.show(error.message, {
+          type: "danger",
+          textStyle: { fontFamily: "Laila-Regular" },
+        });
       }
       setLoading(false);
     };
@@ -67,143 +60,86 @@ export default function AllProductComponent() {
   }, [user]);
 
   return (
-    <Surface
-      style={{ padding: 8, width: "100%", borderRadius: 10, marginTop: 5 }}
-      mode="flat"
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            width: 100,
-            marginLeft: 2,
-            fontWeight: "bold",
-            flex: 1,
-            flexDirection: "row",
-          }}
-          variant="titleLarge"
-        >
-          All Mock Series
-        </Text>
-        <Text
-          style={{
-            textAlign: "right",
-            marginRight: 2,
-            fontWeight: "bold",
-            textDecorationLine: "underline",
-            color: theme.colors.tertiary,
-            justifyContent: "space-evenly",
-            marginTop: -3,
-          }}
-          variant="titleMedium"
-        >
-          <Link href={PATH_DASHBOARD.product.list}>see more</Link>
-        </Text>
-        <Icon source="arrow-right-drop-circle" />
-      </View>
+    <View>
+      {(loading || productList.length != 0) && (
+        <View>
+          <Surface
+            style={{
+              padding: 8,
+              width: "100%",
+              borderRadius: 10,
+              marginTop: 5,
+            }}
+            elevation={0}
+            mode="flat"
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  width: 100,
+                  marginLeft: 2,
+                  flex: 1,
+                  flexDirection: "row",
+                  fontFamily: "Laila-Regular",
+                }}
+                variant="titleSmall"
+              >
+                All Mock Series
+              </Text>
+              <Text
+                style={{
+                  textAlign: "right",
+                  marginRight: 2,
+                  textDecorationLine: "underline",
+                  color: theme.colors.tertiary,
+                  justifyContent: "space-evenly",
+                  marginTop: -3,
+                  fontFamily: "Laila-Regular",
+                }}
+                variant="bodySmall"
+              >
+                <Link href={PATH_DASHBOARD.product.list}>see more</Link>
+              </Text>
+              <Icon source="arrow-right-drop-circle" />
+            </View>
 
-      {loading ? (
-        <View style={styles.app}>
-          <Row>
-            <Col numRows={2}>
-              <Skeleton
-                style={{ margin: 5 }}
-                height={110}
-                width="95%"
-                count={2}
-                color={theme.colors.inverseOnSurface}
-              />
-            </Col>
-
-            <Col numRows={2}>
-              <Skeleton
-                style={{ margin: 5 }}
-                height={110}
-                width="95%"
-                count={2}
-                color={theme.colors.inverseOnSurface}
-              />
-            </Col>
-          </Row>
-        </View>
-      ) : (
-        <View style={styles.app}>
-          <Row>
-            <Col numRows={2}>
-              {productList.length >= 1 && (
-                <ProductSmallComponent product={productList[0]} />
+            <Container>
+              {loading && (
+                <Row>
+                  <Col xs={6}>
+                    <Skeleton height={120} style={{ margin: 3 }} />
+                  </Col>
+                  <Col xs={6}>
+                    <Skeleton height={120} style={{ margin: 3 }} />
+                  </Col>
+                  <Col xs={6}>
+                    <Skeleton height={120} style={{ margin: 3 }} />
+                  </Col>
+                  <Col xs={6}>
+                    <Skeleton height={120} style={{ margin: 3 }} />
+                  </Col>
+                </Row>
               )}
-            </Col>
-            <Col numRows={2}>
-              {productList.length >= 2 && (
-                <ProductSmallComponent product={productList[1]} />
+              {!loading && (
+                <Row>
+                  {productList.map((product) => (
+                    <Col xs={6} key={product.$id}>
+                      <ProductSmallComponent product={product} />
+                    </Col>
+                  ))}
+                </Row>
               )}
-            </Col>
-          </Row>
+            </Container>
+          </Surface>
 
-          {productList.length >= 3 && (
-            <Row>
-              <Col numRows={2}>
-                {productList.length >= 3 && (
-                  <ProductSmallComponent product={productList[2]} />
-                )}
-              </Col>
-
-              <Col numRows={2}>
-                {productList.length === 4 && (
-                  <ProductSmallComponent product={productList[3]} />
-                )}
-                {productList.length >= 5 && (
-                  <FAB
-                    icon="arrow-right-drop-circle"
-                    style={{
-                      margin: 3,
-                      alignContent: "center",
-                      borderRadius: 5,
-                    }}
-                    customSize={120}
-                    onPress={() => router.push(PATH_DASHBOARD.product.list)}
-                  />
-                )}
-              </Col>
-            </Row>
-          )}
+          <Divider bold />
         </View>
       )}
-    </Surface>
+    </View>
   );
 }
-
-const styles = {
-  app: {
-    flex: 4, // the number of columns you want to devide the screen into
-    marginHorizontal: "auto",
-    width: "auto",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  "1col": {
-    flex: 1,
-  },
-  "2col": {
-    flex: 2,
-  },
-  "3col": {
-    flex: 3,
-  },
-  "4col": {
-    flex: 4,
-  },
-};
-
-// RN Code
-const Col = ({ numRows, children }) => {
-  return <View style={styles[`${numRows}col`]}>{children}</View>;
-};
-
-const Row = ({ children }) => <View style={styles.row}>{children}</View>;

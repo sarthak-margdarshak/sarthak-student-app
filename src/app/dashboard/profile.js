@@ -1,21 +1,9 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { ScrollView } from "react-native";
 import { Button, Divider, List, Text, TextInput } from "react-native-paper";
-import { useAuthContext } from "../../../auth/useAuthContext";
 import { router } from "expo-router";
-import { PATH_DASHBOARD } from "../../../routes/paths";
-import { langPath, useLocales } from "../../../locales";
+import { useAuthContext } from "../../auth/useAuthContext";
+import { langPath, useLocales } from "../../locales";
+import { PATH_DASHBOARD } from "../../routes/paths";
 
 export default function ProfileFragment() {
   const { user, logout } = useAuthContext();

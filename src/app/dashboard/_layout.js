@@ -1,38 +1,33 @@
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import AuthGuard from "../../auth/AuthGuard";
 import { PaperProvider, useTheme } from "react-native-paper";
-import { langPath, useLocales } from "../../locales";
 import { StatusBar } from "expo-status-bar";
+import { Dimensions, View } from "react-native";
 
 export default function DashboardLayout() {
   const theme = useTheme();
-  const { translate } = useLocales();
 
   return (
     <PaperProvider theme={theme}>
-      <StatusBar style={theme.dark ? "light" : "dark"} />
-      <AuthGuard>
-        <Stack
-          screenOptions={{
-            headerTransparent: true,
-            headerStyle: {
-              backgroundColor: theme.colors.primaryContainer,
-            },
-            headerTintColor: theme.colors.onPrimaryContainer,
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-            headerShadowVisible: true,
-          }}
-        >
-          <Stack.Screen
-            name="index"
-            options={{
-              title: translate(langPath.app.dashboard.layout.stackTitle),
+      <View
+        style={{
+          width: Dimensions.get("window").width,
+          height: Dimensions.get("window").height,
+          alignItems: "center",
+        }}
+      >
+        <StatusBar style={theme.dark ? "light" : "dark"} />
+        <AuthGuard>
+          <View
+            style={{
+              minWidth: Math.min(Dimensions.get("window").width, 600),
+              maxWidth: 700,
             }}
-          />
-        </Stack>
-      </AuthGuard>
+          >
+            <Slot />
+          </View>
+        </AuthGuard>
+      </View>
     </PaperProvider>
   );
 }

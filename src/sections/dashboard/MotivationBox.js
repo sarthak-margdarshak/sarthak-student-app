@@ -1,15 +1,3 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { Card, Icon, Text } from "react-native-paper";
 import { useAuthContext } from "../../auth/useAuthContext";
 import { useEffect, useState } from "react";
@@ -94,12 +82,17 @@ export default function MotivationBox() {
     <Card>
       <Card.Title
         title={"Hi " + user?.name}
+        titleStyle={{ fontFamily: "Laila-Regular" }}
         subtitle={greetingTime(new Date())}
+        subtitleStyle={{ fontFamily: "Laila-Regular" }}
         left={() => <Icon size={50} source="comment-quote" />}
       />
       <Card.Content>
         <Icon source="format-quote-open" />
-        <Text style={{ marginStart: 8 }} variant="bodyMedium">
+        <Text
+          style={{ marginStart: 8, fontFamily: "Laila-Regular" }}
+          variant="bodyMedium"
+        >
           {quote}
         </Text>
         <View style={{ alignItems: "flex-end" }}>
