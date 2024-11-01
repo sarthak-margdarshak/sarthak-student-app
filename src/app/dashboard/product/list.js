@@ -1,17 +1,5 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { Dimensions, ScrollView, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { Appbar, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { useEffect, useState } from "react";
 import {
@@ -21,8 +9,9 @@ import {
 import { APPWRITE_API } from "../../../config-global";
 import { Query } from "appwrite";
 import ProductMediumComponent from "../../../sections/dashboard/mockSeries/ProductMediumComponent";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import ProductMediumComponentLoading from "../../../sections/dashboard/mockSeries/ProductMediumComponentLoading";
+import { Toast } from "react-native-toast-notifications";
 
 export default function ProductList() {
   const theme = useTheme();
@@ -31,7 +20,6 @@ export default function ProductList() {
 
   const [ProductList, setProductList] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +77,10 @@ export default function ProductList() {
         }
         setProductList(x.documents);
       } catch (error) {
-        // ToastAndroid.show(error.message, ToastAndroid.LONG);
+        Toast.show(error.message, {
+          type: "danger",
+          textStyle: { fontFamily: "Laila-Regular" },
+        });
       }
       setLoading(false);
     };
@@ -98,18 +89,16 @@ export default function ProductList() {
 
   return (
     <View>
-      <Stack.Screen
-        options={{
-          title: "Mock Test Series",
-        }}
-      />
-      {/* <Searchbar
-        placeholder="Search"
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        style={{ position: "absolute", top: 0, zIndex: 1 }}
-        mode="view"
-      /> */}
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title="Mock Test Series"
+        />
+      </Appbar.Header>
+
       <ScrollView
         style={{
           height: Dimensions.get("window").height,
@@ -117,7 +106,6 @@ export default function ProductList() {
         }}
         contentContainerStyle={{
           paddingBottom: 60,
-          // paddingTop: 80,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
@@ -132,10 +120,6 @@ export default function ProductList() {
           </>
         )}
       </ScrollView>
-      {/* <FAB
-        icon="filter"
-        style={{ position: "absolute", margin: 30, right: 0, bottom: 0 }}
-      /> */}
     </View>
   );
 }

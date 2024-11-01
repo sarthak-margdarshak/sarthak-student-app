@@ -1,15 +1,3 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { router } from "expo-router";
 import { View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
@@ -17,16 +5,21 @@ import { PATH_DASHBOARD } from "../../../routes/paths";
 
 export default function ProductMediumComponent({
   product,
-  cardePage,
+  cardPage,
   onRemove,
 }) {
   return (
     <Card
-      style={{ margin: 5 }}
+      style={{ margin: 5, padding: 5, paddingBottom: 10 }}
       onPress={() => router.push(PATH_DASHBOARD.product.view(product?.$id))}
     >
       <Card.Cover source={{ uri: product?.images[0] }} />
-      <Card.Title title={product?.name} subtitle={product?.description} />
+      <Card.Title
+        title={product?.name}
+        subtitle={product?.description}
+        titleStyle={{ fontFamily: "Laila-Regular" }}
+        subtitleStyle={{ fontFamily: "Laila-Regular" }}
+      />
       <Card.Content>
         <View
           style={{
@@ -35,51 +28,66 @@ export default function ProductMediumComponent({
           }}
         >
           <View style={{ alignContent: "flex-start" }}>
-            <View style={{ flexDirection: "row" }}>
-              <Text variant="bodyMedium" style={{ fontWeight: "bold" }}>
-                {"Standard - "}
-              </Text>
-              {product?.standards?.map((standard) => (
-                <Text key={standard?.$id} variant="bodyMedium">
-                  {standard?.name + ", "}
+            {product?.standards?.length !== 0 && (
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  variant="bodySmall"
+                  style={{ fontWeight: "bold", fontFamily: "Laila-Regular" }}
+                >
+                  {"Standard - "}
                 </Text>
-              ))}
-            </View>
+                {product?.standards?.map((standard) => (
+                  <Text
+                    key={standard?.$id}
+                    variant="bodySmall"
+                    style={{ fontFamily: "Laila-Regular" }}
+                  >
+                    {standard?.name + ", "}
+                  </Text>
+                ))}
+              </View>
+            )}
 
-            <View style={{ flexDirection: "row" }}>
-              <Text variant="bodyMedium" style={{ fontWeight: "bold" }}>
-                {"Subjects - "}
-              </Text>
-              {product?.subjects?.map((subject) => (
-                <Text key={subject?.$id} variant="bodyMedium">
-                  {subject?.name + ", "}
+            {product?.subjects?.length !== 0 && (
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  variant="bodySmall"
+                  style={{ fontWeight: "bold", fontFamily: "Laila-Regular" }}
+                >
+                  {"Subjects - "}
                 </Text>
-              ))}
-            </View>
+                {product?.subjects?.map((subject) => (
+                  <Text key={subject?.$id} variant="bodySmall">
+                    {subject?.name + ", "}
+                  </Text>
+                ))}
+              </View>
+            )}
           </View>
 
-          <View
-            style={{
-              alignItems: "flex-end",
-            }}
-          >
-            <Text variant="headlineLarge" style={{ fontWeight: "bold" }}>
-              {"₹" + product?.sellPrice}
-            </Text>
-
-            <Text
-              variant="bodySmall"
+          {cardPage && (
+            <View
               style={{
-                fontWeight: "bold",
-                textDecorationLine: "line-through",
+                alignItems: "flex-end",
               }}
             >
-              {"₹" + product?.mrp}
-            </Text>
-          </View>
+              <Text variant="headlineSmall" style={{ fontWeight: "bold" }}>
+                {"₹" + product?.sellPrice}
+              </Text>
+
+              <Text
+                variant="bodySmall"
+                style={{
+                  textDecorationLine: "line-through",
+                }}
+              >
+                {"₹" + product?.mrp}
+              </Text>
+            </View>
+          )}
         </View>
       </Card.Content>
-      {cardePage && (
+      {cardPage && (
         <Card.Actions>
           <Button icon="delete" onPress={onRemove}>
             Remove from Cart

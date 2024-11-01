@@ -29,11 +29,14 @@ export default function ForgotPasswordPage() {
       );
       Toast.show(
         "Password reset link has been sent to your email. Happy to help you.",
-        { type: "success" }
+        { type: "success", textStyle: { fontFamily: "Laila-Regular" } }
       );
       setEmailSent(true);
     } catch (error) {
-      Toast.show(error.message, { type: "danger" });
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
   };
 

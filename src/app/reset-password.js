@@ -44,7 +44,11 @@ export default function ResetPassword() {
         setName(x?.name);
         setEmailId(x?.email);
       } catch (error) {
-        if (error.code != 404) Toast.show(error.code, { type: "danger" });
+        if (error.code != 404)
+          Toast.show(error.code, {
+            type: "danger",
+            textStyle: { fontFamily: "Laila-Regular" },
+          });
       }
     };
     if (userId !== undefined) fetchData();
@@ -59,10 +63,16 @@ export default function ResetPassword() {
         password,
         confirmPassword
       );
-      Toast.show("Password Reset Successfully", { type: "success" });
+      Toast.show("Password Reset Successfully", {
+        type: "success",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
       router.replace("/dashboard");
     } catch (error) {
-      Toast.show(error.message, { type: "danger" });
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setSubmitting(false);
   };

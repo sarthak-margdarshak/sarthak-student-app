@@ -103,9 +103,15 @@ export function AuthProvider({ children }) {
       setUser(x);
       setStudentProfile(y);
       setAuthenticated(true);
-      Toast.show("Successfully signed up", { type: "success" });
+      Toast.show("Successfully signed up", {
+        type: "success",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     } catch (error) {
-      Toast.show(error.message, { type: "danger" });
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
   }, []);
 
@@ -133,9 +139,15 @@ export function AuthProvider({ children }) {
         )
       );
       setAuthenticated(true);
-      Toast.show("Successfully logged In", { type: "success" });
+      Toast.show("Successfully logged In", {
+        type: "success",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     } catch (error) {
-      Toast.show(error.message, { type: "danger" });
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
   }, []);
 

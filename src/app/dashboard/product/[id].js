@@ -1,19 +1,8 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
-import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import {
+  Appbar,
   Button,
   Chip,
   Divider,
@@ -29,7 +18,7 @@ import { APPWRITE_API } from "../../../config-global";
 import { Skeleton } from "react-native-skeletons";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { PATH_DASHBOARD } from "../../../routes/paths";
-import Carousel from "../../../components/Carousel";
+import { Carousel } from "react-bootstrap";
 
 export default function productView() {
   const theme = useTheme();
@@ -123,11 +112,26 @@ export default function productView() {
 
   return (
     <Fragment>
-      <Stack.Screen
-        options={{
-          title: loading ? "Series Name" : product?.name,
-        }}
-      />
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title={product?.name}
+        />
+      </Appbar.Header>
+
       <ScrollView
         style={{
           height: Dimensions.get("window").height,
@@ -138,9 +142,6 @@ export default function productView() {
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchData} />
-        }
       >
         {loading ? (
           <View>
@@ -170,7 +171,17 @@ export default function productView() {
           </View>
         ) : (
           <View>
-            <Carousel imagesList={product?.images} />
+            <Carousel>
+              {product?.images?.map((image) => (
+                <Carousel.Item interval={5000} key={image}>
+                  <img
+                    className="d-block w-100"
+                    src={image}
+                    alt="First slide"
+                  />
+                </Carousel.Item>
+              ))}
+            </Carousel>
 
             <Surface
               style={{
@@ -183,9 +194,9 @@ export default function productView() {
               <Text
                 variant="headlineSmall"
                 style={{
-                  fontWeight: "bold",
                   margin: 5,
                   color: theme.colors.onInfoContainer,
+                  fontFamily: "Laila-Regular",
                 }}
               >
                 {product?.name}
@@ -193,7 +204,11 @@ export default function productView() {
 
               <Text
                 variant="labelLarge"
-                style={{ margin: 10, color: theme.colors.onInfoContainer }}
+                style={{
+                  margin: 10,
+                  color: theme.colors.onInfoContainer,
+                  fontFamily: "Laila-Regular",
+                }}
               >
                 {product?.description}
               </Text>
@@ -206,26 +221,38 @@ export default function productView() {
                 padding: 15,
               }}
             >
-              <View>
-                <Text variant="headlineLarge" style={{ fontWeight: "bold" }}>
-                  {"₹" + product?.sellPrice}
-                </Text>
+              {!purchased && !addedToCart && (
+                <View>
+                  <Text
+                    variant="bodyLarge"
+                    style={{ fontWeight: "bold", fontFamily: "Laila-Regular" }}
+                  >
+                    {"₹" + product?.sellPrice}
+                  </Text>
 
-                <Text
-                  variant="headlineSmall"
-                  style={{
-                    fontWeight: "bold",
-                    textDecorationLine: "line-through",
-                    color: theme.colors.surfaceDisabled,
-                  }}
-                >
-                  {"₹" + product?.mrp}
-                </Text>
-              </View>
+                  <Text
+                    variant="bodySmall"
+                    style={{
+                      fontWeight: "bold",
+                      textDecorationLine: "line-through",
+                      color: theme.colors.surfaceDisabled,
+                      fontFamily: "Laila-Regular",
+                    }}
+                  >
+                    {"₹" + product?.mrp}
+                  </Text>
+                </View>
+              )}
 
               <View style={{ justifyContent: "space-evenly", width: 200 }}>
                 {purchased && (
-                  <Button mode="contained" icon="test-tube" onPress={attempt}>
+                  <Button
+                    mode="contained"
+                    icon="test-tube"
+                    onPress={attempt}
+                    style={{ backgroundColor: theme.colors.success }}
+                    labelStyle={{ fontFamily: "Laila-Regular" }}
+                  >
                     Attempt
                   </Button>
                 )}
@@ -235,6 +262,7 @@ export default function productView() {
                     mode="contained"
                     icon="cart-arrow-right"
                     onPress={goToCart}
+                    labelStyle={{ fontFamily: "Laila-Regular" }}
                   >
                     Go to Cart
                   </Button>
@@ -250,8 +278,13 @@ export default function productView() {
 
             <Surface style={{ borderRadius: 15, padding: 5, margin: 5 }}>
               <Text
-                variant="titleLarge"
-                style={{ margin: 5, marginTop: 15, fontWeight: "bold" }}
+                variant="titleSmall"
+                style={{
+                  fontFamily: "Laila-Regular",
+                  fontWeight: "bold",
+                  margin: 5,
+                  marginTop: 15,
+                }}
               >
                 Mock Highlights
               </Text>
@@ -266,6 +299,10 @@ export default function productView() {
                     margin: 2,
                     backgroundColor: theme.colors.errorContainer,
                   }}
+                  textStyle={{
+                    fontSize: 12,
+                    fontFamily: "Laila-Regular",
+                  }}
                 >
                   {product?.mockTestIds?.length + " Mock Tests Available"}
                 </Chip>
@@ -277,7 +314,14 @@ export default function productView() {
                 style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
               >
                 {product?.standards?.map((standard) => (
-                  <Chip key={standard?.$id} style={{ margin: 2 }}>
+                  <Chip
+                    key={standard?.$id}
+                    style={{ margin: 2 }}
+                    textStyle={{
+                      fontSize: 12,
+                      fontFamily: "Laila-Regular",
+                    }}
+                  >
                     {standard?.name}
                   </Chip>
                 ))}
@@ -294,6 +338,10 @@ export default function productView() {
                     style={{
                       margin: 2,
                       backgroundColor: theme.colors.warningContainer,
+                    }}
+                    textStyle={{
+                      fontSize: 12,
+                      fontFamily: "Laila-Regular",
                     }}
                   >
                     {subject?.name}
@@ -313,6 +361,10 @@ export default function productView() {
                       margin: 2,
                       backgroundColor: theme.colors.inversePrimary,
                     }}
+                    textStyle={{
+                      fontSize: 12,
+                      fontFamily: "Laila-Regular",
+                    }}
                   >
                     {chapter?.name}
                   </Chip>
@@ -330,6 +382,10 @@ export default function productView() {
                     style={{
                       margin: 2,
                       backgroundColor: theme.colors.infoContainer,
+                    }}
+                    textStyle={{
+                      fontSize: 12,
+                      fontFamily: "Laila-Regular",
                     }}
                   >
                     {concept?.name}
