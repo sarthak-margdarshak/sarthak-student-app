@@ -5,7 +5,11 @@
     "slug": "sarthak-margdarshak-app",
     "owner": "sarthakmargdarshak",
     "version": "1.1.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "githubUrl": "https://github.com/sarthak-margdarshak/sarthak-student-app",
     "orientation": "portrait",
     "icon": "./public/assets/favicon/favicon-1024x1024.png",
@@ -15,7 +19,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#FFFBFF"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "versionCode": 1,
       "userInterfaceStyle": "automatic",
@@ -90,6 +96,9 @@
           "root": "./src/app"
         }
       ]
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.sarthak.margdarshak.guidance"
+    }
   }
 }

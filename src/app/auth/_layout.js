@@ -1,38 +1,14 @@
-import { Redirect, Slot, useGlobalSearchParams } from "expo-router";
+import { Redirect, router, Slot, useGlobalSearchParams } from "expo-router";
 import { useAuthContext } from "../../auth/useAuthContext";
-import { Surface, useTheme } from "react-native-paper";
+import { IconButton, Surface } from "react-native-paper";
 import LoadingScreen from "../../components/LoadingScreen";
-import { Dimensions, ScrollView, useColorScheme, View } from "react-native";
-import { lightTheme } from "../../theme/lightTheme";
+import { Dimensions, ScrollView, View } from "react-native";
 import { Container, Navbar } from "react-bootstrap";
 import FootComponent from "../../sections/auth/FootComponent";
-// import { useThemeContext } from "../../theme/useThemeContext";
-// import { darkTheme } from "../../theme/darkTheme";
 
 export default function AuthLayout() {
   const { isAuthenticated, isInitiated, user } = useAuthContext();
   const { redirect } = useGlobalSearchParams();
-  const theme = useTheme();
-  theme.colors = lightTheme.colors;
-  theme.dark = false;
-
-  // const { customTheme } = useThemeContext();
-  // const defaultColorScheme = useColorScheme();
-  // if (customTheme === "dark") {
-  //   theme.colors = darkTheme.colors;
-  //   theme.dark = true;
-  // } else if (customTheme === "light") {
-  //   theme.colors = lightTheme.colors;
-  //   theme.dark = false;
-  // } else {
-  //   if (defaultColorScheme === "dark") {
-  //     theme.colors = darkTheme.colors;
-  //     theme.dark = true;
-  //   } else {
-  //     theme.colors = lightTheme.colors;
-  //     theme.dark = false;
-  //   }
-  // }
 
   if (!isInitiated) {
     return <LoadingScreen />;
@@ -79,12 +55,13 @@ export default function AuthLayout() {
           </Navbar.Brand>
 
           <Navbar.Text className="justify-content-end">
-            <a
-              target="_blank"
-              href="https://www.sarthakmargdarshak.in/contact-us"
-            >
-              Need Help?
-            </a>
+            <IconButton
+              icon="help-circle"
+              size={20}
+              onPress={() =>
+                router.navigate("https://www.sarthakmargdarshak.in/contact-us")
+              }
+            />
           </Navbar.Text>
         </Container>
       </Navbar>

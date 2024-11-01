@@ -1,6 +1,6 @@
-import { Link, Stack } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
-import { Dimensions, ScrollView, View } from "react-native";
+import { View } from "react-native";
 import {
   Button,
   HelperText,
@@ -10,7 +10,6 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useAuthContext } from "../../auth/useAuthContext";
-import FootComponent from "../../sections/auth/FootComponent";
 
 export default function LogInPage() {
   const theme = useTheme();
@@ -89,9 +88,12 @@ export default function LogInPage() {
           marginLeft: 10,
           marginRight: 10,
           borderRadius: 10,
+          borderWidth: 1,
+          borderColor: theme.colors.primary,
         }}
       >
         <TextInput
+          mode="outlined"
           inputMode="email"
           style={{
             margin: 10,
@@ -99,14 +101,16 @@ export default function LogInPage() {
           }}
           value={email}
           onChangeText={(e) => setEmail(e)}
-          label="email"
+          label="Email"
+          left={<TextInput.Icon icon="email" />}
         />
         <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
-          Enter your persional email-id, which you uses to sign in to
+          Enter your personal email-id, which you uses to sign in to
           Sarthak-Margdarshak.
         </HelperText>
 
         <TextInput
+          mode="outlined"
           secureTextEntry={hidePassword}
           inputMode="text"
           value={password}
@@ -115,7 +119,8 @@ export default function LogInPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
-          label="password"
+          label="Password"
+          left={<TextInput.Icon icon="lastpass" />}
           right={
             <TextInput.Icon
               icon={hidePassword ? "eye" : "eye-off"}
@@ -159,7 +164,7 @@ export default function LogInPage() {
               fontFamily: "Laila-Regular",
             }}
           >
-            <Link href="/auth/forgot-password">Forgot password?</Link>
+            <Link href="/auth/forgot-password">Forgot Password?</Link>
           </Text>
         </View>
 
@@ -171,6 +176,7 @@ export default function LogInPage() {
             marginTop: 40,
             borderRadius: 10,
           }}
+          labelStyle={{ fontFamily: "Laila-Regular" }}
           icon="login"
           mode="elevated"
           buttonColor={theme.colors.primary}

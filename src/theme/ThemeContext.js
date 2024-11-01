@@ -8,10 +8,10 @@ import {
 } from "react";
 import LoadingScreen from "../components/LoadingScreen";
 import NetInfo from "@react-native-community/netinfo";
-import { useToast } from "react-native-toast-notifications";
 import { NoNetworkLight } from "../components/SVG/NoNetworkLight";
 import { Dimensions, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
+import { lightTheme } from "./lightTheme";
 
 export const ThemeContext = createContext({
   customTheme: "system_default",
@@ -19,9 +19,30 @@ export const ThemeContext = createContext({
 });
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("system_default");
+  const [themeLite, setThemeLite] = useState("system_default");
   const [isConnected, setConnected] = useState(-1);
-  const toast = useToast();
+
+  const theme = useTheme();
+  theme.colors = lightTheme.colors;
+  theme.dark = false;
+
+  // const { customTheme } = useThemeContext();
+  // const defaultColorScheme = useColorScheme();
+  // if (customTheme === "dark") {
+  //   theme.colors = darkTheme.colors;
+  //   theme.dark = true;
+  // } else if (customTheme === "light") {
+  //   theme.colors = lightTheme.colors;
+  //   theme.dark = false;
+  // } else {
+  //   if (defaultColorScheme === "dark") {
+  //     theme.colors = darkTheme.colors;
+  //     theme.dark = true;
+  //   } else {
+  //     theme.colors = lightTheme.colors;
+  //     theme.dark = false;
+  //   }
+  // }
 
   const [loaded, error] = useFonts({
     "Laila-Bold": require("../../public/assets/fonts/Laila-Bold.ttf"),
@@ -39,24 +60,24 @@ export function ThemeProvider({ children }) {
     return () => {
       unsubscribe();
     };
-  }, [toast]);
+  }, []);
 
   const updateTheme = useCallback((newTheme) => {
     if (newTheme === "light") {
-      setTheme("light");
+      setThemeLite("light");
     } else if (newTheme === "dark") {
-      setTheme("dark");
+      setThemeLite("dark");
     } else {
-      setTheme("system_default");
+      setThemeLite("system_default");
     }
   }, []);
 
   const memoizedValue = useMemo(
     () => ({
-      customTheme: theme,
+      customTheme: themeLite,
       updateTheme: updateTheme,
     }),
-    [theme, updateTheme]
+    [themeLite, updateTheme]
   );
 
   if (!loaded || isConnected === -1) {

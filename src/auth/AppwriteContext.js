@@ -1,15 +1,3 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import {
   Account,
   Client,
@@ -33,6 +21,7 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import { useLocales } from "../locales";
 import { useThemeContext } from "../theme/useThemeContext";
+import { Toast } from "react-native-toast-notifications";
 
 TimeAgo.addDefaultLocale(en);
 export const timeAgo = new TimeAgo("en-US");
@@ -91,62 +80,50 @@ export function AuthProvider({ children }) {
     init();
   }, [init]);
 
+  const createStudentProfile = async (x) => {
+    return await appwriteDatabases.createDocument(
+      APPWRITE_API.databaseId,
+      APPWRITE_API.collections.students,
+      x.$id,
+      {
+        name: x.name,
+        email: x.email,
+      },
+      [Permission.update(Role.user(x.$id))]
+    );
+  };
+
   const signup = useCallback(async (email, password, name) => {
     try {
       await appwriteAccount.create(ID.unique(), email, password, name);
       await appwriteAccount.createEmailSession(email, password);
       const x = await appwriteAccount.get();
       // Create student document in database
-      const y = await appwriteDatabases.createDocument(
-        APPWRITE_API.databaseId,
-        APPWRITE_API.collections.students,
-        x.$id,
-        {
-          name: x.name,
-          email: x.email,
-        },
-        [Permission.update(Role.user(x.$id))]
-      );
+      const y = createStudentProfile(x);
       setUser(x);
       setStudentProfile(y);
       setAuthenticated(true);
-      // ToastAndroid.show("Successfully signed up", ToastAndroid.SHORT);
+      Toast.show("Successfully signed up", { type: "success" });
     } catch (error) {
-      if (error.code === 409) {
-        const y = await appwriteDatabases.listDocuments(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.adminUsers,
-          [Query.equal("email", email)]
-        );
-        if (y.total !== 0) {
-          // ToastAndroid.show(
-          //   "You are already an admin user of this platform. You can't have a student account.",
-          //   ToastAndroid.SHORT
-          // );
-        } else {
-          // ToastAndroid.show(error.message, ToastAndroid.SHORT);
-        }
-      } else {
-        // ToastAndroid.show(error.message, ToastAndroid.SHORT);
-      }
+      Toast.show(error.message, { type: "danger" });
     }
   }, []);
 
   const login = useCallback(async (email, password) => {
     try {
-      // Check for only students
-      const y = await appwriteDatabases.listDocuments(
-        APPWRITE_API.databaseId,
-        APPWRITE_API.collections.adminUsers,
-        [Query.equal("email", email)]
-      );
-      if (y.total !== 0) {
-        throw new Error(
-          "You are an admin user of this platform. You can't login as a student."
-        );
-      }
       await appwriteAccount.createEmailSession(email, password);
       const x = await appwriteAccount.get();
+
+      // Create student profile, if not there
+      const y = await appwriteDatabases.listDocuments(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.students,
+        [Query.equal("email", email)]
+      );
+      if (y.total === 0) {
+        createStudentProfile(x);
+      }
+
       setUser(x);
       setStudentProfile(
         await appwriteDatabases.getDocument(
@@ -156,9 +133,9 @@ export function AuthProvider({ children }) {
         )
       );
       setAuthenticated(true);
-      // ToastAndroid.show("Successfully logged In", ToastAndroid.SHORT);
+      Toast.show("Successfully logged In", { type: "success" });
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.LONG);
+      Toast.show(error.message, { type: "danger" });
     }
   }, []);
 

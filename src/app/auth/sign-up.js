@@ -1,6 +1,6 @@
-import { Link, Stack } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
-import { Dimensions, ScrollView, View } from "react-native";
+import { View } from "react-native";
 import {
   Button,
   HelperText,
@@ -10,7 +10,6 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useAuthContext } from "../../auth/useAuthContext";
-import FootComponent from "../../sections/auth/FootComponent";
 
 export default function SignUpPage() {
   const theme = useTheme();
@@ -90,9 +89,12 @@ export default function SignUpPage() {
           marginLeft: 10,
           marginRight: 10,
           borderRadius: 10,
+          borderWidth: 1,
+          borderColor: theme.colors.primary,
         }}
       >
         <TextInput
+          mode="outlined"
           inputMode="text"
           style={{
             margin: 10,
@@ -101,6 +103,7 @@ export default function SignUpPage() {
           value={name}
           onChangeText={(e) => setName(e)}
           label="Name"
+          left={<TextInput.Icon icon="account" />}
         />
         <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
           Enter your correct name, you will not be able to update your name
@@ -108,6 +111,7 @@ export default function SignUpPage() {
         </HelperText>
 
         <TextInput
+          mode="outlined"
           inputMode="email"
           style={{
             margin: 10,
@@ -116,6 +120,7 @@ export default function SignUpPage() {
           value={emailId}
           onChangeText={(e) => setEmailId(e)}
           label="Email Id"
+          left={<TextInput.Icon icon="email" />}
         />
         <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
           Enter your correct email-id, this will be used as id during the login
@@ -123,6 +128,7 @@ export default function SignUpPage() {
         </HelperText>
 
         <TextInput
+          mode="outlined"
           secureTextEntry={hidePassword}
           inputMode="text"
           value={password}
@@ -131,7 +137,8 @@ export default function SignUpPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
-          label="password"
+          label="Password"
+          left={<TextInput.Icon icon="lastpass" />}
           right={
             <TextInput.Icon
               icon={hidePassword ? "eye" : "eye-off"}
@@ -158,7 +165,7 @@ export default function SignUpPage() {
               fontFamily: "Laila-Regular",
             }}
           >
-            <Link href="/auth/login">Already a member</Link>
+            <Link href="/auth/login">Already a Member</Link>
           </Text>
           <Text
             style={{
@@ -172,7 +179,7 @@ export default function SignUpPage() {
               fontFamily: "Laila-Regular",
             }}
           >
-            <Link href="/auth/forgot-password">Forgot password?</Link>
+            <Link href="/auth/forgot-password">Forgot Password?</Link>
           </Text>
         </View>
 
@@ -185,6 +192,7 @@ export default function SignUpPage() {
             borderRadius: 10,
             fontFamily: "Laila-Regular",
           }}
+          labelStyle={{ fontFamily: "Laila-Regular" }}
           icon="account-plus-outline"
           mode="elevated"
           buttonColor={theme.colors.primary}

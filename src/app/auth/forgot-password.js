@@ -1,60 +1,39 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
-import { Link, Stack } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
-import { Dimensions, ScrollView, View } from "react-native";
+import { View } from "react-native";
 import {
   Button,
+  Chip,
   HelperText,
   Surface,
   Text,
   TextInput,
   useTheme,
 } from "react-native-paper";
-import FootComponent from "../../sections/auth/FootComponent";
-import { appwriteAccount, appwriteDatabases } from "../../auth/AppwriteContext";
+import { appwriteAccount } from "../../auth/AppwriteContext";
 import { APPWRITE_API } from "../../config-global";
-import { Query } from "appwrite";
+import { Toast } from "react-native-toast-notifications";
 
 export default function ForgotPasswordPage() {
   const theme = useTheme();
 
   const [emailId, setEmailId] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
 
   const submit = async () => {
+    setEmailSent(false);
     try {
-      // Check for only student emails
-      const y = await appwriteDatabases.listDocuments(
-        APPWRITE_API.databaseId,
-        APPWRITE_API.collections.adminUsers,
-        [Query.equal("email", emailId)]
-      );
-      if (y.total !== 0) {
-        throw new Error(
-          "You are an admin user of this platform. You can't reset your password on this app."
-        );
-      }
       await appwriteAccount.createRecovery(
         emailId,
-        APPWRITE_API.adminHostOrigin + "/auth/new-password"
+        window.location.origin + "/reset-password"
       );
-      // ToastAndroid.show(
-      //   "Password reset link has been sent to your email. Happy to help you",
-      //   ToastAndroid.LONG
-      // );
+      Toast.show(
+        "Password reset link has been sent to your email. Happy to help you.",
+        { type: "success" }
+      );
+      setEmailSent(true);
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.LONG);
-      console.log(error.message);
+      Toast.show(error.message, { type: "danger" });
     }
   };
 
@@ -120,9 +99,12 @@ export default function ForgotPasswordPage() {
           marginLeft: 10,
           marginRight: 10,
           borderRadius: 10,
+          borderWidth: 1,
+          borderColor: theme.colors.primary,
         }}
       >
         <TextInput
+          mode="outlined"
           inputMode="email"
           style={{
             margin: 10,
@@ -131,11 +113,24 @@ export default function ForgotPasswordPage() {
           value={emailId}
           onChangeText={(e) => setEmailId(e)}
           label="Email"
+          left={<TextInput.Icon icon="email" />}
         />
         <HelperText type="info" style={{ fontFamily: "Laila-Regular" }}>
           We will send a magic URL for resetting your password to your Email,
           which can be used to reset your password.
         </HelperText>
+
+        {emailSent && (
+          <Chip
+            icon="checkbox-marked"
+            selectedColor={theme.colors.secondary}
+            selected
+            style={{ margin: 20 }}
+            textStyle={{ fontFamily: "Laila-Regular" }}
+          >
+            Email Sent Successfully.
+          </Chip>
+        )}
 
         <View
           style={{
@@ -181,6 +176,7 @@ export default function ForgotPasswordPage() {
             marginTop: 40,
             borderRadius: 10,
           }}
+          labelStyle={{ fontFamily: "Laila-Regular" }}
           icon="send"
           mode="elevated"
           buttonColor={theme.colors.primary}

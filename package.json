@@ -9,7 +9,6 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@expo/config-plugins": "^7.8.0",
     "@expo/metro-config": "~0.17.1",
     "@pkasila/react-katex": "^1.2.2",
     "@react-native-community/netinfo": "11.1.0",
@@ -47,8 +46,7 @@
     "typescript": "^5.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
-    "@types/react-native": "^0.73.0"
+    "@babel/core": "^7.24.0"
   },
   "private": true
 }
