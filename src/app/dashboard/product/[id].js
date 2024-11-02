@@ -138,8 +138,7 @@ export default function productView() {
 
       <ScrollView
         style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.surface,
+          height: Dimensions.get("window").height - 70,
         }}
         contentContainerStyle={{
           paddingBottom: 20,
@@ -273,7 +272,12 @@ export default function productView() {
                 )}
 
                 {!addedToCart && !purchased && (
-                  <Button icon="cart-plus" mode="contained" onPress={addToCart}>
+                  <Button
+                    icon="cart-plus"
+                    mode="contained"
+                    onPress={addToCart}
+                    labelStyle={{ fontFamily: "Laila-Regular" }}
+                  >
                     Add to Cart
                   </Button>
                 )}

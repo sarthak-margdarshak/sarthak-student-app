@@ -71,13 +71,13 @@ export default function DashboardPage() {
 
       <ScrollView
         style={{
-          margin: 2,
-          height: Dimensions.get("window").height,
+          height: Dimensions.get("window").height - 70,
+        }}
+        contentContainerStyle={{
+          paddingBottom: 20,
         }}
         showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={false} onRefresh={() => {}} />
-        }
+        automaticallyAdjustKeyboardInsets={true}
       >
         <MotivationBox />
 

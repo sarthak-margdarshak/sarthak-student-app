@@ -18,6 +18,7 @@ export default function ProductMediumComponent({
       <Card.Title
         title={product?.name}
         subtitle={product?.description}
+        subtitleNumberOfLines={2}
         titleStyle={{ fontFamily: "Laila-Regular" }}
         subtitleStyle={{ fontFamily: "Laila-Regular" }}
       />

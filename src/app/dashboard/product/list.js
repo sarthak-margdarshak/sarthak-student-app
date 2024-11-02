@@ -12,6 +12,7 @@ import ProductMediumComponent from "../../../sections/dashboard/mockSeries/Produ
 import { router, useLocalSearchParams } from "expo-router";
 import ProductMediumComponentLoading from "../../../sections/dashboard/mockSeries/ProductMediumComponentLoading";
 import { Toast } from "react-native-toast-notifications";
+import { PATH_DASHBOARD } from "../../../routes/paths";
 
 export default function ProductList() {
   const theme = useTheme();
@@ -92,6 +93,20 @@ export default function ProductList() {
       <Appbar.Header>
         {router.canGoBack() && (
           <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+            onClick={() => {
+              router.dismissAll();
+              router.replace(PATH_DASHBOARD.root);
+            }}
+          />
         )}
         <Appbar.Content
           titleStyle={{ fontFamily: "Laila-Regular" }}

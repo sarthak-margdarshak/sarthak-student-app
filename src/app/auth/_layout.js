@@ -68,7 +68,7 @@ export default function AuthLayout() {
 
       <View
         style={{
-          minWidth: Math.min(Dimensions.get("window").width, 400),
+          minWidth: Math.min(Dimensions.get("window").width, 600),
           maxWidth: 700,
         }}
       >
