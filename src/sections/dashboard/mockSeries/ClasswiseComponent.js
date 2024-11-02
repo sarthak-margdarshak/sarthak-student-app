@@ -29,7 +29,7 @@ export default function ClasswiseComponent() {
             Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("published", true),
             Query.select(["standards"]),
-            Query.limit(4),
+            Query.limit(8),
           ]
         );
 
@@ -112,16 +112,28 @@ export default function ClasswiseComponent() {
             <Container>
               {loading && (
                 <Row>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
                 </Row>
@@ -130,7 +142,7 @@ export default function ClasswiseComponent() {
               {!loading && (
                 <Row>
                   {standardsList.map((standard) => (
-                    <Col xs={3} key={standard?.$id}>
+                    <Col xs={3} key={standard?.$id} style={{ marginBottom: 5 }}>
                       <BoxTextComponent
                         title={standard?.name}
                         link={

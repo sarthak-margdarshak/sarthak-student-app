@@ -12,6 +12,7 @@ import { EmptyCartLight } from "../../components/SVG/EmptyCartLight";
 import { langPath, useLocales } from "../../locales";
 import ProductMediumComponentLoading from "../../sections/dashboard/mockSeries/ProductMediumComponentLoading";
 import ProductMediumComponent from "../../sections/dashboard/mockSeries/ProductMediumComponent";
+import { Toast } from "react-native-toast-notifications";
 
 export default function CartFragment() {
   const theme = useTheme();
@@ -67,7 +68,10 @@ export default function CartFragment() {
       setProducts(tmpProducts);
       setTotalBill(tmpBill);
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.LONG);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setLoading(false);
   };
@@ -146,6 +150,7 @@ export default function CartFragment() {
                   style={{
                     color: theme.colors.onSurfaceDisabled,
                     marginTop: 50,
+                    fontFamily: "Laila-Regular",
                   }}
                 >
                   {translate(
@@ -159,6 +164,7 @@ export default function CartFragment() {
                   style={{
                     color: theme.colors.onSurfaceDisabled,
                     marginTop: 10,
+                    fontFamily: "Laila-Regular",
                   }}
                 >
                   {translate(
@@ -172,6 +178,7 @@ export default function CartFragment() {
                   icon="file-find"
                   onPress={() => router.push(PATH_DASHBOARD.product.list)}
                   style={{ marginTop: 40, borderRadius: 10 }}
+                  labelStyle={{ fontFamily: "Laila-Regular" }}
                 >
                   {translate(
                     langPath.section.dashboard.dashboardFragments.exploreMockBtn
@@ -185,10 +192,18 @@ export default function CartFragment() {
                     product={product}
                     key={product?.$id}
                     onRemove={() => updateCart(product?.$id, -1)}
-                    cardePage
+                    cartPage
                   />
                 ))}
-                <Surface style={{ borderRadius: 15 }}>
+
+                <Surface
+                  style={{
+                    padding: 5,
+                    marginTop: 5,
+                    marginBottom: 5,
+                    backgroundColor: theme.colors.infoContainer,
+                  }}
+                >
                   <View
                     style={{
                       flexDirection: "row",
@@ -199,16 +214,19 @@ export default function CartFragment() {
                   >
                     <View>
                       <Text
-                        variant="headlineLarge"
-                        style={{ fontWeight: "bold" }}
+                        variant="bodyLarge"
+                        style={{
+                          fontWeight: "bold",
+                          fontFamily: "Laila-Regular",
+                        }}
                       >
                         {"₹" + totalBill}
                       </Text>
 
                       <Text
-                        variant="headlineSmall"
+                        variant="bodySmall"
                         style={{
-                          fontWeight: "bold",
+                          fontFamily: "Laila-Regular",
                         }}
                       >
                         Amount to be paid
@@ -221,6 +239,7 @@ export default function CartFragment() {
                         icon="cart-check"
                         onPress={placeOrder}
                         loading={placingOrder}
+                        labelStyle={{ fontFamily: "Laila-Regular" }}
                       >
                         Checkout
                       </Button>

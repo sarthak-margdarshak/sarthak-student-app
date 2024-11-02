@@ -1,18 +1,6 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { Fragment, useEffect, useState } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
-import { Divider, List, Text, useTheme } from "react-native-paper";
+import { Appbar, Divider, List, Text, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { appwriteDatabases } from "../../../auth/AppwriteContext";
 import { APPWRITE_API } from "../../../config-global";
@@ -37,7 +25,7 @@ export default function subjects() {
           [
             Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("published", true),
-            Query.select(["subjects"]),
+            Query.select(["subjects", "$id"]),
           ]
         );
 
@@ -58,7 +46,10 @@ export default function subjects() {
         subjects.forEach((value, key) => z.push({ $id: key, name: value }));
         setSubjectsList(z);
       } catch (error) {
-        // ToastAndroid.show(error.message, ToastAndroid.LONG);
+        Toast.show(error.message, {
+          type: "danger",
+          textStyle: { fontFamily: "Laila-Regular" },
+        });
       }
       setLoading(false);
     };
@@ -67,55 +58,71 @@ export default function subjects() {
 
   return (
     <View>
-      <Stack.Screen
-        options={{
-          title: "Subjects",
-        }}
-      />
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title="All Subjects"
+        />
+      </Appbar.Header>
+
       <ScrollView
         style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.background,
+          height: Dimensions.get("window").height - 70,
         }}
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 20,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
       >
-        {loading ? (
-          <View style={{ padding: 10 }}>
-            <Text
-              variant="titleLarge"
-              style={{ fontWeight: "bold", margin: 10 }}
-            >
-              List of all Subjects
-            </Text>
+        <List.Section>
+          <List.Subheader
+            style={{ fontWeight: "bold", fontFamily: "Laila-Regular" }}
+          >
+            List of all Classes
+          </List.Subheader>
+          <Divider bold />
+          {loading ? (
             <Skeleton
               height={50}
               count={5}
               color={theme.colors.inverseOnSurface}
             />
-          </View>
-        ) : (
-          <List.Section>
-            <List.Subheader>List of all Subjects</List.Subheader>
-            <Divider bold />
-            {subjectsList.map((subject) => (
-              <Fragment key={subject?.$id}>
-                <List.Item
-                  title={subject?.name}
-                  onPress={() =>
-                    router.push(
-                      "/dashboard/product/list?subjects=" + subject?.$id
-                    )
-                  }
-                />
-                <Divider />
-              </Fragment>
-            ))}
-          </List.Section>
-        )}
+          ) : (
+            <View>
+              {subjectsList.map((subject) => (
+                <Fragment key={subject?.$id}>
+                  <List.Item
+                    title={subject?.name}
+                    titleStyle={{ fontFamily: "Laila-Regular" }}
+                    right={(props) => (
+                      <List.Icon {...props} icon="chevron-right" />
+                    )}
+                    onPress={() =>
+                      router.push(
+                        "/dashboard/product/list?subjects=" + subject?.$id
+                      )
+                    }
+                  />
+                  <Divider />
+                </Fragment>
+              ))}
+            </View>
+          )}
+        </List.Section>
       </ScrollView>
     </View>
   );

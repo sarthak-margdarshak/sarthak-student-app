@@ -99,7 +99,7 @@ export function AuthProvider({ children }) {
       await appwriteAccount.createEmailSession(email, password);
       const x = await appwriteAccount.get();
       // Create student document in database
-      const y = createStudentProfile(x);
+      const y = await createStudentProfile(x);
       setUser(x);
       setStudentProfile(y);
       setAuthenticated(true);
@@ -127,7 +127,7 @@ export function AuthProvider({ children }) {
         [Query.equal("email", email)]
       );
       if (y.total === 0) {
-        createStudentProfile(x);
+        await createStudentProfile(x);
       }
 
       setUser(x);

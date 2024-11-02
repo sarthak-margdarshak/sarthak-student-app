@@ -1,15 +1,3 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { Query } from "appwrite";
 import { appwriteDatabases } from "./AppwriteContext";
 
@@ -22,10 +10,7 @@ export class AppwriteHelper {
    */
   static async listAllDocuments(databaseId, collectionId, queries) {
     var res = [];
-    var tempQueries = [];
-    for (let i in queries) {
-      tempQueries.push(queries[i]);
-    }
+    var tempQueries = queries;
     tempQueries.push(Query.limit(100));
     const page0 = await appwriteDatabases.listDocuments(
       databaseId,

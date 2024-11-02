@@ -19,6 +19,7 @@ import { Skeleton } from "react-native-skeletons";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 import { Carousel } from "react-bootstrap";
+import { Toast } from "react-native-toast-notifications";
 
 export default function productView() {
   const theme = useTheme();
@@ -88,7 +89,10 @@ export default function productView() {
       );
       setProduct(x);
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.LONG);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setLoading(false);
   };
@@ -107,7 +111,7 @@ export default function productView() {
   };
 
   const goToCart = async () => {
-    router.push(PATH_DASHBOARD.root + "?pagesIndex=2");
+    router.push(PATH_DASHBOARD.cart);
   };
 
   return (

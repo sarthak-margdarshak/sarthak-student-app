@@ -28,7 +28,7 @@ export default function SubjectWiseComponent() {
             Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("published", true),
             Query.select(["subjects"]),
-            Query.limit(5),
+            Query.limit(8),
           ]
         );
 
@@ -111,16 +111,28 @@ export default function SubjectWiseComponent() {
             <Container>
               {loading && (
                 <Row>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
-                  <Col xs={3}>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
+                    <Skeleton height={70} />
+                  </Col>
+                  <Col xs={3} style={{ marginBottom: 5 }}>
                     <Skeleton height={70} />
                   </Col>
                 </Row>
@@ -129,13 +141,13 @@ export default function SubjectWiseComponent() {
               {!loading && (
                 <Row>
                   {subjectsList.map((subject) => (
-                    <Col xs={3} key={subject?.$id}>
+                    <Col xs={3} key={subject?.$id} style={{ marginBottom: 5 }}>
                       <BoxTextComponent
                         title={subject?.name}
                         link={
                           PATH_DASHBOARD.product.list +
                           "?subjects=" +
-                          standard?.$id
+                          subject?.$id
                         }
                       />
                     </Col>

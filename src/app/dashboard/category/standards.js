@@ -1,18 +1,6 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { Fragment, useEffect, useState } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
-import { Divider, List, Text, useTheme } from "react-native-paper";
+import { Appbar, Divider, List, Text, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { appwriteDatabases } from "../../../auth/AppwriteContext";
 import { APPWRITE_API } from "../../../config-global";
@@ -20,6 +8,7 @@ import { Query } from "appwrite";
 import { Stack, router } from "expo-router";
 import { AppwriteHelper } from "../../../auth/AppwriteHelper";
 import { Skeleton } from "react-native-skeletons";
+import { Toast } from "react-native-toast-notifications";
 
 export default function standards() {
   const theme = useTheme();
@@ -37,7 +26,7 @@ export default function standards() {
           [
             Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("published", true),
-            Query.select(["standards"]),
+            Query.select(["standards", "$id"]),
           ]
         );
 
@@ -58,7 +47,10 @@ export default function standards() {
         standards.forEach((value, key) => z.push({ $id: key, name: value }));
         setStandardList(z);
       } catch (error) {
-        // ToastAndroid.show(error.message, ToastAndroid.LONG);
+        Toast.show(error.message, {
+          type: "danger",
+          textStyle: { fontFamily: "Laila-Regular" },
+        });
       }
       setLoading(false);
     };
@@ -67,55 +59,71 @@ export default function standards() {
 
   return (
     <View>
-      <Stack.Screen
-        options={{
-          title: "Classes",
-        }}
-      />
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title="All Classes"
+        />
+      </Appbar.Header>
+
       <ScrollView
         style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.background,
+          height: Dimensions.get("window").height - 70,
         }}
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 20,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
       >
-        {loading ? (
-          <View style={{ padding: 10 }}>
-            <Text
-              variant="titleLarge"
-              style={{ fontWeight: "bold", margin: 10 }}
-            >
-              List of all Classes
-            </Text>
+        <List.Section>
+          <List.Subheader
+            style={{ fontWeight: "bold", fontFamily: "Laila-Regular" }}
+          >
+            List of all Classes
+          </List.Subheader>
+          <Divider bold />
+          {loading ? (
             <Skeleton
               height={50}
               count={5}
               color={theme.colors.inverseOnSurface}
             />
-          </View>
-        ) : (
-          <List.Section>
-            <List.Subheader>List of all Subjects</List.Subheader>
-            <Divider bold />
-            {standardList.map((standard) => (
-              <Fragment key={standard?.$id}>
-                <List.Item
-                  title={standard?.name}
-                  onPress={() =>
-                    router.push(
-                      "/dashboard/product/list?standards=" + standard?.$id
-                    )
-                  }
-                />
-                <Divider />
-              </Fragment>
-            ))}
-          </List.Section>
-        )}
+          ) : (
+            <View>
+              {standardList.map((standard) => (
+                <Fragment key={standard?.$id}>
+                  <List.Item
+                    title={standard?.name}
+                    titleStyle={{ fontFamily: "Laila-Regular" }}
+                    right={(props) => (
+                      <List.Icon {...props} icon="chevron-right" />
+                    )}
+                    onPress={() =>
+                      router.push(
+                        "/dashboard/product/list?standards=" + standard?.$id
+                      )
+                    }
+                  />
+                  <Divider />
+                </Fragment>
+              ))}
+            </View>
+          )}
+        </List.Section>
       </ScrollView>
     </View>
   );

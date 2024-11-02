@@ -1,13 +1,14 @@
 import { router } from "expo-router";
 import { View } from "react-native";
-import { Button, Card, Text } from "react-native-paper";
+import { Button, Card, Text, useTheme } from "react-native-paper";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 
 export default function ProductMediumComponent({
   product,
-  cardPage,
+  cartPage,
   onRemove,
 }) {
+  const theme = useTheme();
   return (
     <Card
       style={{ margin: 5, padding: 5, paddingBottom: 10 }}
@@ -57,7 +58,11 @@ export default function ProductMediumComponent({
                   {"Subjects - "}
                 </Text>
                 {product?.subjects?.map((subject) => (
-                  <Text key={subject?.$id} variant="bodySmall">
+                  <Text
+                    key={subject?.$id}
+                    variant="bodySmall"
+                    style={{ fontFamily: "Laila-Regular" }}
+                  >
                     {subject?.name + ", "}
                   </Text>
                 ))}
@@ -65,13 +70,16 @@ export default function ProductMediumComponent({
             )}
           </View>
 
-          {cardPage && (
+          {cartPage && (
             <View
               style={{
                 alignItems: "flex-end",
               }}
             >
-              <Text variant="headlineSmall" style={{ fontWeight: "bold" }}>
+              <Text
+                variant="headlineSmall"
+                style={{ fontWeight: "bold", fontFamily: "Laila-Regular" }}
+              >
                 {"₹" + product?.sellPrice}
               </Text>
 
@@ -79,6 +87,8 @@ export default function ProductMediumComponent({
                 variant="bodySmall"
                 style={{
                   textDecorationLine: "line-through",
+                  color: theme.colors.surfaceDisabled,
+                  fontFamily: "Laila-Regular",
                 }}
               >
                 {"₹" + product?.mrp}
@@ -87,9 +97,13 @@ export default function ProductMediumComponent({
           )}
         </View>
       </Card.Content>
-      {cardPage && (
+      {cartPage && (
         <Card.Actions>
-          <Button icon="delete" onPress={onRemove}>
+          <Button
+            icon="delete"
+            onPress={onRemove}
+            labelStyle={{ fontFamily: "Laila-Regular" }}
+          >
             Remove from Cart
           </Button>
         </Card.Actions>
