@@ -1,19 +1,8 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
-import { Link, Stack, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
 import {
+  Appbar,
   Button,
   Card,
   Dialog,
@@ -24,7 +13,6 @@ import {
   Text,
   useTheme,
 } from "react-native-paper";
-import RazorpayCheckout from "react-native-razorpay";
 import {
   appwriteDatabases,
   appwriteFunctions,
@@ -37,6 +25,7 @@ import { Query } from "appwrite";
 import { AppwriteHelper } from "../../../auth/AppwriteHelper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import rgbHex from "rgb-hex";
+import { Toast } from "react-native-toast-notifications";
 
 export default function orderPage() {
   const { orderId } = useLocalSearchParams();
@@ -65,12 +54,15 @@ export default function orderPage() {
           APPWRITE_API.collections.products,
           [
             Query.equal("$id", x.products),
-            Query.select(["name", "sellPrice", "mrp"]),
+            Query.select(["name", "sellPrice", "mrp", "$id"]),
           ]
         );
         setOrderObj(x);
       } catch (error) {
-        // ToastAndroid.show(error.message, ToastAndroid.SHORT);
+        Toast.show(error.message, {
+          type: "danger",
+          textStyle: { fontFamily: "Laila-Regular" },
+        });
       }
       setLoading(false);
     };
@@ -110,31 +102,29 @@ export default function orderPage() {
         }
       }
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.LONG);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setCreatingOrder(false);
 
     if (razorpay_order_id) {
       var options = {
         key: RAZORPAY_API.keyId,
+        key_secret: RAZORPAY_API.secret,
         amount: orderObj.amount_to_be_paid,
         currency: "INR",
         name: "Sarthak Margdarshak",
         description: "Sarthak Margdarshk - Mock Test Series - purchase",
         image:
-          "https://api.sarthakmargdarshak.in/v1/storage/buckets/66831750aac03d4d2f6e/files/668317a028ab1ae5fa6d/view?project=6639f48744439b98db71&mode=admin",
+          "https://api.sarthakmargdarshak.in/v1/storage/buckets/672a50aa003599f495e8/files/672a50c8003897892e6a/view?project=671f66a0001e5803f481&project=671f66a0001e5803f481&mode=admin",
         order_id: razorpay_order_id,
         prefill: {
           email: studentProfile.email,
           name: studentProfile.name,
         },
-        notes: { studentId: studentProfile.$id },
-        theme: { color: "#" + rgbHex(theme.colors.primary) },
-        timeout: 300,
-        send_sms_hash: true,
-      };
-      RazorpayCheckout.open(options)
-        .then(async (data) => {
+        handler: async function (data) {
           setBackendValidating(true);
           const y = await appwriteFunctions.createExecution(
             APPWRITE_API.functions.confirmPayment,
@@ -174,10 +164,10 @@ export default function orderPage() {
               attempts: orderObj.attempts + 1,
             });
           } else {
-            // ToastAndroid.show(
-            //   "Payment verfication Successful",
-            //   ToastAndroid.LONG
-            // );
+            Toast.show("Payment verfication Successful", {
+              type: "success",
+              textStyle: { fontFamily: "Laila-Regular" },
+            });
             appwriteDatabases.updateDocument(
               APPWRITE_API.databaseId,
               APPWRITE_API.collections.orders,
@@ -201,38 +191,48 @@ export default function orderPage() {
 
           await updateStudentProfile();
           setBackendValidating(false);
-        })
-        .catch((error) => {
-          // handle failure, update status and attempts, store error message
-          setPaymentError({
-            title: error?.error?.reason,
-            description: error?.error?.description,
-          });
-          setVisibleErrorDialoge(true);
+        },
+        notes: { studentId: studentProfile.$id },
+        theme: { color: "#" + rgbHex(theme.colors.primary) },
+        timeout: 300,
+        send_sms_hash: true,
+      };
 
-          appwriteDatabases.updateDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.orders,
-            orderId,
-            {
-              status: "failure",
-              last_payment_date: new Date(),
-              attempts: orderObj.attempts + 1,
-            }
-          );
+      var rzp1 = new window.Razorpay(options);
 
-          setOrderObj({
-            ...orderObj,
+      rzp1.on("payment.failed", function (error) {
+        // handle failure, update status and attempts, store error message
+        setPaymentError({
+          title: error?.error?.reason,
+          description: error?.error?.description,
+        });
+        setVisibleErrorDialoge(true);
+
+        appwriteDatabases.updateDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.orders,
+          orderId,
+          {
             status: "failure",
             last_payment_date: new Date(),
             attempts: orderObj.attempts + 1,
-          });
+          }
+        );
+
+        setOrderObj({
+          ...orderObj,
+          status: "failure",
+          last_payment_date: new Date(),
+          attempts: orderObj.attempts + 1,
         });
+      });
+
+      rzp1.open();
     } else {
-      // ToastAndroid.show(
-      //   "Retry Payment by restarting the app",
-      //   ToastAndroid.SHORT
-      // );
+      Toast.show("Retry Payment by restarting the app", {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
   };
 
@@ -254,7 +254,10 @@ export default function orderPage() {
         last_payment_date: new Date(),
       });
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setCreatingOrder(false);
 
@@ -297,7 +300,10 @@ export default function orderPage() {
         attempts: orderObj.attempts + 1,
       });
     } else {
-      // ToastAndroid.show("Payment verfication Successful", ToastAndroid.LONG);
+      Toast.show("Payment verfication Successful", {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
       appwriteDatabases.updateDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.orders,
@@ -322,20 +328,32 @@ export default function orderPage() {
 
   return (
     <Fragment>
-      <Stack.Screen
-        options={{
-          title: "Order ID - " + orderId,
-        }}
-      />
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title={"Order ID - " + orderId}
+        />
+      </Appbar.Header>
+
       <ScrollView
         style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.surface,
-          padding: 10,
+          height: Dimensions.get("window").height - 70,
         }}
         contentContainerStyle={{
           paddingBottom: 20,
-          // paddingTop: 80,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
@@ -349,7 +367,10 @@ export default function orderPage() {
         ) : (
           <View>
             <Card style={{ margin: 5 }}>
-              <Card.Title title="Mock Test Series Product" />
+              <Card.Title
+                title="Mock Test Series Products - "
+                titleStyle={{ fontFamily: "Laila-Regular", fontWeight: "bold" }}
+              />
               <Divider />
               <Card.Content>
                 {orderObj.products?.map((product) => (
@@ -357,7 +378,9 @@ export default function orderPage() {
                     style={{
                       flexDirection: "row",
                       justifyContent: "space-between",
-                      margin: 5,
+                      marginTop: 3,
+                      marginLeft: 5,
+                      marginRight: 5,
                       padding: 5,
                     }}
                     key={product.$id}
@@ -367,6 +390,7 @@ export default function orderPage() {
                         style={{
                           textDecorationLine: "underline",
                           color: theme.colors.tertiary,
+                          fontFamily: "Laila-Regular",
                         }}
                         variant="titleSmall"
                       >
@@ -376,7 +400,10 @@ export default function orderPage() {
                       </Text>
                     </View>
                     <View style={{ justifyContent: "center" }}>
-                      <Text variant="titleSmall">
+                      <Text
+                        variant="titleSmall"
+                        style={{ fontFamily: "Laila-Regular" }}
+                      >
                         {"₹" + product.sellPrice + "/-"}
                       </Text>
                     </View>
@@ -385,76 +412,111 @@ export default function orderPage() {
               </Card.Content>
             </Card>
 
-            <Surface style={{ borderRadius: 15, padding: 10, margin: 5 }}>
-              <Text variant="headlineSmall">Bill Summary</Text>
-
-              <Divider style={{ margin: 5 }} />
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 5,
-                  padding: 5,
-                }}
-              >
-                <View>
-                  <Text variant="titleSmall" style={{ fontWeight: "bold" }}>
-                    Item Total & GST
-                  </Text>
-                </View>
-
-                <View style={{ justifyContent: "center" }}>
-                  <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                    {"₹" + orderObj.amount_total / 100 + "/-"}
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 5,
-                  padding: 5,
-                }}
-              >
-                <View>
-                  <Text variant="titleSmall" style={{ fontWeight: "bold" }}>
-                    Coupon Discount
-                  </Text>
-                </View>
-
-                <View style={{ justifyContent: "center" }}>
-                  <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                    {"₹" + orderObj.coupon_applied / 100 + "/-"}
-                  </Text>
-                </View>
-              </View>
-
+            <Card style={{ margin: 5 }}>
+              <Card.Title
+                title="Bill Summary - "
+                titleStyle={{ fontFamily: "Laila-Regular", fontWeight: "bold" }}
+              />
               <Divider />
+              <Card.Content>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    margin: 5,
+                    padding: 5,
+                  }}
+                >
+                  <View>
+                    <Text
+                      variant="titleSmall"
+                      style={{
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
+                      Item Total & GST
+                    </Text>
+                  </View>
 
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 5,
-                  padding: 5,
-                }}
-              >
-                <View>
-                  <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                    Total
-                  </Text>
+                  <View style={{ justifyContent: "center" }}>
+                    <Text
+                      variant="titleSmall"
+                      style={{
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
+                      {"₹" + orderObj.amount_total / 100 + "/-"}
+                    </Text>
+                  </View>
                 </View>
 
-                <View style={{ justifyContent: "center" }}>
-                  <Text variant="titleLarge" style={{ fontWeight: "bold" }}>
-                    {"₹" + orderObj.amount_to_be_paid / 100 + "/-"}
-                  </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    margin: 5,
+                    padding: 5,
+                  }}
+                >
+                  <View>
+                    <Text
+                      variant="titleSmall"
+                      style={{
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
+                      Coupon Discount
+                    </Text>
+                  </View>
+
+                  <View style={{ justifyContent: "center" }}>
+                    <Text
+                      variant="titleSmall"
+                      style={{
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
+                      {"₹" + orderObj.coupon_applied / 100 + "/-"}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </Surface>
+
+                <Divider />
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    margin: 5,
+                    padding: 5,
+                  }}
+                >
+                  <View>
+                    <Text
+                      variant="titleSmall"
+                      style={{
+                        fontWeight: "bold",
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
+                      Total
+                    </Text>
+                  </View>
+
+                  <View style={{ justifyContent: "center" }}>
+                    <Text
+                      variant="titleSmall"
+                      style={{
+                        fontWeight: "bold",
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
+                      {"₹" + orderObj.amount_to_be_paid / 100 + "/-"}
+                    </Text>
+                  </View>
+                </View>
+              </Card.Content>
+            </Card>
 
             {orderObj.status === "success" && (
               <Surface
@@ -475,7 +537,10 @@ export default function orderPage() {
                 >
                   <Text
                     variant="headlineSmall"
-                    style={{ color: theme.colors.onSuccessContainer }}
+                    style={{
+                      color: theme.colors.onSuccessContainer,
+                      fontFamily: "Laila-Regular",
+                    }}
                   >
                     Payment Done Successfully
                   </Text>
@@ -495,13 +560,25 @@ export default function orderPage() {
                   }}
                 >
                   <View>
-                    <Text variant="titleSmall" style={{ fontWeight: "bold" }}>
+                    <Text
+                      variant="titleSmall"
+                      style={{
+                        fontWeight: "bold",
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
                       {orderObj.payment_id}
                     </Text>
                   </View>
 
                   <View style={{ justifyContent: "center" }}>
-                    <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
+                    <Text
+                      variant="titleMedium"
+                      style={{
+                        fontWeight: "bold",
+                        fontFamily: "Laila-Regular",
+                      }}
+                    >
                       {timeAgo.format(new Date(orderObj.last_payment_date))}
                     </Text>
                   </View>
@@ -514,19 +591,30 @@ export default function orderPage() {
                     marginRight: 10,
                     marginBottom: 5,
                     fontWeight: "bold",
+                    fontFamily: "Laila-Regular",
                   }}
                 >
                   NOTE : HOW TO ACCESS THIS PURCHASED MOCK TEST SERIES
                 </Text>
                 <Text
                   variant="labelSmall"
-                  style={{ marginRight: 10, marginBottom: 5, marginLeft: 20 }}
+                  style={{
+                    marginRight: 10,
+                    marginBottom: 5,
+                    marginLeft: 20,
+                    fontFamily: "Laila-Regular",
+                  }}
                 >
                   1. BY CLICKING THE MOCK TEST SERIES ON THE TOP OF THIS PAGE.
                 </Text>
                 <Text
                   variant="labelSmall"
-                  style={{ marginRight: 10, marginBottom: 5, marginLeft: 20 }}
+                  style={{
+                    marginRight: 10,
+                    marginBottom: 5,
+                    marginLeft: 20,
+                    fontFamily: "Laila-Regular",
+                  }}
                 >
                   2. YOU CAN FIND ALL PURCHASED ON THE `PURCHASED` TAB OF MAIN
                   PAGE OF APP.
@@ -554,7 +642,10 @@ export default function orderPage() {
                   >
                     <Text
                       variant="headlineSmall"
-                      style={{ color: theme.colors.onErrorContainer }}
+                      style={{
+                        color: theme.colors.onErrorContainer,
+                        fontFamily: "Laila-Regular",
+                      }}
                     >
                       Payment Failed
                     </Text>
@@ -575,7 +666,13 @@ export default function orderPage() {
                     }}
                   >
                     <View>
-                      <Text variant="titleSmall" style={{ fontWeight: "bold" }}>
+                      <Text
+                        variant="titleSmall"
+                        style={{
+                          fontWeight: "bold",
+                          fontFamily: "Laila-Regular",
+                        }}
+                      >
                         {orderObj.attempts + " attempts made."}
                       </Text>
                     </View>
@@ -583,7 +680,10 @@ export default function orderPage() {
                     <View style={{ justifyContent: "center" }}>
                       <Text
                         variant="titleMedium"
-                        style={{ fontWeight: "bold" }}
+                        style={{
+                          fontWeight: "bold",
+                          fontFamily: "Laila-Regular",
+                        }}
                       >
                         {timeAgo.format(new Date(orderObj.last_payment_date))}
                       </Text>
@@ -591,13 +691,19 @@ export default function orderPage() {
                   </View>
                 </Surface>
                 <Button
-                  style={{ margin: 5 }}
+                  style={{
+                    marginLeft: 50,
+                    marginRight: 50,
+                    marginTop: 10,
+                    borderRadius: 10,
+                  }}
                   mode="contained"
                   icon="contactless-payment"
                   onPress={startPayment}
                   loading={
                     backendValidating ? true : creatingOrder ? true : false
                   }
+                  labelStyle={{ fontFamily: "Laila-Regular" }}
                 >
                   {backendValidating
                     ? "Verfication In Progress"
@@ -610,7 +716,12 @@ export default function orderPage() {
 
             {orderObj.status === "created" && (
               <Button
-                style={{ margin: 5 }}
+                style={{
+                  margin: 5,
+                  borderRadius: 10,
+                  marginLeft: 30,
+                  marginRight: 30,
+                }}
                 mode="contained"
                 icon="contactless-payment"
                 onPress={startPayment}
@@ -627,7 +738,10 @@ export default function orderPage() {
             )}
 
             {(backendValidating || creatingOrder) && (
-              <Text variant="labelSmall" style={{ margin: 10 }}>
+              <Text
+                variant="labelSmall"
+                style={{ margin: 10, fontFamily: "Laila-Regular" }}
+              >
                 *** PLEASE DO NOT PRESS BACK BUTTON WHILE PAYMENT VERIFICATION
                 IS IN PROGRESS ***
               </Text>
@@ -642,12 +756,19 @@ export default function orderPage() {
           onDismiss={() => setVisibleErrorDialoge(false)}
         >
           <Dialog.Icon icon="alert" />
-          <Dialog.Title>{paymentError?.title}</Dialog.Title>
+          <Dialog.Title style={{ fontFamily: "Laila-Regular" }}>
+            {paymentError?.title}
+          </Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">{paymentError?.description}</Text>
+            <Text variant="bodyMedium" style={{ fontFamily: "Laila-Regular" }}>
+              {paymentError?.description}
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setVisibleErrorDialoge(false)}>
+            <Button
+              labelStyle={{ fontFamily: "Laila-Regular" }}
+              onPress={() => setVisibleErrorDialoge(false)}
+            >
               Dismiss
             </Button>
           </Dialog.Actions>

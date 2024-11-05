@@ -99,6 +99,7 @@ export default function LogInPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
+          contentStyle={{ fontFamily: "Laila-Regular" }}
           value={email}
           onChangeText={(e) => setEmail(e)}
           label="Email"
@@ -119,6 +120,7 @@ export default function LogInPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
+          contentStyle={{ fontFamily: "Laila-Regular" }}
           label="Password"
           left={<TextInput.Icon icon="lastpass" />}
           right={

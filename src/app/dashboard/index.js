@@ -50,13 +50,18 @@ export default function DashboardPage() {
               setVisible(false);
               router.push(PATH_DASHBOARD.profile);
             }}
+            titleStyle={{ fontFamily: "Laila-Regular" }}
             title="Profile"
           />
           <Divider />
           <Menu.Item
             leadingIcon="badge-account-horizontal"
-            onPress={() => {}}
+            onPress={() => {
+              setVisible(false);
+              router.push(PATH_DASHBOARD.purchased);
+            }}
             title="Purchased"
+            titleStyle={{ fontFamily: "Laila-Regular" }}
           />
           <Menu.Item
             leadingIcon="cart"
@@ -65,6 +70,7 @@ export default function DashboardPage() {
               setVisible(false);
               router.push(PATH_DASHBOARD.cart);
             }}
+            titleStyle={{ fontFamily: "Laila-Regular" }}
           />
         </Menu>
       </Appbar.Header>

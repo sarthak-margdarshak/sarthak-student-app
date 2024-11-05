@@ -100,6 +100,7 @@ export default function SignUpPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
+          contentStyle={{ fontFamily: "Laila-Regular" }}
           value={name}
           onChangeText={(e) => setName(e)}
           label="Name"
@@ -117,6 +118,7 @@ export default function SignUpPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
+          contentStyle={{ fontFamily: "Laila-Regular" }}
           value={emailId}
           onChangeText={(e) => setEmailId(e)}
           label="Email Id"
@@ -137,6 +139,7 @@ export default function SignUpPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
+          contentStyle={{ fontFamily: "Laila-Regular" }}
           label="Password"
           left={<TextInput.Icon icon="lastpass" />}
           right={

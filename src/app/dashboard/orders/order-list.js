@@ -1,29 +1,28 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
-import { Stack, router } from "expo-router";
+import { router } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
-import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
-import { Button, Card, Icon, Text, useTheme } from "react-native-paper";
+import { Dimensions, Image, ScrollView, View } from "react-native";
+import {
+  Appbar,
+  Button,
+  Card,
+  Divider,
+  Icon,
+  Surface,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { AppwriteHelper } from "../../../auth/AppwriteHelper";
 import { APPWRITE_API } from "../../../config-global";
 import { Query } from "appwrite";
 import { Skeleton } from "react-native-skeletons";
 import { PATH_DASHBOARD } from "../../../routes/paths";
-import { timeAgo } from "../../../auth/AppwriteContext";
+import { appwriteStorage, timeAgo } from "../../../auth/AppwriteContext";
 import { langPath, useLocales } from "../../../locales";
 import { EmptyOrderDark } from "../../../components/SVG/EmptyOrderDark";
 import { EmptyOrderLight } from "../../../components/SVG/EmptyOrderLight";
+import { Toast } from "react-native-toast-notifications";
+import { Col, Container, Row } from "react-bootstrap";
 
 export default function orderList() {
   const theme = useTheme();
@@ -51,13 +50,27 @@ export default function orderList() {
           [
             Query.notEqual("$id", APPWRITE_API.documents.dummyProduct),
             Query.equal("$id", x[i].products),
-            Query.select(["name"]),
           ]
         );
       }
+
+      for (let i in x) {
+        for (let j in x[i].products) {
+          x[i].products[j].images[0] = appwriteStorage.getFilePreview(
+            APPWRITE_API.buckets.productFiles,
+            x[i].products[j].images[0],
+            undefined,
+            undefined,
+            undefined
+          ).href;
+        }
+      }
       setOrdersList(x);
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setLoading(false);
   };
@@ -68,25 +81,35 @@ export default function orderList() {
 
   return (
     <Fragment>
-      <Stack.Screen
-        options={{
-          title: translate(langPath.app.dashboard.orders.title),
-        }}
-      />
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title="Your Orders"
+        />
+      </Appbar.Header>
+
       <ScrollView
         style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.surface,
-          padding: 10,
+          height: Dimensions.get("window").height - 70,
         }}
         contentContainerStyle={{
           paddingBottom: 20,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchData} />
-        }
       >
         {loading ? (
           <Skeleton
@@ -112,6 +135,7 @@ export default function orderList() {
                   style={{
                     color: theme.colors.onSurfaceDisabled,
                     marginTop: 50,
+                    fontFamily: "Laila-Regular",
                   }}
                 >
                   {translate(langPath.app.dashboard.orders.list.empty.title)}
@@ -122,6 +146,7 @@ export default function orderList() {
                   style={{
                     color: theme.colors.onSurfaceDisabled,
                     marginTop: 10,
+                    fontFamily: "Laila-Regular",
                   }}
                 >
                   {translate(
@@ -134,6 +159,7 @@ export default function orderList() {
                   icon="file-find"
                   onPress={() => router.push(PATH_DASHBOARD.product.list)}
                   style={{ marginTop: 40, borderRadius: 10 }}
+                  labelStyle={{ fontFamily: "Laila-Regular" }}
                 >
                   {translate(
                     langPath.section.dashboard.dashboardFragments.exploreMockBtn
@@ -151,42 +177,60 @@ export default function orderList() {
                     style={{ margin: 5 }}
                   >
                     <Card.Title
-                      title={order.$id}
+                      title={"Order Id - " + order.$id}
+                      titleStyle={{ fontFamily: "Laila-Regular" }}
                       subtitle={timeAgo.format(new Date(order.$createdAt))}
+                      subtitleStyle={{ fontFamily: "Laila-Regular" }}
+                      left={(props) => (
+                        <Icon
+                          source={
+                            order.status === "success"
+                              ? "checkbox-multiple-marked-circle"
+                              : order.status === "failure"
+                              ? "alert"
+                              : "shopping"
+                          }
+                          size={25}
+                        />
+                      )}
                       right={(props) => (
                         <Icon {...props} source="chevron-right" />
                       )}
                     />
+                    <Divider />
                     <Card.Content>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          margin: 5,
-                          padding: 5,
-                        }}
-                      >
-                        <View>
+                      <Container>
+                        <Row>
                           {order.products.map((product) => (
-                            <Text key={product?.$id} variant="bodyMedium">
-                              {product.name}
-                            </Text>
+                            <Col
+                              xs={3}
+                              key={product?.$id + Math.random().toString()}
+                              style={{ marginTop: 10, marginBottom: 30 }}
+                            >
+                              <Surface elevation={1} style={{ height: 70 }}>
+                                <Image
+                                  style={{
+                                    objectFit: "cover",
+                                    width: "100%",
+                                    height: "100%",
+                                  }}
+                                  source={{ uri: product?.images[0] }}
+                                  alt="background"
+                                />
+                                <Text
+                                  variant="labelSmall"
+                                  style={{
+                                    fontFamily: "Laila-Regular",
+                                    marginTop: 2,
+                                  }}
+                                >
+                                  {product.name}
+                                </Text>
+                              </Surface>
+                            </Col>
                           ))}
-                        </View>
-
-                        <View style={{ justifyContent: "center" }}>
-                          <Icon
-                            source={
-                              order.status === "success"
-                                ? "checkbox-multiple-marked-circle"
-                                : order.status === "failure"
-                                ? "alert"
-                                : ""
-                            }
-                            size={25}
-                          />
-                        </View>
-                      </View>
+                        </Row>
+                      </Container>
                     </Card.Content>
                   </Card>
                 ))}

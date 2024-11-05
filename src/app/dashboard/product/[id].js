@@ -29,6 +29,7 @@ export default function productView() {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState({});
   const [addedToCart, setAddedToCart] = useState(false);
+  const [addingToCart, setAddingToCart] = useState(false);
   const [purchased, setPurchased] = useState(false);
 
   const fetchData = async () => {
@@ -102,8 +103,14 @@ export default function productView() {
   }, [id]);
 
   const addToCart = async () => {
+    setAddingToCart(true);
     await updateCart(id, 1);
+    Toast.show("Added to cart successfully", {
+      type: "success",
+      textStyle: { fontFamily: "Laila-Regular" },
+    });
     setAddedToCart(true);
+    setAddingToCart(true);
   };
 
   const attempt = async () => {
@@ -221,7 +228,7 @@ export default function productView() {
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
-                padding: 15,
+                margin: 15,
               }}
             >
               {!purchased && !addedToCart && (
@@ -248,34 +255,13 @@ export default function productView() {
               )}
 
               <View style={{ justifyContent: "space-evenly", width: 200 }}>
-                {purchased && (
-                  <Button
-                    mode="contained"
-                    icon="test-tube"
-                    onPress={attempt}
-                    style={{ backgroundColor: theme.colors.success }}
-                    labelStyle={{ fontFamily: "Laila-Regular" }}
-                  >
-                    Attempt
-                  </Button>
-                )}
-
-                {addedToCart && (
-                  <Button
-                    mode="contained"
-                    icon="cart-arrow-right"
-                    onPress={goToCart}
-                    labelStyle={{ fontFamily: "Laila-Regular" }}
-                  >
-                    Go to Cart
-                  </Button>
-                )}
-
                 {!addedToCart && !purchased && (
                   <Button
                     icon="cart-plus"
                     mode="contained"
                     onPress={addToCart}
+                    loading={addingToCart}
+                    style={{ borderRadius: 10 }}
                     labelStyle={{ fontFamily: "Laila-Regular" }}
                   >
                     Add to Cart
@@ -283,6 +269,41 @@ export default function productView() {
                 )}
               </View>
             </View>
+
+            {purchased && (
+              <Button
+                mode="contained"
+                icon="test-tube"
+                onPress={attempt}
+                style={{
+                  borderRadius: 10,
+                  marginLeft: 50,
+                  marginRight: 50,
+                  marginBottom: 20,
+                  backgroundColor: theme.colors.success,
+                }}
+                labelStyle={{ fontFamily: "Laila-Regular" }}
+              >
+                Attempt
+              </Button>
+            )}
+
+            {addedToCart && (
+              <Button
+                mode="contained"
+                icon="cart-arrow-right"
+                onPress={goToCart}
+                style={{
+                  borderRadius: 10,
+                  marginLeft: 50,
+                  marginRight: 50,
+                  marginBottom: 20,
+                }}
+                labelStyle={{ fontFamily: "Laila-Regular" }}
+              >
+                Go to Cart
+              </Button>
+            )}
 
             <Surface style={{ borderRadius: 15, padding: 5, margin: 5 }}>
               <Text

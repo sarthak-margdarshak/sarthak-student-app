@@ -9,7 +9,6 @@ export default function ProductSmallComponent({ product }) {
   return (
     <Card
       mode="contained"
-      style={{ margin: 5 }}
       onPress={() => router.push(PATH_DASHBOARD.product.view(product?.$id))}
     >
       <View style={styles.article}>

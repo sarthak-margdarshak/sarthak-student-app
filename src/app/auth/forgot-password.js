@@ -113,6 +113,7 @@ export default function ForgotPasswordPage() {
             margin: 10,
             fontFamily: "Laila-Regular",
           }}
+          contentStyle={{ fontFamily: "Laila-Regular" }}
           value={emailId}
           onChangeText={(e) => setEmailId(e)}
           label="Email"

@@ -1,4 +1,4 @@
-import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { Appbar, Button, Surface, Text, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../auth/useAuthContext";
 import { useEffect, useState } from "react";
@@ -88,8 +88,8 @@ export default function CartFragment() {
         APPWRITE_API.collections.orders,
         ID.unique(),
         {
-          amount_total: totalBill * 100,
-          amount_to_be_paid: totalBill * 100,
+          amount_total: parseFloat(totalBill) * 100,
+          amount_to_be_paid: parseFloat(totalBill) * 100,
           studentId: studentProfile.$id,
           products: products.map((value) => value.$id),
           status: "created",
@@ -100,8 +100,10 @@ export default function CartFragment() {
       }
       router.push(PATH_DASHBOARD.orders.view(x.$id));
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.LONG);
-      console.log(error.message);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setPlacingOrder(false);
   };
@@ -112,6 +114,16 @@ export default function CartFragment() {
         {router.canGoBack() && (
           <Appbar.BackAction onPress={() => router.back()} />
         )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
         <Appbar.Content
           titleStyle={{ fontFamily: "Laila-Regular" }}
           title="Cart"
@@ -120,15 +132,13 @@ export default function CartFragment() {
 
       <ScrollView
         style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.surface,
-          margin: 2,
+          height: Dimensions.get("window").height - 70,
+        }}
+        contentContainerStyle={{
+          paddingBottom: 20,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchData} />
-        }
       >
         {loading ? (
           <ProductMediumComponentLoading count={3} />
@@ -239,6 +249,9 @@ export default function CartFragment() {
                         icon="cart-check"
                         onPress={placeOrder}
                         loading={placingOrder}
+                        style={{
+                          borderRadius: 10,
+                        }}
                         labelStyle={{ fontFamily: "Laila-Regular" }}
                       >
                         Checkout
