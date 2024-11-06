@@ -84,6 +84,7 @@ export default function orderPage() {
           JSON.stringify({ amount: orderObj.amount_to_be_paid })
         );
         const response = JSON.parse(x.response);
+        console.log(response);
         if (response.success) {
           await appwriteDatabases.updateDocument(
             APPWRITE_API.databaseId,
@@ -98,6 +99,7 @@ export default function orderPage() {
           });
           razorpay_order_id = response.razorPayId;
         } else {
+          console.log("Error in creating an payment order for you.");
           throw new Error("Error in creating an payment order for you.");
         }
       }
@@ -136,6 +138,8 @@ export default function orderPage() {
               razorpay_signature: data.razorpay_signature,
             })
           );
+
+          await new Promise((resolve) => setTimeout(resolve, 45000));
 
           const response = JSON.parse(y.response);
 
@@ -273,6 +277,8 @@ export default function orderPage() {
       })
     );
 
+    await new Promise((resolve) => setTimeout(resolve, 45000));
+
     const response = JSON.parse(y.response);
 
     if (response.payment_verification !== "success") {
@@ -301,7 +307,7 @@ export default function orderPage() {
       });
     } else {
       Toast.show("Payment verfication Successful", {
-        type: "danger",
+        type: "success",
         textStyle: { fontFamily: "Laila-Regular" },
       });
       appwriteDatabases.updateDocument(
@@ -334,12 +340,16 @@ export default function orderPage() {
         )}
         {!router.canGoBack() && (
           <img
-            src="public/assets/favicon/favicon-512x512.png"
+            src="https://api.sarthakmargdarshak.in/v1/storage/buckets/672a50aa003599f495e8/files/672a50c8003897892e6a/view?project=671f66a0001e5803f481&project=671f66a0001e5803f481&mode=admin"
             width="30"
             height="30"
             className="d-inline-block align-top"
             alt="sarthak-logo"
             style={{ margin: 3 }}
+            onClick={() => {
+              router.dismissAll();
+              router.replace(PATH_DASHBOARD.root);
+            }}
           />
         )}
         <Appbar.Content

@@ -1,18 +1,6 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { useState } from "react";
 import { Dimensions, Linking, ScrollView } from "react-native";
-import { Divider, List, RadioButton, useTheme } from "react-native-paper";
+import { Divider, List, RadioButton } from "react-native-paper";
 import { langPath, useLocales } from "../../../locales";
 import { appwriteAccount } from "../../../auth/AppwriteContext";
 import { useAuthContext } from "../../../auth/useAuthContext";
@@ -20,7 +8,6 @@ import { useThemeContext } from "../../../theme/useThemeContext";
 
 export default function SettingsFragment() {
   const { customTheme, updateTheme } = useThemeContext();
-  const theme = useTheme();
   const { translate, allLangs, currentLang, onChangeLang } = useLocales();
   const { user } = useAuthContext();
 
@@ -30,9 +17,7 @@ export default function SettingsFragment() {
   return (
     <ScrollView
       style={{
-        height: Dimensions.get("window").height,
-        backgroundColor: theme.colors.surface,
-        padding: 10,
+        height: Dimensions.get("window").height - 70,
       }}
       contentContainerStyle={{
         paddingBottom: 20,

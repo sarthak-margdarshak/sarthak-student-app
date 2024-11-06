@@ -146,14 +146,20 @@ export default function AppearMockTest() {
       );
 
       setTestPage(3);
-      // ToastAndroid.show("Test Submitted Successfully", ToastAndroid.LONG);
+      Toast.show("Test Submitted Successfully", {
+        type: "success",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
 
       setBackInitiatedBy("system");
       setTimeout(() => {
         router.replace(PATH_DASHBOARD.mockTest.attempReport(attemptId));
       }, 5000);
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.LONG);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
   };
 

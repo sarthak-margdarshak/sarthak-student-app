@@ -66,12 +66,16 @@ export default function chapters() {
         )}
         {!router.canGoBack() && (
           <img
-            src="public/assets/favicon/favicon-512x512.png"
+            src="https://api.sarthakmargdarshak.in/v1/storage/buckets/672a50aa003599f495e8/files/672a50c8003897892e6a/view?project=671f66a0001e5803f481&project=671f66a0001e5803f481&mode=admin"
             width="30"
             height="30"
             className="d-inline-block align-top"
             alt="sarthak-logo"
             style={{ margin: 3 }}
+            onClick={() => {
+              router.dismissAll();
+              router.replace(PATH_DASHBOARD.root);
+            }}
           />
         )}
         <Appbar.Content

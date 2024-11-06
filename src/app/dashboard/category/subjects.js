@@ -1,12 +1,12 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
-import { Appbar, Divider, List, Text, useTheme } from "react-native-paper";
+import { Appbar, Divider, List, useTheme } from "react-native-paper";
 import { useAuthContext } from "../../../auth/useAuthContext";
 import { appwriteDatabases } from "../../../auth/AppwriteContext";
 import { APPWRITE_API } from "../../../config-global";
 import { Query } from "appwrite";
 import { AppwriteHelper } from "../../../auth/AppwriteHelper";
-import { Stack, router } from "expo-router";
+import { router } from "expo-router";
 import { Skeleton } from "react-native-skeletons";
 
 export default function subjects() {
@@ -64,12 +64,16 @@ export default function subjects() {
         )}
         {!router.canGoBack() && (
           <img
-            src="public/assets/favicon/favicon-512x512.png"
+            src="https://api.sarthakmargdarshak.in/v1/storage/buckets/672a50aa003599f495e8/files/672a50c8003897892e6a/view?project=671f66a0001e5803f481&project=671f66a0001e5803f481&mode=admin"
             width="30"
             height="30"
             className="d-inline-block align-top"
             alt="sarthak-logo"
             style={{ margin: 3 }}
+            onClick={() => {
+              router.dismissAll();
+              router.replace(PATH_DASHBOARD.root);
+            }}
           />
         )}
         <Appbar.Content
