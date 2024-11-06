@@ -31,6 +31,7 @@
     "react-dom": "18.2.0",
     "react-helmet-async": "^2.0.5",
     "react-i18next": "^15.0.0",
+    "react-latex": "^2.0.0",
     "react-native": "0.73.6",
     "react-native-dotenv": "^3.4.10",
     "react-native-paper": "^5.12.3",

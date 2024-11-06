@@ -1,7 +1,8 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
-import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import {
+  Appbar,
   Button,
   Dialog,
   Divider,
@@ -19,6 +20,8 @@ import {
 import { APPWRITE_API } from "../../../../../config-global";
 import { ID, Query } from "appwrite";
 import { useAuthContext } from "../../../../../auth/useAuthContext";
+import { Toast } from "react-native-toast-notifications";
+import { NoEventLight } from "../../../../../components/SVG/NoEventLight";
 
 export default function MockTestAttemptsList() {
   const { mockTestId } = useLocalSearchParams();
@@ -38,7 +41,7 @@ export default function MockTestAttemptsList() {
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.mockTest,
         mockTestId,
-        [Query.select(["name", "questions", "duration"])]
+        [Query.select(["name", "questions", "duration", "$id"])]
       );
       setMockTest(y);
 
@@ -53,13 +56,18 @@ export default function MockTestAttemptsList() {
             "status",
             "time_remaining_in_seconds",
             "duration_in_seconds",
+            "$id",
+            "$updatedAt",
           ]),
           Query.limit(100),
         ]
       );
       setAttempts(x.documents);
     } catch (error) {
-      // ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      Toast.show(error.message, {
+        type: "danger",
+        textStyle: { fontFamily: "Laila-Regular" },
+      });
     }
     setLoading(false);
   };
@@ -120,26 +128,35 @@ export default function MockTestAttemptsList() {
 
   return (
     <Fragment>
-      <Stack.Screen
-        options={{
-          title: loading ? "Mock Test Name" : mockTest?.name,
-        }}
-      />
+      <Appbar.Header>
+        {router.canGoBack() && (
+          <Appbar.BackAction onPress={() => router.back()} />
+        )}
+        {!router.canGoBack() && (
+          <img
+            src="public/assets/favicon/favicon-512x512.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="sarthak-logo"
+            style={{ margin: 3 }}
+          />
+        )}
+        <Appbar.Content
+          titleStyle={{ fontFamily: "Laila-Regular" }}
+          title={mockTest?.name}
+        />
+      </Appbar.Header>
 
       <ScrollView
         style={{
-          height: Dimensions.get("window").height,
-          backgroundColor: theme.colors.surface,
-          padding: 10,
+          height: Dimensions.get("window").height - 70,
         }}
         contentContainerStyle={{
           paddingBottom: 20,
         }}
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchData} />
-        }
       >
         {loading ? (
           <Skeleton
@@ -158,51 +175,98 @@ export default function MockTestAttemptsList() {
                   (attempt) => attempt.status !== "complete"
                 ) !== -1
               }
+              labelStyle={{ fontFamily: "Laila-Regular" }}
+              style={{
+                marginLeft: 50,
+                marginRight: 50,
+                marginTop: 10,
+                borderRadius: 10,
+              }}
             >
               Appear the mock test
             </Button>
 
             <Divider bold style={{ marginTop: 15 }} />
 
-            <List.Section title="All Attempts till now">
-              {attempts?.map((attempt, index) => (
-                <View key={attempt.$id}>
-                  <List.Item
-                    title={"Attempt - " + (attempts.length - index)}
-                    description={
-                      timeAgo.format(new Date(attempt.$updatedAt)) +
-                      "  |  " +
-                      attempt.status +
-                      "  |  " +
-                      (attempt.status !== "complete"
-                        ? "Click to complete"
-                        : "Report")
-                    }
-                    onPress={() =>
-                      navigateNext(
-                        attempt.$id,
-                        attempt.status,
-                        attempt.time_remaining_in_seconds
-                      )
-                    }
-                    left={(props) => (
-                      <List.Icon
-                        {...props}
-                        icon={
-                          attempt.status === "complete"
-                            ? "check-circle-outline"
-                            : "progress-clock"
-                        }
-                      />
-                    )}
-                    right={(props) => (
-                      <List.Icon {...props} icon="chevron-right" />
-                    )}
-                  />
-                  <Divider />
-                </View>
-              ))}
-            </List.Section>
+            {attempts.length === 0 ? (
+              <View
+                style={{
+                  height: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <NoEventLight />
+
+                <Text
+                  variant="bodyLarge"
+                  style={{
+                    color: theme.colors.onSurfaceDisabled,
+                    marginTop: 50,
+                    fontFamily: "Laila-Regular",
+                  }}
+                >
+                  No Attempt
+                </Text>
+
+                <Text
+                  variant="bodySmall"
+                  style={{
+                    color: theme.colors.onSurfaceDisabled,
+                    marginTop: 10,
+                    fontFamily: "Laila-Regular",
+                  }}
+                >
+                  You have not made any attempts till now.
+                </Text>
+              </View>
+            ) : (
+              <List.Section
+                title="All Attempts till now"
+                style={{ fontFamily: "Laila-Regular" }}
+              >
+                {attempts?.map((attempt, index) => (
+                  <View key={attempt.$id}>
+                    <List.Item
+                      title={"Attempt - " + (attempts.length - index)}
+                      titleStyle={{ fontFamily: "Laila-Regular" }}
+                      description={
+                        timeAgo.format(new Date(attempt.$updatedAt)) +
+                        "  |  " +
+                        attempt.status +
+                        "  |  " +
+                        (attempt.status !== "complete"
+                          ? "Click to complete"
+                          : "Report")
+                      }
+                      descriptionStyle={{ fontFamily: "Laila-Regular" }}
+                      onPress={() =>
+                        navigateNext(
+                          attempt.$id,
+                          attempt.status,
+                          attempt.time_remaining_in_seconds
+                        )
+                      }
+                      left={(props) => (
+                        <List.Icon
+                          {...props}
+                          icon={
+                            attempt.status === "complete"
+                              ? "check-circle-outline"
+                              : "progress-clock"
+                          }
+                        />
+                      )}
+                      right={(props) => (
+                        <List.Icon {...props} icon="chevron-right" />
+                      )}
+                    />
+                    <Divider />
+                  </View>
+                ))}
+              </List.Section>
+            )}
           </View>
         )}
       </ScrollView>

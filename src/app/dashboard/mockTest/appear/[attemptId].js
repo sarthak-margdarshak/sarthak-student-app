@@ -1,10 +1,4 @@
-import {
-  BackHandler,
-  Dimensions,
-  ScrollView,
-  StatusBar,
-  View,
-} from "react-native";
+import { Dimensions, ScrollView, StatusBar, View } from "react-native";
 import DisplayQuestion from "../../../../sections/appearTest/DisplayQuestion";
 import {
   Avatar,
@@ -20,12 +14,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { Fragment, useEffect, useState } from "react";
-import {
-  Stack,
-  router,
-  useLocalSearchParams,
-  useNavigation,
-} from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InstructionPage from "../../../../sections/appearTest/InstructionPage";
 import { appwriteDatabases } from "../../../../auth/AppwriteContext";
@@ -34,6 +23,8 @@ import { Query } from "appwrite";
 import { useTimer } from "react-timer-hook";
 import { Skeleton } from "react-native-skeletons";
 import { PATH_DASHBOARD } from "../../../../routes/paths";
+import { Toast } from "react-native-toast-notifications";
+import { Col, Container, Row } from "react-bootstrap";
 
 export default function AppearMockTest() {
   const { attemptId, duration } = useLocalSearchParams();
@@ -101,7 +92,10 @@ export default function AppearMockTest() {
 
         setMockTest(x);
       } catch (error) {
-        // ToastAndroid.show(error.message, ToastAndroid.LONG);
+        Toast.show(error.message, {
+          type: "danger",
+          textStyle: { fontFamily: "Laila-Regular" },
+        });
       }
       setLoading(false);
     };
@@ -272,12 +266,6 @@ export default function AppearMockTest() {
       <StatusBar backgroundColor={theme.colors.surface} />
 
       <SafeAreaView>
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-        />
-
         {loading ? (
           <View
             style={{
@@ -399,6 +387,7 @@ export default function AppearMockTest() {
                   onPress={() => submitTest("user")}
                   disabled={testPage !== 1}
                   style={{ borderRadius: 10 }}
+                  labelStyle={{ fontFamily: "Laila-Regular" }}
                 >
                   SUBMIT TEST
                 </Button>
@@ -419,19 +408,11 @@ export default function AppearMockTest() {
             <Card mode="elevated" style={{ margin: 5 }}>
               <Card.Title
                 title={mockTest.name}
-                subtitle={mockTest.description}
+                titleStyle={{ fontFamily: "Laila-Regular" }}
               />
             </Card>
 
             <Divider bold />
-
-            <ProgressBar
-              animatedValue={totalSeconds / attempt.duration_in_seconds}
-              color={getProgressColor(
-                totalSeconds / attempt.duration_in_seconds
-              )}
-              style={{ height: 5 }}
-            />
 
             <Divider bold />
 
@@ -443,7 +424,7 @@ export default function AppearMockTest() {
               }}
             >
               <View style={{ justifyContent: "center" }}>
-                <Text>
+                <Text style={{ fontFamily: "Laila-Regular" }}>
                   Duration -{" "}
                   {String(
                     Math.floor(
@@ -464,7 +445,7 @@ export default function AppearMockTest() {
               </View>
 
               <View style={{ justifyContent: "center" }}>
-                <Text>
+                <Text style={{ fontFamily: "Laila-Regular" }}>
                   Time Left - {String(hours).padStart(2, "0")}:
                   {String(minutes).padStart(2, "0")}:
                   {String(seconds).padStart(2, "0")}
@@ -517,7 +498,10 @@ export default function AppearMockTest() {
                     style={{ backgroundColor: theme.colors.info }}
                   />
 
-                  <Text variant="labelLarge" style={{ marginTop: 15 }}>
+                  <Text
+                    variant="labelLarge"
+                    style={{ marginTop: 15, fontFamily: "Laila-Regular" }}
+                  >
                     PLEASE WAIT!! WE ARE SUBMITTING YOUR TEST
                   </Text>
                 </View>
@@ -537,10 +521,16 @@ export default function AppearMockTest() {
                     style={{ backgroundColor: theme.colors.success }}
                   />
 
-                  <Text variant="labelLarge" style={{ marginTop: 15 }}>
+                  <Text
+                    variant="labelLarge"
+                    style={{ marginTop: 15, fontFamily: "Laila-Regular" }}
+                  >
                     YOUR ANSWERS HAVE BEEN SUCCESSFULLY SUBMITTED.
                   </Text>
-                  <Text variant="labelLarge" style={{ marginTop: 15 }}>
+                  <Text
+                    variant="labelLarge"
+                    style={{ marginTop: 15, fontFamily: "Laila-Regular" }}
+                  >
                     REDIRECTING YOU TO THE RESULT PAGE IN 5 seconds...
                   </Text>
                 </View>
@@ -556,6 +546,13 @@ export default function AppearMockTest() {
                 backgroundColor: theme.colors.outlineVariant,
               }}
             >
+              <ProgressBar
+                animatedValue={totalSeconds / attempt.duration_in_seconds}
+                color={getProgressColor(
+                  totalSeconds / attempt.duration_in_seconds
+                )}
+                style={{ height: 5 }}
+              />
               <Divider bold />
               {testPage === 0 && (
                 <View
@@ -571,6 +568,7 @@ export default function AppearMockTest() {
                       mode="contained-tonal"
                       onPress={startTest}
                       style={{ borderRadius: 10 }}
+                      labelStyle={{ fontFamily: "Laila-Regular" }}
                     >
                       {attempt.status === "in_progress"
                         ? "RESUME TEST"
@@ -595,6 +593,7 @@ export default function AppearMockTest() {
                       disabled={currQuestionIndex === 0}
                       onPress={previousQuestion}
                       style={{ borderRadius: 10 }}
+                      labelStyle={{ fontFamily: "Laila-Regular" }}
                     >
                       PREVIOUS
                     </Button>
@@ -609,6 +608,7 @@ export default function AppearMockTest() {
                         currQuestionIndex === mockTest?.questions?.length - 1
                       }
                       style={{ borderRadius: 10 }}
+                      labelStyle={{ fontFamily: "Laila-Regular" }}
                     >
                       MARK & NEXT
                     </Button>
@@ -623,6 +623,7 @@ export default function AppearMockTest() {
                         currQuestionIndex === mockTest?.questions?.length - 1
                       }
                       style={{ borderRadius: 10 }}
+                      labelStyle={{ fontFamily: "Laila-Regular" }}
                     >
                       NEXT
                     </Button>
@@ -645,10 +646,12 @@ export default function AppearMockTest() {
           dismissable={false}
           dismissableBackButton
         >
-          <Card>
+          <Card style={{ paddingTop: 10 }}>
             <Card.Title
               title="All Questions"
+              titleStyle={{ fontFamily: "Laila-Regular" }}
               subtitle="Navigate to the question by clicking on the question number"
+              subtitleStyle={{ fontFamily: "Laila-Regular" }}
               subtitleNumberOfLines={4}
               right={(props) => (
                 <IconButton
@@ -660,47 +663,47 @@ export default function AppearMockTest() {
             />
 
             <Card.Content>
-              {Array.from(
-                { length: Math.ceil(attempt?.questionStatus?.length / 4) },
-                (v, i) => attempt?.questionStatus?.slice(i * 4, i * 4 + 4)
-              ).map((arrChunk, index) => (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                    margin: 10,
-                  }}
-                  key={index}
-                >
-                  {arrChunk.map((currQuestionStatus, index2) => (
-                    <Button
-                      mode="contained"
-                      style={{ width: 10, borderRadius: 10 }}
-                      key={index + "_" + index2}
-                      buttonColor={
-                        currQuestionStatus === "answered"
-                          ? theme.colors.success
-                          : currQuestionStatus === "marked"
-                          ? theme.colors.warning
-                          : theme.colors.info
-                      }
-                      textColor={
-                        currQuestionStatus === "answered"
-                          ? theme.colors.onSuccess
-                          : currQuestionStatus === "marked"
-                          ? theme.colors.onWarning
-                          : theme.colors.onInfo
-                      }
-                      onPress={() => {
-                        setCurrQuestionIndex(index * 4 + index2);
-                        setModelVisible(false);
-                      }}
-                    >
-                      {index * 4 + (index2 + 1)}
-                    </Button>
-                  ))}
-                </View>
-              ))}
+              <ScrollView style={{ height: 400, marginTop: 10 }}>
+                <Container>
+                  <Row>
+                    {attempt?.questionStatus?.map(
+                      (currQuestionStatus, index) => (
+                        <Col xs={3} key={index}>
+                          <Button
+                            mode="contained"
+                            style={{
+                              width: 10,
+                              borderRadius: 10,
+                              marginBottom: 5,
+                            }}
+                            buttonColor={
+                              currQuestionStatus === "answered"
+                                ? theme.colors.success
+                                : currQuestionStatus === "marked"
+                                ? theme.colors.warning
+                                : theme.colors.info
+                            }
+                            textColor={
+                              currQuestionStatus === "answered"
+                                ? theme.colors.onSuccess
+                                : currQuestionStatus === "marked"
+                                ? theme.colors.onWarning
+                                : theme.colors.onInfo
+                            }
+                            labelStyle={{ fontFamily: "Laila-Regular" }}
+                            onPress={() => {
+                              setCurrQuestionIndex(index);
+                              setModelVisible(false);
+                            }}
+                          >
+                            {index + 1}
+                          </Button>
+                        </Col>
+                      )
+                    )}
+                  </Row>
+                </Container>
+              </ScrollView>
             </Card.Content>
           </Card>
         </Modal>
@@ -711,19 +714,30 @@ export default function AppearMockTest() {
           visible={backDialogVisible}
           onDismiss={() => setBackDialogVisible(false)}
         >
-          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Title style={{ fontFamily: "Laila-Regular" }}>
+            Alert
+          </Dialog.Title>
           <Dialog.Content>
             {backInitiatedBy === "system" ? (
-              <Text variant="bodyMedium">
+              <Text
+                variant="bodyMedium"
+                style={{ fontFamily: "Laila-Regular" }}
+              >
                 You are leaving this page. Please Click SURE to procceed
               </Text>
             ) : (
               <>
-                <Text variant="bodyMedium">
+                <Text
+                  variant="bodyMedium"
+                  style={{ fontFamily: "Laila-Regular" }}
+                >
                   Are you trying to finish the test, if yes, please click on the
                   SUBMIT button.
                 </Text>
-                <Text variant="bodyMedium">
+                <Text
+                  variant="bodyMedium"
+                  style={{ fontFamily: "Laila-Regular" }}
+                >
                   If you want to go back due to some emergency, please click
                   SURE else click DISMISS. We will save all the states of your
                   test, you can come back anytime and appear the test.
@@ -738,12 +752,14 @@ export default function AppearMockTest() {
                 navigation.dispatch(backAction);
               }}
               style={{ borderRadius: 10 }}
+              labelStyle={{ fontFamily: "Laila-Regular" }}
             >
               SURE
             </Button>
             <Button
               style={{ borderRadius: 10 }}
               onPress={() => setBackDialogVisible(false)}
+              labelStyle={{ fontFamily: "Laila-Regular" }}
             >
               DISMISS
             </Button>

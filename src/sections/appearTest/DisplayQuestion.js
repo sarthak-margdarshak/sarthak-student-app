@@ -1,25 +1,8 @@
-/**
- * Written By - Ritesh Ranjan
- * Website - https://sagittariusk2.github.io/
- *
- *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
- * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
- *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
- *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
- *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
- *
- */
-
 import { useState } from "react";
 import { View } from "react-native";
-import {
-  Card,
-  Divider,
-  Icon,
-  Surface,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { Card, Divider, Surface, Text, useTheme } from "react-native-paper";
+
+var Latex = require("react-latex");
 
 export default function DisplayQuestion({
   sn,
@@ -106,27 +89,32 @@ export default function DisplayQuestion({
         }}
       >
         <View style={{ justifyContent: "center" }}>
-          <Text variant="headlineSmall">Question No: {sn}</Text>
+          <Text variant="headlineSmall" style={{ fontFamily: "Laila-Regular" }}>
+            Question No: {sn}
+          </Text>
         </View>
 
         <View style={{ justifyContent: "center" }}>
-          <Text variant="labelLarge">Marking: +1, -0</Text>
+          <Text variant="labelLarge" style={{ fontFamily: "Laila-Regular" }}>
+            Marking: +1, -0
+          </Text>
         </View>
       </View>
 
       <Divider style={{ marginBottom: 20 }} />
 
-      <Text
+      <View
         style={{
           marginLeft: 20,
           marginRight: 20,
           marginBottom: 10,
           fontWeight: "bold",
+          fontFamily: "Laila-Regular",
         }}
-        variant="headlineSmall"
       >
-        {question}
-      </Text>
+        <Latex>{question}</Latex>
+      </View>
+
       <Card
         onPress={() => {
           changeOption("A");
@@ -136,7 +124,13 @@ export default function DisplayQuestion({
         style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
       >
         <Card.Content>
-          <Text variant="bodyMedium">{optionA}</Text>
+          <View
+            style={{
+              fontFamily: "Laila-Regular",
+            }}
+          >
+            <Latex>{optionA}</Latex>
+          </View>
         </Card.Content>
       </Card>
 
@@ -149,7 +143,13 @@ export default function DisplayQuestion({
         style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
       >
         <Card.Content>
-          <Text variant="bodyMedium">{optionB}</Text>
+          <View
+            style={{
+              fontFamily: "Laila-Regular",
+            }}
+          >
+            <Latex>{optionB}</Latex>
+          </View>
         </Card.Content>
       </Card>
 
@@ -162,7 +162,13 @@ export default function DisplayQuestion({
         style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
       >
         <Card.Content>
-          <Text variant="bodyMedium">{optionC}</Text>
+          <View
+            style={{
+              fontFamily: "Laila-Regular",
+            }}
+          >
+            <Latex>{optionC}</Latex>
+          </View>
         </Card.Content>
       </Card>
 
@@ -175,7 +181,13 @@ export default function DisplayQuestion({
         style={{ marginLeft: 10, marginRight: 10, marginBottom: 15 }}
       >
         <Card.Content>
-          <Text variant="bodyMedium">{optionD}</Text>
+          <View
+            style={{
+              fontFamily: "Laila-Regular",
+            }}
+          >
+            <Latex>{optionD}</Latex>
+          </View>
         </Card.Content>
       </Card>
     </Surface>

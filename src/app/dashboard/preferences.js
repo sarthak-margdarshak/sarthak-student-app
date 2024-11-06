@@ -8,12 +8,6 @@ export default function Preferences() {
 
   return (
     <View>
-      <Stack.Screen
-        options={{
-          title: translate(langPath.app.dashboard.preferences.title),
-        }}
-      />
-
       <SettingsFragment />
     </View>
   );
