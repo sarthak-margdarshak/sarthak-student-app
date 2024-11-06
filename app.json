@@ -1,62 +1,66 @@
 {
   "expo": {
-    "name": "Sarthak Margdarshak",
-    "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
-    "slug": "sarthak-student-app",
+    "name": "Sarthak Margdarshak: Mock Test Guidance Guru",
+    "description": "An app for students to appear mock-test of any competitive exam.",
+    "slug": "sarthak-margdarshak-app",
     "owner": "sarthakmargdarshak",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "platforms": ["ios", "android", "web"],
     "githubUrl": "https://github.com/sarthak-margdarshak/sarthak-student-app",
     "orientation": "portrait",
-    "icon": "./assets/favicon/favicon-1024x1024.png",
+    "icon": "./public/assets/favicon/favicon-1024x1024.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash/splash-192x192.png",
+      "image": "./public/assets/splash/splash-192x192.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFBFF"
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "versionCode": 2,
+      "versionCode": 1,
       "userInterfaceStyle": "automatic",
-      "icon": "./assets/favicon/favicon-1024x1024.png",
+      "icon": "./public/assets/favicon/favicon-1024x1024.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/favicon/favicon-1024x1024.png"
+        "foregroundImage": "./public/assets/favicon/favicon-1024x1024.png"
       },
       "splash": {
-        "backgroundColor": "#FFFFE0",
+        "backgroundColor": "#FFFBFF",
         "resizeMode": "contain",
-        "image": "./assets/splash/splash-192x192.png",
-        "mdpi": "./assets/splash/splash-128x128.png",
-        "hdpi": "./assets/splash/splash-180x180.png",
-        "xhdpi": "./assets/splash/splash-256x256.png",
-        "xxhdpi": "./assets/splash/splash-512x512.png",
-        "xxxhdpi": "./assets/splash/splash-1024x1024.png",
+        "image": "./public/assets/splash/splash-192x192.png",
+        "mdpi": "./public/assets/splash/splash-128x128.png",
+        "hdpi": "./public/assets/splash/splash-180x180.png",
+        "xhdpi": "./public/assets/splash/splash-256x256.png",
+        "xxhdpi": "./public/assets/splash/splash-512x512.png",
+        "xxxhdpi": "./public/assets/splash/splash-1024x1024.png",
         "dark": {
           "backgroundColor": "#181a20",
           "resizeMode": "contain",
-          "image": "./assets/splash/splash-192x192.png",
-          "mdpi": "./assets/splash/splash-128x128.png",
-          "hdpi": "./assets/splash/splash-180x180.png",
-          "xhdpi": "./assets/splash/splash-256x256.png",
-          "xxhdpi": "./assets/splash/splash-512x512.png",
-          "xxxhdpi": "./assets/splash/splash-1024x1024.png"
+          "image": "./public/assets/splash/splash-192x192.png",
+          "mdpi": "./public/assets/splash/splash-128x128.png",
+          "hdpi": "./public/assets/splash/splash-180x180.png",
+          "xhdpi": "./public/assets/splash/splash-256x256.png",
+          "xxhdpi": "./public/assets/splash/splash-512x512.png",
+          "xxxhdpi": "./public/assets/splash/splash-1024x1024.png"
         }
       },
-      "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "com.sarthakmargdarshak.students"
+      "package": "com.sarthak.margdarshak.guidance"
     },
     "web": {
-      "favicon": "./assets/favicon/favicon-192x192.png",
-      "themeColor": "#FF5630",
-      "backgroundColor": "#FFFFE0",
-      "description": "An app to manage students, teachers, creators of Sarthak Guidance Institute. Created by the Engineering department of this insitute.",
+      "name": "Sarthak Margdarshak: Mock Test Guidance Guru",
+      "short_name": "Sarthak",
+      "display": "standalone",
+      "start_url": "/",
+      "favicon": "./public/assets/favicon/favicon-192x192.png",
+      "themeColor": "#B62500",
+      "backgroundColor": "#FFFBFF",
+      "description": "An app for students to appear mock-test of any competitive exam.",
       "barStyle": "default",
       "splash": {
         "backgroundColor": "#FFFFE0",
         "resizeMode": "contain",
-        "image": "./assets/splash/splash-192x192.png"
-      }
+        "image": "./public/assets/splash/splash-192x192.png"
+      },
+      "bundler": "metro"
     },
     "scheme": "your-app-scheme",
     "extra": {
@@ -64,8 +68,31 @@
         "origin": false
       },
       "eas": {
-        "projectId": "61bf7ff2-5ea3-4fb8-a087-d71f761a54ed"
+        "projectId": "97d97eab-a0b1-4903-b6d8-80d7a84edd27"
       }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./public/assets/fonts/Laila-Bold.ttf",
+            "./public/assets/fonts/Laila-Light.ttf",
+            "./public/assets/fonts/Laila-Medium.ttf",
+            "./public/assets/fonts/Laila-Regular.ttf",
+            "./public/assets/fonts/Laila-SemiBold.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-router",
+        {
+          "root": "./src/app"
+        }
+      ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.sarthak.margdarshak.guidance"
     }
   }
 }
