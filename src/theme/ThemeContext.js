@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/theme/ThemeContext.js
 import { useFonts } from "expo-font";
 import {
   createContext,
@@ -12,6 +13,21 @@ import { NoNetworkLight } from "../components/SVG/NoNetworkLight";
 import { Dimensions, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { lightTheme } from "./lightTheme";
+=======
+/**
+ * Written By - Ritesh Ranjan
+ * Website - https://sagittariusk2.github.io/
+ *
+ *  /|||||\    /|||||\   |||||||\   |||||||||  |||   |||   /|||||\   ||| ///
+ * |||        |||   |||  |||   |||     |||     |||   |||  |||   |||  |||///
+ *  \|||||\   |||||||||  |||||||/      |||     |||||||||  |||||||||  |||||
+ *       |||  |||   |||  |||  \\\      |||     |||   |||  |||   |||  |||\\\
+ *  \|||||/   |||   |||  |||   \\\     |||     |||   |||  |||   |||  ||| \\\
+ *
+ */
+
+import { createContext, useCallback, useMemo, useState } from "react";
+>>>>>>> dev:theme/ThemeContext.js
 
 export const ThemeContext = createContext({
   customTheme: "system_default",
@@ -19,6 +35,7 @@ export const ThemeContext = createContext({
 });
 
 export function ThemeProvider({ children }) {
+<<<<<<< HEAD:src/theme/ThemeContext.js
   const [themeLite, setThemeLite] = useState("system_default");
   const [isConnected, setConnected] = useState(-1);
 
@@ -69,11 +86,23 @@ export function ThemeProvider({ children }) {
       setThemeLite("dark");
     } else {
       setThemeLite("system_default");
+=======
+  const [theme, setTheme] = useState("system_default");
+
+  const updateTheme = useCallback((newTheme) => {
+    if (newTheme === "light") {
+      setTheme("light");
+    } else if (newTheme === "dark") {
+      setTheme("dark");
+    } else {
+      setTheme("system_default");
+>>>>>>> dev:theme/ThemeContext.js
     }
   }, []);
 
   const memoizedValue = useMemo(
     () => ({
+<<<<<<< HEAD:src/theme/ThemeContext.js
       customTheme: themeLite,
       updateTheme: updateTheme,
     }),
@@ -121,6 +150,14 @@ export function ThemeProvider({ children }) {
     );
   }
 
+=======
+      customTheme: theme,
+      updateTheme: updateTheme,
+    }),
+    [theme, updateTheme]
+  );
+
+>>>>>>> dev:theme/ThemeContext.js
   return (
     <ThemeContext.Provider value={memoizedValue}>
       {children}

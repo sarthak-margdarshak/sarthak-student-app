@@ -10,27 +10,9 @@
  *
  */
 
-<<<<<<< HEAD:src/locales/index.js
 // EXPORT ---------------------------------------------------------------
 
 export * from "./config-lang";
-=======
-import { Stack } from "expo-router";
-import { View } from "react-native";
-import { SettingsFragment } from "../../sections/dashboard/DashboardFragments";
-import { langPath, useLocales } from "../../locales";
-
-export default function Preferences() {
-  const { translate } = useLocales();
-
-  return (
-    <View>
-      <Stack.Screen
-        options={{
-          title: translate(langPath.app.dashboard.preferences.title),
-        }}
-      />
->>>>>>> dev:app/dashboard/preferences.js
 
 export { default as useLocales } from "./useLocales";
 export { default as langPath } from "./langPath";

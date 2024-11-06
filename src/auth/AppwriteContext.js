@@ -50,6 +50,9 @@ export function AuthProvider({ children }) {
   const { currentLang, onChangeLang } = useLocales();
   const { customTheme, updateTheme } = useThemeContext();
 
+  const { currentLang, onChangeLang } = useLocales();
+  const { customTheme, updateTheme } = useThemeContext();
+
   const [user, setUser] = useState(null);
   const [studentProfile, setStudentProfile] = useState(null);
   const [isAuthenticated, setAuthenticated] = useState(false);
@@ -59,6 +62,8 @@ export function AuthProvider({ children }) {
     try {
       const x = await appwriteAccount.get();
       setUser(x);
+      onChangeLang(x.prefs?.lang || currentLang);
+      updateTheme(x.prefs?.theme || customTheme);
       onChangeLang(x.prefs?.lang || currentLang);
       updateTheme(x.prefs?.theme || customTheme);
       const y = await appwriteDatabases.getDocument(
