@@ -8,8 +8,7 @@ import {
   Text,
   useTheme,
 } from "react-native-paper";
-
-var Latex = require("react-latex");
+import ReactKatex from "@pkasila/react-katex";
 
 export default function QuestionReport({
   sn,
@@ -98,7 +97,7 @@ export default function QuestionReport({
           fontFamily: "Laila-Regular",
         }}
       >
-        <Latex>{question}</Latex>
+        <ReactKatex>{question}</ReactKatex>
       </View>
 
       <Card
@@ -121,7 +120,7 @@ export default function QuestionReport({
               fontFamily: "Laila-Regular",
             }}
           >
-            <Latex>{optionA}</Latex>
+            <ReactKatex>{optionA}</ReactKatex>
           </View>
         </Card.Content>
       </Card>
@@ -162,7 +161,7 @@ export default function QuestionReport({
               fontFamily: "Laila-Regular",
             }}
           >
-            <Latex>{optionB}</Latex>
+            <ReactKatex>{optionB}</ReactKatex>
           </View>
         </Card.Content>
       </Card>
@@ -203,7 +202,7 @@ export default function QuestionReport({
               fontFamily: "Laila-Regular",
             }}
           >
-            <Latex>{optionC}</Latex>
+            <ReactKatex>{optionC}</ReactKatex>
           </View>
         </Card.Content>
       </Card>
@@ -244,7 +243,7 @@ export default function QuestionReport({
               fontFamily: "Laila-Regular",
             }}
           >
-            <Latex>{optionD}</Latex>
+            <ReactKatex>{optionD}</ReactKatex>
           </View>
         </Card.Content>
       </Card>
@@ -288,7 +287,7 @@ export default function QuestionReport({
               fontFamily: "Laila-Regular",
             }}
           >
-            <Latex>{contentAnswer}</Latex>
+            <ReactKatex>{contentAnswer}</ReactKatex>
           </View>
         </Card.Content>
       </Card>

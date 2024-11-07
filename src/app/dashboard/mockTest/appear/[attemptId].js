@@ -1,5 +1,4 @@
 import { Dimensions, ScrollView, StatusBar, View } from "react-native";
-import DisplayQuestion from "../../../../sections/appearTest/DisplayQuestion";
 import {
   Avatar,
   Button,
@@ -10,6 +9,7 @@ import {
   Modal,
   Portal,
   ProgressBar,
+  Surface,
   Text,
   useTheme,
 } from "react-native-paper";
@@ -25,6 +25,7 @@ import { Skeleton } from "react-native-skeletons";
 import { PATH_DASHBOARD } from "../../../../routes/paths";
 import { Toast } from "react-native-toast-notifications";
 import { Col, Container, Row } from "react-bootstrap";
+import ReactKatex from "@pkasila/react-katex";
 
 export default function AppearMockTest() {
   const { attemptId, duration } = useLocalSearchParams();
@@ -466,28 +467,200 @@ export default function AppearMockTest() {
               {testPage === 0 && <InstructionPage />}
 
               {testPage === 1 && (
-                <DisplayQuestion
-                  key={mockTest?.questions[currQuestionIndex].$id}
-                  sn={currQuestionIndex + 1}
-                  question={
-                    mockTest?.questions[currQuestionIndex]?.contentQuestion
-                  }
-                  optionA={
-                    mockTest?.questions[currQuestionIndex]?.contentOptionA
-                  }
-                  optionB={
-                    mockTest?.questions[currQuestionIndex]?.contentOptionB
-                  }
-                  optionC={
-                    mockTest?.questions[currQuestionIndex]?.contentOptionC
-                  }
-                  optionD={
-                    mockTest?.questions[currQuestionIndex]?.contentOptionD
-                  }
-                  optionMarked={attempt?.answers[currQuestionIndex]}
-                  status={attempt?.questionStatus[currQuestionIndex]}
-                  changeOption={changeOptionCurr}
-                />
+                <Surface
+                  elevation={1}
+                  style={{
+                    margin: 10,
+                    marginTop: 20,
+                    borderRadius: 10,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      padding: 10,
+                      paddingStart: 15,
+                      paddingEnd: 15,
+                      backgroundColor:
+                        attempt?.questionStatus[currQuestionIndex] ===
+                        "answered"
+                          ? theme.colors.successContainer
+                          : attempt?.questionStatus[currQuestionIndex] ===
+                            "marked"
+                          ? theme.colors.warningContainer
+                          : theme.colors.infoContainer,
+                      color:
+                        attempt?.questionStatus[currQuestionIndex] ===
+                        "answered"
+                          ? theme.colors.onSuccessContainer
+                          : attempt?.questionStatus[currQuestionIndex] ===
+                            "marked"
+                          ? theme.colors.onWarningContainer
+                          : theme.colors.onInfoContainer,
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                    }}
+                  >
+                    <View style={{ justifyContent: "center" }}>
+                      <Text
+                        variant="headlineSmall"
+                        style={{ fontFamily: "Laila-Regular" }}
+                      >
+                        Question No: {currQuestionIndex + 1}
+                      </Text>
+                    </View>
+
+                    <View style={{ justifyContent: "center" }}>
+                      <Text
+                        variant="labelLarge"
+                        style={{ fontFamily: "Laila-Regular" }}
+                      >
+                        Marking: +1, -0
+                      </Text>
+                    </View>
+                  </View>
+
+                  <Divider style={{ marginBottom: 20 }} />
+
+                  <View
+                    style={{
+                      marginLeft: 20,
+                      marginRight: 20,
+                      marginBottom: 10,
+                      fontWeight: "bold",
+                      fontFamily: "Laila-Regular",
+                    }}
+                  >
+                    <ReactKatex>
+                      {mockTest?.questions[currQuestionIndex]?.contentQuestion}
+                    </ReactKatex>
+                  </View>
+
+                  <Card
+                    onPress={() => {
+                      changeOptionCurr("A");
+                    }}
+                    mode={
+                      attempt?.answers[currQuestionIndex] === "A"
+                        ? "contained"
+                        : "outlined"
+                    }
+                    style={{
+                      marginLeft: 10,
+                      marginRight: 10,
+                      marginBottom: 5,
+                    }}
+                  >
+                    <Card.Content>
+                      <View
+                        style={{
+                          fontFamily: "Laila-Regular",
+                        }}
+                      >
+                        <ReactKatex>
+                          {
+                            mockTest?.questions[currQuestionIndex]
+                              ?.contentOptionA
+                          }
+                        </ReactKatex>
+                      </View>
+                    </Card.Content>
+                  </Card>
+
+                  <Card
+                    onPress={() => {
+                      changeOptionCurr("B");
+                    }}
+                    mode={
+                      attempt?.answers[currQuestionIndex] === "B"
+                        ? "contained"
+                        : "outlined"
+                    }
+                    style={{
+                      marginLeft: 10,
+                      marginRight: 10,
+                      marginBottom: 5,
+                    }}
+                  >
+                    <Card.Content>
+                      <View
+                        style={{
+                          fontFamily: "Laila-Regular",
+                        }}
+                      >
+                        <ReactKatex>
+                          {
+                            mockTest?.questions[currQuestionIndex]
+                              ?.contentOptionB
+                          }
+                        </ReactKatex>
+                      </View>
+                    </Card.Content>
+                  </Card>
+
+                  <Card
+                    onPress={() => {
+                      changeOptionCurr("C");
+                    }}
+                    mode={
+                      attempt?.answers[currQuestionIndex] === "C"
+                        ? "contained"
+                        : "outlined"
+                    }
+                    style={{
+                      marginLeft: 10,
+                      marginRight: 10,
+                      marginBottom: 5,
+                    }}
+                  >
+                    <Card.Content>
+                      <View
+                        style={{
+                          fontFamily: "Laila-Regular",
+                        }}
+                      >
+                        <ReactKatex>
+                          {
+                            mockTest?.questions[currQuestionIndex]
+                              ?.contentOptionC
+                          }
+                        </ReactKatex>
+                      </View>
+                    </Card.Content>
+                  </Card>
+
+                  <Card
+                    onPress={() => {
+                      changeOptionCurr("D");
+                    }}
+                    mode={
+                      attempt?.answers[currQuestionIndex] === "D"
+                        ? "contained"
+                        : "outlined"
+                    }
+                    style={{
+                      marginLeft: 10,
+                      marginRight: 10,
+                      marginBottom: 15,
+                    }}
+                  >
+                    <Card.Content>
+                      <View
+                        style={{
+                          fontFamily: "Laila-Regular",
+                        }}
+                      >
+                        <ReactKatex>
+                          {
+                            mockTest?.questions[currQuestionIndex]
+                              ?.contentOptionD
+                          }
+                        </ReactKatex>
+                      </View>
+                    </Card.Content>
+                  </Card>
+                </Surface>
               )}
 
               {testPage === 2 && (

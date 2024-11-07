@@ -27,14 +27,12 @@
     "expo-status-bar": "~1.11.1",
     "greeting-time": "^1.0.0",
     "i18next": "^23.12.2",
-    "i18next": "^23.12.2",
     "javascript-time-ago": "^2.5.10",
     "react": "18.2.0",
     "react-bootstrap": "^2.10.5",
     "react-dom": "18.2.0",
     "react-helmet-async": "^2.0.5",
     "react-i18next": "^15.0.0",
-    "react-latex": "^2.0.0",
     "react-native": "0.73.6",
     "react-native-dotenv": "^3.4.10",
     "react-native-paper": "^5.12.3",
@@ -53,4 +51,3 @@
   },
   "private": true
 }
-
