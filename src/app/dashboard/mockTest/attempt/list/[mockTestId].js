@@ -87,7 +87,12 @@ export default function MockTestAttemptsList() {
         tmpMockTestId = mockTestId;
         duration = mockTest.duration * 60;
       } else {
-        arr = new Array(11);
+        const c = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.mockTest,
+          APPWRITE_API.documents.dummyTest
+        );
+        arr = new Array(c?.questions?.length);
         tmpMockTestId = APPWRITE_API.documents.dummyTest;
         duration = 600;
       }

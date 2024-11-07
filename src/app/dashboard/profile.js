@@ -171,14 +171,14 @@ export default function ProfileFragment() {
           onPress={() => router.push(PATH_DASHBOARD.orders.list)}
         />
 
-        <List.Item
+        {/* <List.Item
           title={translate(langPath.app.dashboard.preferences.title)}
           titleStyle={{ fontFamily: "Laila-Regular" }}
           left={(props) => <List.Icon {...props} icon="cog" />}
           right={() => <List.Icon icon="chevron-right" />}
           onPress={() => router.push(PATH_DASHBOARD.preferences)}
           style={{ borderRadius: 10 }}
-        />
+        /> */}
 
         <Button
           style={{
