@@ -54,7 +54,7 @@ export default function AuthLayout() {
             Sarthak Margdarshak
           </Navbar.Brand>
 
-          <Navbar.Text className="justify-content-end">
+          {/* <Navbar.Text className="justify-content-end">
             <IconButton
               icon="help-circle"
               size={20}
@@ -62,7 +62,7 @@ export default function AuthLayout() {
                 router.navigate("https://www.sarthakmargdarshak.in/contact-us")
               }
             />
-          </Navbar.Text>
+          </Navbar.Text> */}
         </Container>
       </Navbar>
 
