@@ -8,6 +8,7 @@ import { Query } from "appwrite";
 import { Skeleton } from "react-native-skeletons";
 import { PATH_DASHBOARD } from "../../../../../routes/paths";
 import { Toast } from "react-native-toast-notifications";
+import MockTestListItem from "../../../../../sections/dashboard/mockTest/MockTestListItem";
 
 export default function ProductMockTestList() {
   const { productId } = useLocalSearchParams();
@@ -25,14 +26,6 @@ export default function ProductMockTestList() {
         productId,
         [Query.select(["name", "mockTestIds", "$id"])]
       );
-      for (let i in x.mockTestIds) {
-        x.mockTestIds[i] = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.mockTest,
-          x.mockTestIds[i],
-          [Query.select(["name", "description", "level", "$id"])]
-        );
-      }
       setProduct(x);
     } catch (error) {
       Toast.show(error.message, {
@@ -69,7 +62,7 @@ export default function ProductMockTestList() {
         )}
         <Appbar.Content
           titleStyle={{ fontFamily: "Laila-Regular" }}
-          title={product?.name}
+          title={"Mock Test Series"}
         />
       </Appbar.Header>
 
@@ -93,34 +86,7 @@ export default function ProductMockTestList() {
           <List.Section>
             {product?.mockTestIds?.map((mockTest) => (
               <View key={mockTest.$id}>
-                <List.Item
-                  title={mockTest.name}
-                  titleStyle={{ fontFamily: "Laila-Regular" }}
-                  description={mockTest.description}
-                  descriptionStyle={{ fontFamily: "Laila-Regular" }}
-                  onPress={() =>
-                    router.push(PATH_DASHBOARD.mockTest.attempts(mockTest.$id))
-                  }
-                  right={(props) => (
-                    <>
-                      <Chip
-                        {...props}
-                        mode="outlined"
-                        textStyle={{ fontFamily: "Laila-Regular" }}
-                        selectedColor={
-                          mockTest.level === "HARD"
-                            ? theme.colors.error
-                            : mockTest.level === "MEDIUM"
-                            ? theme.colors.info
-                            : theme.colors.success
-                        }
-                      >
-                        {mockTest.level}
-                      </Chip>
-                      <List.Icon {...props} icon="chevron-right" />
-                    </>
-                  )}
-                />
+                <MockTestListItem id={mockTest} />
                 <Divider />
               </View>
             ))}

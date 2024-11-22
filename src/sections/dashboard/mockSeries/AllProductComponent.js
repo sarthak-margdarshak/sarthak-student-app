@@ -128,7 +128,7 @@ export default function AllProductComponent() {
               {!loading && (
                 <Row>
                   {productList.map((product) => (
-                    <Col xs={6} key={product.$id}>
+                    <Col xs={6} key={product.$id} style={{ marginBottom: 5 }}>
                       <ProductSmallComponent product={product} />
                     </Col>
                   ))}
