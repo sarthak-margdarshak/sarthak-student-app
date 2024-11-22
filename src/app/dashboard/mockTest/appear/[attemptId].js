@@ -26,6 +26,7 @@ import { PATH_DASHBOARD } from "../../../../routes/paths";
 import { Toast } from "react-native-toast-notifications";
 import { Col, Container, Row } from "react-bootstrap";
 import ReactKatex from "@pkasila/react-katex";
+import * as Progress from "react-native-progress";
 
 export default function AppearMockTest() {
   const { attemptId, duration } = useLocalSearchParams();
@@ -44,6 +45,7 @@ export default function AppearMockTest() {
   const [mockTest, setMockTest] = useState({});
   const [attempt, setAttempt] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
   const [testPage, setTestPage] = useState(0);
   const [currQuestionIndex, setCurrQuestionIndex] = useState(0);
   const [modelVisible, setModelVisible] = useState(false);
@@ -60,6 +62,7 @@ export default function AppearMockTest() {
           APPWRITE_API.collections.attempts,
           attemptId
         );
+        setLoadProgress(0.01);
         setAttempt(y);
         var x = await appwriteDatabases.getDocument(
           APPWRITE_API.databaseId,
@@ -67,6 +70,7 @@ export default function AppearMockTest() {
           y.mockTestId,
           [Query.select(["name", "description", "questions", "duration"])]
         );
+        setLoadProgress(0.02);
 
         for (let i in x.questions) {
           x.questions[i] = await appwriteDatabases.getDocument(
@@ -89,6 +93,7 @@ export default function AppearMockTest() {
               ]),
             ]
           );
+          setLoadProgress(i / x.questions.length + 0.02);
         }
 
         setMockTest(x);
@@ -280,6 +285,16 @@ export default function AppearMockTest() {
               backgroundColor: theme.colors.surface,
             }}
           >
+            <Progress.Bar
+              progress={loadProgress}
+              width={Dimensions.get("window").width}
+            />
+            <Text
+              variant="labelMedium"
+              style={{ margin: 5, fontFamily: "Laila-Regular" }}
+            >
+              Loading mock test for you
+            </Text>
             <View
               style={{
                 flexDirection: "row",
@@ -415,6 +430,7 @@ export default function AppearMockTest() {
             <Card mode="elevated" style={{ margin: 5 }}>
               <Card.Title
                 title={mockTest.name}
+                titleNumberOfLines={3}
                 titleStyle={{ fontFamily: "Laila-Regular" }}
               />
             </Card>
@@ -847,11 +863,10 @@ export default function AppearMockTest() {
                   <Row>
                     {attempt?.questionStatus?.map(
                       (currQuestionStatus, index) => (
-                        <Col xs={3} key={index}>
+                        <Col xs={4} key={index}>
                           <Button
                             mode="contained"
                             style={{
-                              width: 10,
                               borderRadius: 10,
                               marginBottom: 5,
                             }}

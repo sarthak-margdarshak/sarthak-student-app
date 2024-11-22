@@ -139,7 +139,7 @@ export default function orderPage() {
             })
           );
 
-          await new Promise((resolve) => setTimeout(resolve, 45000));
+          // await new Promise((resolve) => setTimeout(resolve, 45000));
 
           const response = JSON.parse(y.response);
 
@@ -277,7 +277,7 @@ export default function orderPage() {
       })
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 45000));
+    // await new Promise((resolve) => setTimeout(resolve, 45000));
 
     const response = JSON.parse(y.response);
 

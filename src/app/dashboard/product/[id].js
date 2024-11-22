@@ -20,6 +20,7 @@ import { useAuthContext } from "../../../auth/useAuthContext";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 import { Carousel } from "react-bootstrap";
 import { Toast } from "react-native-toast-notifications";
+import DescChip from "../../../sections/dashboard/product/DescChip";
 
 export default function productView() {
   const theme = useTheme();
@@ -43,47 +44,16 @@ export default function productView() {
         APPWRITE_API.collections.products,
         id
       );
-      for (let j in x.images) {
-        x.images[j] = appwriteStorage.getFilePreview(
-          APPWRITE_API.buckets.productFiles,
-          x.images[j],
-          undefined,
-          undefined,
-          undefined
-        ).href;
-      }
-
-      for (let j in x.standards) {
-        x.standards[j] = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.standards,
-          x.standards[j]
-        );
-      }
-
-      for (let j in x.subjects) {
-        x.subjects[j] = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.subjects,
-          x.subjects[j]
-        );
-      }
-
-      for (let j in x.chapters) {
-        x.chapters[j] = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.chapters,
-          x.chapters[j]
-        );
-      }
-
-      for (let j in x.concepts) {
-        x.concepts[j] = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.concepts,
-          x.concepts[j]
-        );
-      }
+      x.images = x?.images?.map(
+        (imageId) =>
+          appwriteStorage.getFilePreview(
+            APPWRITE_API.buckets.productFiles,
+            imageId,
+            undefined,
+            undefined,
+            undefined
+          ).href
+      );
 
       setAddedToCart(
         studentProfile?.cart.findIndex((value) => value === id) !== -1
@@ -143,7 +113,7 @@ export default function productView() {
         )}
         <Appbar.Content
           titleStyle={{ fontFamily: "Laila-Regular" }}
-          title={product?.name}
+          title={"Mock Test Series"}
         />
       </Appbar.Header>
 
@@ -186,8 +156,8 @@ export default function productView() {
         ) : (
           <View>
             <Carousel>
-              {product?.images?.map((image) => (
-                <Carousel.Item interval={5000} key={image}>
+              {product?.images?.map((image, index) => (
+                <Carousel.Item interval={5000} key={index}>
                   <img
                     className="d-block w-100"
                     src={image}
@@ -346,17 +316,8 @@ export default function productView() {
               <View
                 style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
               >
-                {product?.standards?.map((standard) => (
-                  <Chip
-                    key={standard?.$id}
-                    style={{ margin: 2 }}
-                    textStyle={{
-                      fontSize: 12,
-                      fontFamily: "Laila-Regular",
-                    }}
-                  >
-                    {standard?.name}
-                  </Chip>
+                {product?.standards?.map((standard, index) => (
+                  <DescChip key={index} id={standard} type="standard" />
                 ))}
               </View>
 
@@ -365,20 +326,8 @@ export default function productView() {
               <View
                 style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
               >
-                {product?.subjects?.map((subject) => (
-                  <Chip
-                    key={subject?.$id}
-                    style={{
-                      margin: 2,
-                      backgroundColor: theme.colors.warningContainer,
-                    }}
-                    textStyle={{
-                      fontSize: 12,
-                      fontFamily: "Laila-Regular",
-                    }}
-                  >
-                    {subject?.name}
-                  </Chip>
+                {product?.subjects?.map((subject, index) => (
+                  <DescChip key={index} id={subject} type="subject" />
                 ))}
               </View>
 
@@ -387,20 +336,8 @@ export default function productView() {
               <View
                 style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
               >
-                {product?.chapters?.map((chapter) => (
-                  <Chip
-                    key={chapter?.$id}
-                    style={{
-                      margin: 2,
-                      backgroundColor: theme.colors.inversePrimary,
-                    }}
-                    textStyle={{
-                      fontSize: 12,
-                      fontFamily: "Laila-Regular",
-                    }}
-                  >
-                    {chapter?.name}
-                  </Chip>
+                {product?.chapters?.map((chapter, index) => (
+                  <DescChip key={index} id={chapter} type="chapter" />
                 ))}
               </View>
 
@@ -409,20 +346,8 @@ export default function productView() {
               <View
                 style={{ flexDirection: "row", margin: 5, flexWrap: "wrap" }}
               >
-                {product?.concepts?.map((concept) => (
-                  <Chip
-                    key={concept?.$id}
-                    style={{
-                      margin: 2,
-                      backgroundColor: theme.colors.infoContainer,
-                    }}
-                    textStyle={{
-                      fontSize: 12,
-                      fontFamily: "Laila-Regular",
-                    }}
-                  >
-                    {concept?.name}
-                  </Chip>
+                {product?.concepts?.map((concept, index) => (
+                  <DescChip key={index} id={concept} type="concept" />
                 ))}
               </View>
             </Surface>

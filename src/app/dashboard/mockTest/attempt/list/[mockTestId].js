@@ -153,7 +153,7 @@ export default function MockTestAttemptsList() {
         )}
         <Appbar.Content
           titleStyle={{ fontFamily: "Laila-Regular" }}
-          title={mockTest?.name}
+          title={"Mock Test"}
         />
       </Appbar.Header>
 
@@ -175,6 +175,15 @@ export default function MockTestAttemptsList() {
           />
         ) : (
           <View>
+            <Text
+              variant="titleLarge"
+              style={{ margin: 5, fontFamily: "Laila-Regular" }}
+            >
+              {mockTest?.name}
+            </Text>
+
+            <Divider bold style={{ marginTop: 15 }} />
+
             <Button
               mode="elevated"
               onPress={() => setVisible(true)}
