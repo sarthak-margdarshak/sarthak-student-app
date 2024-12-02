@@ -141,7 +141,7 @@ export default function SignUpPage() {
           }}
           contentStyle={{ fontFamily: "Laila-Regular" }}
           label="Password"
-          left={<TextInput.Icon icon="lastpass" />}
+          left={<TextInput.Icon icon="lock" />}
           right={
             <TextInput.Icon
               icon={hidePassword ? "eye" : "eye-off"}
