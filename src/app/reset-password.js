@@ -248,7 +248,7 @@ export default function ResetPassword() {
                   }}
                   contentStyle={{ fontFamily: "Laila-Regular" }}
                   label="Password"
-                  left={<TextInput.Icon icon="lastpass" />}
+                  left={<TextInput.Icon icon="lock" />}
                   right={
                     <TextInput.Icon
                       icon={hidePassword ? "eye" : "eye-off"}
@@ -272,7 +272,7 @@ export default function ResetPassword() {
                   }}
                   contentStyle={{ fontFamily: "Laila-Regular" }}
                   label="Password Again"
-                  left={<TextInput.Icon icon="lastpass" />}
+                  left={<TextInput.Icon icon="lock" />}
                   right={
                     <TextInput.Icon
                       icon={hideConfirmPassword ? "eye" : "eye-off"}
