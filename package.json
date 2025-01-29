@@ -1,6 +1,6 @@
 {
   "name": "sarthak-student-app",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "main": "expo-router/entry",
   "scripts": {
     "start": "NODE_ENV=development expo start",
