@@ -10,6 +10,7 @@ import { Query } from "appwrite";
 import { PATH_DASHBOARD } from "../../../routes/paths";
 import { Skeleton } from "react-native-skeletons";
 import { Col, Container, Row } from "react-bootstrap";
+import { Toast } from "react-native-toast-notifications";
 
 export default function SubjectWiseComponent() {
   const theme = useTheme();
