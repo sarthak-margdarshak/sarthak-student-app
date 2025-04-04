@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
     "paths": {
-      "auth": ["src/auth"]
+      "@/*": ["./src/*"]
     }
-  },
-  "include": ["src"]
+  }
 }
