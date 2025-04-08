@@ -7,9 +7,15 @@ import {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
 } from "react";
 import { APPWRITE_API } from "@/config-global";
 import { toast } from "sonner";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+
+TimeAgo.addDefaultLocale(en);
+export const timeAgo = new TimeAgo("en-US");
 
 export const appwriteClient = new Client()
   .setEndpoint(APPWRITE_API.backendUrl)
@@ -40,6 +46,14 @@ export const AuthContext = createContext(initialState);
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const subscriptionRef = useRef(null);
+
+  const unsubscribeFromUserUpdates = useCallback(() => {
+    if (subscriptionRef.current) {
+      subscriptionRef.current();
+      subscriptionRef.current = null;
+    }
+  }, []);
 
   const init = useCallback(async () => {
     try {
@@ -59,13 +73,23 @@ export function AuthProvider({ children }) {
         type: "UPDATE",
         payload: { user: x },
       });
+
+      // Set up subscription
+      if (!subscriptionRef.current) {
+        subscriptionRef.current = appwriteClient.subscribe("account", (response) => {
+          if (response.events.includes("users.*.update")) {
+            init();
+          }
+        });
+      }
     } catch (error) {
       dispatch({
         type: "UPDATE",
         payload: { user: null },
       });
+      unsubscribeFromUserUpdates();
     }
-  }, []);
+  }, [unsubscribeFromUserUpdates]);
 
   useEffect(() => {
     init();
@@ -92,16 +116,25 @@ export function AuthProvider({ children }) {
         payload: { user: x },
       });
 
+      // Set up subscription after successful login
+      if (!subscriptionRef.current) {
+        subscriptionRef.current = appwriteClient.subscribe("account", (response) => {
+          if (response.events.includes("users.*.update")) {
+            init();
+          }
+        });
+      }
+
       toast.success("Successfully Logged In");
     } catch (error) {
       toast.error(error.message);
     }
-  }, []);
+  }, [init]);
 
   const logout = useCallback(async () => {
     try {
       await appwriteAccount.deleteSessions();
-
+      unsubscribeFromUserUpdates();
       dispatch({
         type: "UPDATE",
         payload: { user: null },
@@ -111,7 +144,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       toast.error(error.message);
     }
-  }, []);
+  }, [unsubscribeFromUserUpdates]);
 
   const updateProfileImage = useCallback(async (file) => {
     try {
@@ -152,6 +185,12 @@ export function AuthProvider({ children }) {
       toast.error(e.message);
     }
   }, []);
+
+  useEffect(() => {
+    return () => {
+      unsubscribeFromUserUpdates();
+    };
+  }, [unsubscribeFromUserUpdates]);
 
   const memoizedValue = useMemo(
     () => ({

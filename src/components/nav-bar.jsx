@@ -3,14 +3,18 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { PATH_DASHBOARD, PATH_PAGE } from "@/routes/paths";
+import {PATH_AUTH, PATH_DASHBOARD, PATH_PAGE} from "@/routes/paths";
 import { useAppContent } from "@/hook/app/useAppContent";
 import { useAuthContext } from "@/hook/auth/useAuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogIn } from 'lucide-react';
+import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 
 const Navbar = () => {
   const { currentPage } = useAppContent();
   const { user } = useAuthContext();
+  const router = useRouter();
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-md z-50">
@@ -40,7 +44,7 @@ const Navbar = () => {
           </div>
 
           {/* User Profile */}
-          {user && (
+          {user ? (
             <div className="flex items-center">
               <div className="hidden md:flex items-center">
                 <Link
@@ -66,7 +70,9 @@ const Navbar = () => {
                 </Avatar>
               </Link>
             </div>
-          )}
+          ) : <Button variant="outline" onClick={() => router.push(PATH_AUTH.login)}>
+            <LogIn />
+          </Button>}
         </div>
       </div>
     </nav>

@@ -114,7 +114,7 @@ export default function ProfileCard() {
                           Purchased
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Browse your purchased items
+                          Browse your mock test series
                         </p>
                       </div>
                     </div>

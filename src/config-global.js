@@ -8,6 +8,7 @@ export const APPWRITE_API = {
     questions: "questions",
     mockTest: "mock_test",
     products: "products",
+    orders: "orders",
   },
   documents: {
     metadataContentDoc: "content_doc",
@@ -19,4 +20,9 @@ export const APPWRITE_API = {
   functions: {
     sarthakAPI: "sarthak-api",
   },
+};
+
+export const RAZORPAY_API = {
+  keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  secret: process.env.NEXT_PUBLIC_RAZORPAY_SECRET,
 };

@@ -9,7 +9,6 @@ import { useAppContent } from "@/hook/app/useAppContent";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
-import { SparklesText } from "@/components/magicui/sparkles-text";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import {
   Card,
@@ -21,21 +20,44 @@ import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { PulsatingButton } from "@/components/magicui/pulsating-button";
 import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
+import { useAuthContext } from "@/hook/auth/useAuthContext";
+import { labels } from "@/lib/labels";
+import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
+import { useRouter } from "next/navigation";
+import { ChevronRight, Loader2 } from "lucide-react";
+import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
+import MockTestCard from "@/components/sections/dashboard/mock-test-card";
+import { appwriteDatabases } from "@/hook/auth/AppwriteContext";
+import { APPWRITE_API } from "@/config-global";
+import { ID, Query } from "appwrite";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function ProductViewPage() {
   const { setCurrentPageName, products } = useAppContent();
+  const { user } = useAuthContext();
+  const router = useRouter();
 
   const [productId, setProductId] = useState(
     window.location.pathname.split("/")[2]
   );
   const [product, setProduct] = useState({});
+  const [enrolled, setEnrolled] = useState(false);
+  const [placingOrder, setPlacingOrder] = useState(false);
 
   useEffect(() => {
     const updateViews = async () => {
       const id = window.location.pathname.split("/")[2];
       setProductId(id);
+      if (user) {
+        setEnrolled(
+          user.labels.findIndex(
+            (label) =>
+              label === labels.founder || label === labels.admin || label === id
+          ) !== -1
+        );
+      }
       setProduct(products[id]);
       setCurrentPageName(products[id]?.name);
     };
@@ -43,6 +65,51 @@ export default function ProductViewPage() {
     updateViews();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const enrollIn = async () => {
+    if (user) {
+      // Create an Order
+      setPlacingOrder(true);
+      try {
+        const x = await appwriteDatabases.createDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.orders,
+          ID.unique(),
+          {
+            amount_total: parseFloat(product.sellPrice) * 100,
+            amount_to_be_paid: parseFloat(product.sellPrice) * 100,
+            studentId: user.$id,
+            productId: productId,
+            status: "created",
+            attempts: 0,
+          }
+        );
+        router.push(PATH_DASHBOARD.orders.view(x.$id));
+        toast.success("Order Created successfully");
+      } catch (error) {
+        if (error.code === 409) {
+          const x = (
+            await appwriteDatabases.listDocuments(
+              APPWRITE_API.databaseId,
+              APPWRITE_API.collections.orders,
+              [
+                Query.equal("studentId", user.$id),
+                Query.equal("productId", productId),
+                Query.select(["$id"]),
+              ]
+            )
+          ).documents[0];
+
+          router.push(PATH_DASHBOARD.orders.view(x.$id));
+        } else {
+          toast.error(error.message);
+        }
+      }
+      setPlacingOrder(false);
+    } else {
+      router.push(PATH_AUTH.login);
+    }
+  };
 
   return (
     <div>
@@ -79,7 +146,7 @@ export default function ProductViewPage() {
           ))}
         </CarouselContent>
       </Carousel>
-      {/* <SparklesText className="text-2xl mt-4" text={product?.name} /> */}
+
       <Card className="mt-2 relative overflow-hidden">
         <CardHeader>
           <CardTitle>{product?.name}</CardTitle>
@@ -99,6 +166,9 @@ export default function ProductViewPage() {
           className="from-transparent via-blue-500 to-transparent"
         />
       </Card>
+
+      <div className="w-full h-1 bg-gray-200 mt-4"></div>
+
       <div className="z-10 flex items-center">
         <div
           className={cn(
@@ -111,7 +181,10 @@ export default function ProductViewPage() {
           </AnimatedShinyText>
         </div>
       </div>
-      <div className="flex flex-col ml-8 gap-2 mt-2">
+
+      <div
+        className={cn("flex flex-col ml-8 gap-2 mt-2", enrolled ? "" : "mb-80")}
+      >
         <div>
           👉{" "}
           <Badge variant="destructive">{`${product?.mockTest?.length} Mock Tests Inside`}</Badge>
@@ -128,19 +201,65 @@ export default function ProductViewPage() {
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 z-50 flex justify-center">
-        <NeonGradientCard className="max-w-sm items-center justify-center text-center">
-          <div className="grid grid-cols-2">
-            <div className="col-span-1 flex flex-col">
-              <div className="font-bold text-2xl">{`₹ ${product?.sellPrice}`}</div>
-              <div className="text-xs line-through">{`₹ ${product?.mrp}`}</div>
-            </div>
-            <PulsatingButton className="w-full max-w-md col-span-1">
-              Enroll Now
-            </PulsatingButton>
+      {!enrolled ? (
+        <div>
+          <div className="mb-8"></div>
+          <div className="fixed bottom-0 left-0 right-0 p-4 z-50 flex justify-center">
+            <NeonGradientCard className="max-w-sm items-center justify-center text-center">
+              <div className="grid grid-cols-2">
+                <div className="col-span-1 flex flex-col">
+                  <div className="font-bold text-2xl">{`₹ ${product?.sellPrice}`}</div>
+                  <div className="text-xs line-through">{`₹ ${product?.mrp}`}</div>
+                </div>
+                <Button
+                  onClick={enrollIn}
+                  className="w-full h-full max-w-md col-span-1"
+                  disabled={placingOrder}
+                >
+                  {placingOrder && <Loader2 className="animate-spin" />}
+                  Enroll Now
+                </Button>
+              </div>
+            </NeonGradientCard>
           </div>
-        </NeonGradientCard>
-      </div>
+        </div>
+      ) : (
+        <div>
+          <div className="w-full h-1 bg-gray-200 mt-4"></div>
+
+          <div className="z-10 flex items-center mt-4">
+            <div className="group relative flex items-center rounded-full px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f] ">
+              <span
+                className={cn(
+                  "absolute inset-0 block h-full w-full animate-gradient rounded-[inherit] bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:300%_100%] p-[1px]"
+                )}
+                style={{
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "destination-out",
+                  mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  maskComposite: "subtract",
+                  WebkitClipPath: "padding-box",
+                }}
+              />
+              🎉 <hr className="mx-2 h-4 w-px shrink-0 bg-neutral-500" />
+              <AnimatedGradientText className="text-sm font-bold">
+                Mock Tests
+              </AnimatedGradientText>
+              <ChevronRight
+                className="ml-1 size-4 stroke-neutral-500 transition-transform
+ duration-300 ease-in-out group-hover:translate-x-0.5"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-1 mb-1">
+            {product?.mockTest?.map((test) => (
+              <MockTestCard mockTestId={test} key={test} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

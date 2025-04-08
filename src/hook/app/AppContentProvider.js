@@ -70,36 +70,28 @@ export function AppContentProvider({ children }) {
       dispatch({
         type: "UPDATE_TOP_3_PRODUCTS",
         payload: {
-          top3Products: localStorage.getItem("top3Products")
-            ? JSON.parse(localStorage.getItem("top3Products"))
-            : [],
+          top3Products: [],
         },
       });
 
       dispatch({
         type: "UPDATE_STANDARDS",
         payload: {
-          standards: localStorage.getItem("standards")
-            ? JSON.parse(localStorage.getItem("standards"))
-            : {},
+          standards: {},
         },
       });
 
       dispatch({
         type: "UPDATE_SUBJECTS",
         payload: {
-          subjects: localStorage.getItem("subjects")
-            ? JSON.parse(localStorage.getItem("subjects"))
-            : {},
+          subjects: {},
         },
       });
 
       dispatch({
         type: "UPDATE_PRODUCTS",
         payload: {
-          products: localStorage.getItem("products")
-            ? JSON.parse(localStorage.getItem("products"))
-            : {},
+          products: {},
         },
       });
 
