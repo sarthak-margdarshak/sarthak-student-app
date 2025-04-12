@@ -53,7 +53,7 @@ export default function PurchasedPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8 px-4">
+      <div className="mt-20 container mx-auto py-8 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, index) => (
             <SkeletonCard key={index} />
@@ -64,7 +64,7 @@ export default function PurchasedPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="mt-20 container mx-auto py-8 px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {purchasedProducts?.map((product) => (
           <ImageWithOverlayText

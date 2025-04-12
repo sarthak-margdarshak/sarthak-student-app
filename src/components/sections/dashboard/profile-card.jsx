@@ -84,7 +84,7 @@ export default function ProfileCard() {
               <div className="w-full h-1 bg-gray-100 mb-6"></div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Orders */}
-                <Link href={PATH_DASHBOARD.orders.list} className="group">
+                <Link href={PATH_DASHBOARD.orders.root} className="group">
                   <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md hover:border-blue-100 hover:scale-102">
                     <div className="flex items-center gap-4">
                       <div className="p-3 rounded-full bg-blue-50 text-blue-600 group-hover:bg-blue-100 transition-colors">

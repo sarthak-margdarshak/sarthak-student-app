@@ -13,5 +13,9 @@ export default function ProfilePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <ProfileCard />;
+  return (
+    <div className="mt-20">
+      <ProfileCard />
+    </div>
+  );
 }

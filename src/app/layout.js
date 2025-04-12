@@ -16,14 +16,20 @@ const laila = Laila({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="light" style={{ colorScheme: "light" }}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/katex@0.16.0/dist/katex.min.css"
+        ></link>
+      </head>
       <body className={`${laila.className} antialiased`}>
         <AuthProvider>
           <AppContentProvider>
             <ThemeProvider>
               <Navbar />
-              <div className="mt-20 mx-4 sm:mx-6 md:mx-12 lg:mx-24 xl:mx-32">
+              <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 {children}
-              </div>
+              </main>
             </ThemeProvider>
           </AppContentProvider>
         </AuthProvider>

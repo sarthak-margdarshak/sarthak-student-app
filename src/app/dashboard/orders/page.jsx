@@ -46,7 +46,7 @@ export default function OrdersListPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="mt-20 mx-4 sm:mx-6 md:mx-12 lg:mx-24 xl:mx-32 container mx-auto p-6">
         <div className="space-y-4">
           {[...Array(3)].map((_, index) => (
             <Skeleton key={index} className="h-24 w-full" />
@@ -57,12 +57,12 @@ export default function OrdersListPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="mt-20 container mx-auto p-6">
       <div className="space-y-4">
         {orders.map((order) => (
           <Link href={`/dashboard/orders/${order.$id}`} key={order.$id}>
             <Card
-              className={`p-4 cursor-pointer transition-all duration-200 ${
+              className={`m-2 p-4 cursor-pointer transition-all duration-200 ${
                 statusConfig[order.status]?.bg ||
                 "bg-gray-100 hover:bg-gray-200"
               }`}

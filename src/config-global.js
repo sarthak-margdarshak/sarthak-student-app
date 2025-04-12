@@ -9,6 +9,7 @@ export const APPWRITE_API = {
     mockTest: "mock_test",
     products: "products",
     orders: "orders",
+    mockTestAttempts: "mock_test_attempts",
   },
   documents: {
     metadataContentDoc: "content_doc",
@@ -20,6 +21,13 @@ export const APPWRITE_API = {
   functions: {
     sarthakAPI: "sarthak-api",
   },
+};
+
+export const TEST_STATUS = {
+  CREATED: "created",
+  IN_PROGRESS: "in_progress",
+  COMPLETED: "completed",
+  IN_EVALUATION: "in_evaluation",
 };
 
 export const RAZORPAY_API = {

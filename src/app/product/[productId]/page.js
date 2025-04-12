@@ -112,7 +112,7 @@ export default function ProductViewPage() {
   };
 
   return (
-    <div>
+    <div className="mt-20">
       {/**
        * 1. Carousel
        * 2. Series Name
@@ -227,7 +227,7 @@ export default function ProductViewPage() {
         <div>
           <div className="w-full h-1 bg-gray-200 mt-4"></div>
 
-          <div className="z-10 flex items-center mt-4">
+          <div className="flex items-center justify-between mt-4 mb-4">
             <div className="group relative flex items-center rounded-full px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f] ">
               <span
                 className={cn(
@@ -246,10 +246,7 @@ export default function ProductViewPage() {
               <AnimatedGradientText className="text-sm font-bold">
                 Mock Tests
               </AnimatedGradientText>
-              <ChevronRight
-                className="ml-1 size-4 stroke-neutral-500 transition-transform
- duration-300 ease-in-out group-hover:translate-x-0.5"
-              />
+              <ChevronRight className="ml-1 size-4 stroke-neutral-500 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
             </div>
           </div>
 

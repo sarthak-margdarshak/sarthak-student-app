@@ -1,5 +1,5 @@
-'use client';
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 
 const LoadingSpinner = () => {
   const [mounted, setMounted] = useState(false);
@@ -16,18 +16,40 @@ const LoadingSpinner = () => {
       <div className="relative flex flex-col items-center">
         <div className="relative">
           {/* Pulsing circles */}
-          <div className="absolute inset-0 rounded-full bg-red-800/20 animate-ping" style={{ animationDuration: '3s' }}></div>
-          <div className="absolute inset-0 rounded-full bg-red-800/10 animate-ping" style={{ animationDuration: '2s', animationDelay: '0.5s' }}></div>
-          <div className="absolute inset-0 rounded-full bg-red-800/5 animate-ping" style={{ animationDuration: '1.5s', animationDelay: '1s' }}></div>
+          <div
+            className="absolute inset-0 rounded-full bg-red-800/20 animate-ping"
+            style={{ animationDuration: "3s" }}
+          ></div>
+          <div
+            className="absolute inset-0 rounded-full bg-red-800/10 animate-ping"
+            style={{ animationDuration: "2s", animationDelay: "0.5s" }}
+          ></div>
+          <div
+            className="absolute inset-0 rounded-full bg-red-800/5 animate-ping"
+            style={{ animationDuration: "1.5s", animationDelay: "1s" }}
+          ></div>
 
           {/* Main target icon with pulse zoom effect */}
-          <div className="animate-pulse" style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}>
-            <svg width="100.000000pt" height="100.000000pt" viewBox="0 0 512.000000 512.000000"
-                 preserveAspectRatio="xMidYMid meet" style={{ animation: 'zoom 2s ease-in-out infinite' }}>
-
-              <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                 fill="#7A0916" stroke="none">
-                <path d="M2135 4770 c-146 -21 -278 -44 -345 -60 -79 -19 -318 -90 -357 -106
+          <div
+            className="animate-pulse"
+            style={{
+              animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            }}
+          >
+            <svg
+              width="100.000000pt"
+              height="100.000000pt"
+              viewBox="0 0 512.000000 512.000000"
+              preserveAspectRatio="xMidYMid meet"
+              style={{ animation: "zoom 2s ease-in-out infinite" }}
+            >
+              <g
+                transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                fill="#7A0916"
+                stroke="none"
+              >
+                <path
+                  d="M2135 4770 c-146 -21 -278 -44 -345 -60 -79 -19 -318 -90 -357 -106
 -21 -9 -56 -23 -78 -32 -327 -134 -614 -385 -781 -682 -65 -115 -148 -316
 -173 -415 -5 -22 -23 -89 -39 -150 -67 -247 -94 -468 -94 -760 0 -288 31 -534
 96 -775 15 -52 33 -119 41 -148 20 -74 101 -276 137 -342 17 -30 38 -68 46
@@ -60,7 +82,8 @@ const LoadingSpinner = () => {
 25 -1 35 29 65 50 50 78 47 132 -12 57 -61 87 -63 176 -7 75 48 176 89 239 99
 95 14 130 49 130 129 0 61 29 96 80 96 53 0 80 -34 80 -102 0 -43 4 -54 34
 -84 23 -23 43 -34 63 -34 46 0 129 -28 227 -76 105 -51 170 -58 236 -24 51 26
-68 54 80 124 13 82 46 140 125 222 73 76 90 86 98 57z"/>
+68 54 80 124 13 82 46 140 125 222 73 76 90 86 98 57z"
+                />
               </g>
             </svg>
           </div>
@@ -73,8 +96,13 @@ const LoadingSpinner = () => {
       {/* Custom animation keyframes */}
       <style jsx>{`
         @keyframes zoom {
-          0%, 100% { transform: scale(0.9); }
-          50% { transform: scale(1.1); }
+          0%,
+          100% {
+            transform: scale(0.9);
+          }
+          50% {
+            transform: scale(1.1);
+          }
         }
       `}</style>
     </div>

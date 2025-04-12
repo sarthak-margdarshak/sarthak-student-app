@@ -3,5 +3,9 @@
 import GuestGuard from "@/hook/auth/GuestGuard";
 
 export default function AuthLayout({ children }) {
-  return <GuestGuard>{children}</GuestGuard>;
+  return (
+    <div className="mt-20">
+      <GuestGuard>{children}</GuestGuard>
+    </div>
+  );
 }

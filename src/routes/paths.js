@@ -28,7 +28,7 @@ export const PATH_DASHBOARD = {
   attempt: (attemptId) => path(ROOTS_DASHBOARD, `/attempt/${attemptId}`),
   mockTest: (mockTestId) => path(ROOTS_DASHBOARD, `/mockTest/${mockTestId}`),
   orders: {
-    list: path(ROOTS_DASHBOARD, "/orders/list"),
+    root: path(ROOTS_DASHBOARD, "/orders"),
     view: (id) => path(ROOTS_DASHBOARD, `/orders/${id}`),
   },
 };
