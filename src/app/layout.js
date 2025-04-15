@@ -21,6 +21,11 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
           href="https://unpkg.com/katex@0.16.0/dist/katex.min.css"
         ></link>
+        <title>Sarthak Margdarshak: Mock Test Guidance Guru</title>
+        <meta
+          name="description"
+          content="An app for students to appear mock-test of any competitive exam."
+        />
       </head>
       <body className={`${laila.className} antialiased`}>
         <AuthProvider>
