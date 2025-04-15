@@ -1,51 +1,34 @@
-// ----------------------------------------------------------------------
 function path(root, sublink) {
   return `${root}${sublink}`;
 }
 
-// ----------------------------------------------------------------------
-
 const ROOTS_AUTH = "/auth";
 const ROOTS_DASHBOARD = "/dashboard";
 
-// ----------------------------------------------------------------------
-
 export const PATH_AUTH = {
-  root: ROOTS_AUTH,
+  root: ROOTS_AUTH, // redirect to login
   login: path(ROOTS_AUTH, "/login"),
-  signUp: path(ROOTS_AUTH, "/sign-up"),
-  forgotPassword: path(ROOTS_AUTH, "/forgot-password"),
+  resetPassword: path(ROOTS_AUTH, "/reset-password"),
+  newPassword: path(ROOTS_AUTH, "/new-password"),
+  signup: path(ROOTS_AUTH, "/signup"),
 };
 
-// ----------------------------------------------------------------------
+export const PATH_PAGE = {
+  root: "/",
+  maintenance: "/maintenance",
+  standard: (standardId) => `/standard/${standardId}`,
+  subject: (subjectId) => `/subject/${subjectId}`,
+  product: (productId) => `/product/${productId}`,
+};
 
 export const PATH_DASHBOARD = {
-  root: ROOTS_DASHBOARD,
-  preferences: path(ROOTS_DASHBOARD, "/preferences"),
+  root: ROOTS_DASHBOARD, // redirect to profile
   profile: path(ROOTS_DASHBOARD, "/profile"),
   purchased: path(ROOTS_DASHBOARD, "/purchased"),
-  cart: path(ROOTS_DASHBOARD, "/cart"),
-  category: {
-    standards: path(ROOTS_DASHBOARD, "/category/standards"),
-    subjects: path(ROOTS_DASHBOARD, "/category/subjects"),
-    chapters: path(ROOTS_DASHBOARD, "/category/chapters"),
-  },
-  product: {
-    list: path(ROOTS_DASHBOARD, "/product/list"),
-    view: (id) => path(ROOTS_DASHBOARD, `/product/${id}`),
-  },
+  attempt: (attemptId) => path(ROOTS_DASHBOARD, `/attempt/${attemptId}`),
+  mockTest: (mockTestId) => path(ROOTS_DASHBOARD, `/mockTest/${mockTestId}`),
   orders: {
-    list: path(ROOTS_DASHBOARD, "/orders/order-list"),
+    root: path(ROOTS_DASHBOARD, "/orders"),
     view: (id) => path(ROOTS_DASHBOARD, `/orders/${id}`),
-  },
-  mockTest: {
-    list: (productId) =>
-      path(ROOTS_DASHBOARD, `/mockTest/list/product/${productId}`),
-    attempts: (mockTestId) =>
-      path(ROOTS_DASHBOARD, `/mockTest/attempt/list/${mockTestId}`),
-    attempReport: (attemptId) =>
-      path(ROOTS_DASHBOARD, `/mockTest/attempt/report/${attemptId}`),
-    appear: (attemptId) =>
-      path(ROOTS_DASHBOARD, `/mockTest/appear/${attemptId}`),
   },
 };

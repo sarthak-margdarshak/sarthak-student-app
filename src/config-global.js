@@ -1,67 +1,36 @@
-import {
-  BACKEND_URL,
-  APPWRITE_PROJECT_ID,
-  NINJAS_API,
-  APPWRITE_SARTHAK_DATABASE,
-  APPWRITE_COLLECTION_ADMIN_USERS,
-  APPWRITE_COLLECTION_CHAPTERS,
-  APPWRITE_COLLECTION_CONCEPTS,
-  APPWRITE_COLLECTION_MOCKTEST,
-  APPWRITE_COLLECTION_MOCK_TEST_DRIVER,
-  APPWRITE_COLLECTION_QUESTIONS,
-  APPWRITE_COLLECTION_STANDARDS,
-  APPWRITE_COLLECTION_SUBJECTS,
-  APPWRITE_COLLECTION_PRODUCTS,
-  APPWRITE_COLLECTION_STUDENTS,
-  APPWRITE_BUCKET_QUESTION_FILES,
-  APPWRITE_BUCKET_PRODUCT_FILES,
-  RAZORPAY_KEY_ID,
-  RAZORPAY_SECRET,
-  APPWRITE_FUCTION_CREATE_ORDER,
-  APPWRITE_COLLECTION_ORDERS,
-  APPWRITE_FUCTION_CONFIRM_PAYMENT,
-  APPWRITE_COLLECTION_ATTEMPTS,
-  APPWRITE_COLLECTION_DUMMY_TEST,
-  APPWRITE_COLLECTION_DUMMY_PRODUCT,
-} from "@env";
-
 export const APPWRITE_API = {
-  backendUrl: BACKEND_URL,
-  projectId: APPWRITE_PROJECT_ID,
-  databaseId: APPWRITE_SARTHAK_DATABASE,
-  documents: {
-    dummyProduct: APPWRITE_COLLECTION_DUMMY_PRODUCT,
-    dummyTest: APPWRITE_COLLECTION_DUMMY_TEST,
-  },
+  backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
+  projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID,
+  databaseId: "sarthak_core_db",
   collections: {
-    adminUsers: APPWRITE_COLLECTION_ADMIN_USERS,
-    chapters: APPWRITE_COLLECTION_CHAPTERS,
-    concepts: APPWRITE_COLLECTION_CONCEPTS,
-    mockTest: APPWRITE_COLLECTION_MOCKTEST,
-    mockTestDriver: APPWRITE_COLLECTION_MOCK_TEST_DRIVER,
-    questions: APPWRITE_COLLECTION_QUESTIONS,
-    standards: APPWRITE_COLLECTION_STANDARDS,
-    subjects: APPWRITE_COLLECTION_SUBJECTS,
-    products: APPWRITE_COLLECTION_PRODUCTS,
-    students: APPWRITE_COLLECTION_STUDENTS,
-    orders: APPWRITE_COLLECTION_ORDERS,
-    attempts: APPWRITE_COLLECTION_ATTEMPTS,
+    metadata: "metadata",
+    bookIndex: "book_index",
+    questions: "questions",
+    mockTest: "mock_test",
+    products: "products",
+    orders: "orders",
+    mockTestAttempts: "mock_test_attempts",
+  },
+  documents: {
+    metadataContentDoc: "content_doc",
+    testProduct: process.env.NEXT_PUBLIC_TEST_PRODUCT_ID,
   },
   buckets: {
-    questionFiles: APPWRITE_BUCKET_QUESTION_FILES,
-    productFiles: APPWRITE_BUCKET_PRODUCT_FILES,
+    sarthakDatalakeBucket: "sarthak_datalake_bucket",
   },
   functions: {
-    createOrder: APPWRITE_FUCTION_CREATE_ORDER,
-    confirmPayment: APPWRITE_FUCTION_CONFIRM_PAYMENT,
+    sarthakAPI: "sarthak-api",
   },
 };
 
-export const NINJA_API = {
-  key: NINJAS_API,
+export const TEST_STATUS = {
+  CREATED: "created",
+  IN_PROGRESS: "in_progress",
+  COMPLETED: "completed",
+  IN_EVALUATION: "in_evaluation",
 };
 
 export const RAZORPAY_API = {
-  keyId: RAZORPAY_KEY_ID,
-  secret: RAZORPAY_SECRET,
+  keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  secret: process.env.NEXT_PUBLIC_RAZORPAY_SECRET,
 };
