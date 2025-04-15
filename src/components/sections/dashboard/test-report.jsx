@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { appwriteDatabases } from "@/hook/auth/AppwriteContext";
 import { APPWRITE_API, TEST_STATUS } from "@/config-global";
 import { toast } from "sonner";

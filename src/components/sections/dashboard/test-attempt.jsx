@@ -30,6 +30,7 @@ import { useAppContent } from "@/hook/app/useAppContent";
 import { LayoutGrid } from "lucide-react";
 import ReactKatex from "@pkasila/react-katex";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function TestAttempt({ attemptObj }) {
   const { setCurrentPageName } = useAppContent();
@@ -383,24 +384,26 @@ export default function TestAttempt({ attemptObj }) {
                   <DialogHeader>
                     <DialogTitle>Question Navigator</DialogTitle>
                   </DialogHeader>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 p-4">
-                    {attempt.marked_answers?.map((answer, index) => (
-                      <CarouselQuestionTo
-                        index={index}
-                        key={index}
-                        variant={
-                          answer === "" ||
-                          answer === null ||
-                          answer === undefined
-                            ? "outline"
-                            : "default"
-                        }
-                        customAction={() => {
-                          setQuestionGridOpen(false);
-                        }}
-                      />
-                    ))}
-                  </div>
+                  <ScrollArea className="h-[60vh] w-full">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 p-4">
+                      {attempt.marked_answers?.map((answer, index) => (
+                        <CarouselQuestionTo
+                          index={index}
+                          key={index}
+                          variant={
+                            answer === "" ||
+                            answer === null ||
+                            answer === undefined
+                              ? "outline"
+                              : "default"
+                          }
+                          customAction={() => {
+                            setQuestionGridOpen(false);
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </ScrollArea>
                   <div className="p-4 border-t space-y-2">
                     <div className="flex items-center gap-2 text-sm">
                       <Button variant="default">x</Button>
