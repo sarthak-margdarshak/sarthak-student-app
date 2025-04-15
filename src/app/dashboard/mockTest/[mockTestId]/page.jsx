@@ -117,9 +117,9 @@ export default function MockTestPage() {
           total_marks: questionsCount || 0,
         }
       );
-      setIsCreatingAttempt(false);
 
       router.push(PATH_DASHBOARD.attempt(attempt.$id));
+      setIsCreatingAttempt(false);
     } catch (error) {
       console.error("Error creating attempt:", error);
     }
@@ -207,27 +207,34 @@ export default function MockTestPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Choose Test Mode</AlertDialogTitle>
             <AlertDialogDescription>
-              Would you like to attempt this test or try a practice (dummy) test
-              first?
+              <p>Are you sure to make an attempt of this test?</p>
+              <p>
+                1. After clicking on Start Test, you will be redirected to the
+                test page.
+              </p>
+              <p>
+                2. First Instructions will appear, read those carefully and then
+                click on Start Test button to start the test.
+              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isCreatingAttempt}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction
+            {/* <AlertDialogAction
               onClick={() => startTest(true)}
               className="bg-blue-500 hover:bg-blue-600"
               disabled={isCreatingAttempt}
             >
               Practice Test
-            </AlertDialogAction>
+            </AlertDialogAction> */}
             <AlertDialogAction
               onClick={() => startTest(false)}
               className="bg-green-500 hover:bg-green-600"
               disabled={isCreatingAttempt}
             >
-              {isCreatingAttempt ? "Creating..." : "Actual Test"}
+              {isCreatingAttempt ? "Creating..." : "Start Test"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -309,9 +316,7 @@ export default function MockTestPage() {
                   .filter((attempt) => attempt.status === TEST_STATUS.COMPLETED)
                   .reverse()
                   .map((attempt) => ({
-                    attempt: new Date(
-                      attempt.test_started
-                    ).toLocaleDateString(),
+                    attempt: new Date(attempt.$createdAt).toLocaleDateString(),
                     marks: (attempt.obtained_marks / attempt.total_marks) * 100,
                   }))}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

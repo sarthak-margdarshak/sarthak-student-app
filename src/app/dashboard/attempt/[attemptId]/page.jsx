@@ -118,7 +118,7 @@ export default function AttemptPage() {
 
   // If test is already completed, show result card
   if (attempt?.status === TEST_STATUS.COMPLETED) {
-    return <TestReport attemptId={attempt} />;
+    return <TestReport attempt={attempt} />;
   }
 
   return <TestAttempt attemptObj={attempt} />;

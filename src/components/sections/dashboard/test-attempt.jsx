@@ -19,7 +19,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { appwriteDatabases } from "@/hook/auth/AppwriteContext";
+import {
+  appwriteDatabases,
+  appwriteFunction,
+} from "@/hook/auth/AppwriteContext";
 import { APPWRITE_API, TEST_STATUS } from "@/config-global";
 import { toast } from "sonner";
 import Instructions from "./instructions";
@@ -129,6 +132,14 @@ export default function TestAttempt({ attemptObj }) {
       );
 
       // TODO: Call function to evaluate test and update results
+      appwriteFunction.createExecution(
+        APPWRITE_API.functions.sarthakAPI,
+        JSON.stringify({
+          attemptId: attempt.$id,
+        }),
+        true,
+        "/mockTest/evaluate"
+      );
 
       toast.success("Test submitted successfully");
     } catch (error) {

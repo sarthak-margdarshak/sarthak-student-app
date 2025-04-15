@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "api.sarthakmargdarshak.in",
       },
+      {
+        protocol: "https",
+        hostname: "cloud.appwrite.io",
+      },
     ],
   },
 };

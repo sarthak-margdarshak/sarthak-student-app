@@ -257,7 +257,6 @@ export default function OrderPage() {
         orderId,
         {
           payment_mode: "zero_cash",
-          last_payment_date: new Date(),
           attempts: 0,
         }
       );
