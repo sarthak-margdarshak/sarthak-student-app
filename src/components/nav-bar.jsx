@@ -29,7 +29,7 @@ const Navbar = () => {
             <div className="flex-shrink-0">
               <Link href={PATH_PAGE.root} className="flex items-center">
                 <Image
-                  src="/favicon/favicon-1024x1024.png"
+                  src="https://cloud.appwrite.io/v1/storage/buckets/sarthak_datalake_bucket/files/67ba3f6a002ef0a0f7b1/view?project=sarthak-margdarshak"
                   alt="App Logo"
                   width={40}
                   height={40}
