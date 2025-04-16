@@ -4,14 +4,16 @@
   "description": "An app for students to appear mock-test of any competitive exam.",
   "icons": [
     {
-      "src": "/favicon/favicon-1024x1024.png",
+      "src": "/favicon/favicon-192x192.png",
       "type": "image/png",
-      "sizes": "1024x1024"
+      "sizes": "192x192",
+      "purpose": "maskable"
     },
     {
       "src": "/favicon/favicon-512x512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "start_url": "/",

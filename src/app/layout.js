@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
           name="description"
           content="An app for students to appear mock-test of any competitive exam."
         />
+        <meta name="apple-mobile-web-app-title" content="Sarthak" />
       </head>
       <body className={`${laila.className} antialiased`}>
         <AuthProvider>
