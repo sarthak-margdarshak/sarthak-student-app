@@ -2,7 +2,7 @@
   {
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
-      "namespace": "scapeq",
+      "namespace": "android_app",
       "package_name": "in.sarthakmargdarshak.app",
       "sha256_cert_fingerprints": [
         "38:DF:00:48:60:EE:BC:95:D1:7D:5D:86:1C:5A:7E:D4:22:50:81:B3:3F:CB:4B:D5:AF:AB:7D:37:53:01:2B:DC"
