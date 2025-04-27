@@ -2,18 +2,39 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Package, ShoppingCart, PenSquare } from "lucide-react";
+import {
+  LogOut,
+  Package,
+  ShoppingCart,
+  PenSquare,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 import { useAuthContext } from "@/hook/auth/useAuthContext";
 import ImagePickerDialog from "./image-dialogue";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PATH_DASHBOARD } from "@/routes/paths";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { appwriteAccount, appwriteFunction } from "@/hook/auth/AppwriteContext";
+import { APPWRITE_API } from "@/config-global";
+import { toast } from "sonner";
 
 export default function ProfileCard() {
   const { user, logout } = useAuthContext();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleLogout = async () => {
     console.log("Logout");
@@ -24,6 +45,44 @@ export default function ProfileCard() {
 
   const handleEditProfile = () => {
     setIsDialogOpen(true);
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      // let scheduledDeleteDate = new Date(
+      //   Math.floor(Date.now() / (1000 * 60)) * 60 * 1000 +
+      //     90 * 24 * 60 * 60 * 1000
+      // );
+      // const deleteFunction = await appwriteFunction.createExecution(
+      //   "sarthak-api",
+      //   undefined,
+      //   true,
+      //   "/user/update/permanently-delete",
+      //   "GET",
+      //   {},
+      //   scheduledDeleteDate.toISOString().replace("T", " ").replace("Z", "")
+      // );
+
+      const tempPrefs = await appwriteAccount.getPrefs();
+      appwriteAccount.updatePrefs({
+        ...tempPrefs,
+        scheduledDeleteFunctionId: deleteFunction.$id,
+      });
+
+      appwriteFunction.createExecution(
+        APPWRITE_API.functions.sarthakAPI,
+        undefined,
+        true,
+        "/user/update/delete"
+      );
+      toast.success("Account deletion scheduled. You will be logged out soon.");
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+    }
   };
 
   // Function to get user initials
@@ -125,16 +184,28 @@ export default function ProfileCard() {
           </div>
 
           {/* Logout Button */}
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex flex-col gap-4 items-center">
             <Button
               variant="destructive"
               onClick={handleLogout}
               className="w-full max-w-md py-4 px-6"
               disabled={loggingOut}
             >
-              {loggingOut && <Loader2 className="animate-spin" />}
-              <LogOut size={20} />
+              {loggingOut && <Loader2 className="animate-spin mr-2" />}
+              <LogOut size={20} className="mr-2" />
               <span>Logout</span>
+            </Button>
+
+            {/* Delete Account Button */}
+            <Button
+              variant="ghost"
+              onClick={() => setShowDeleteDialog(true)}
+              className="w-full max-w-md py-4 px-6 text-red-600 hover:text-red-700 hover:bg-red-50"
+              disabled={isDeleting}
+            >
+              {isDeleting && <Loader2 className="animate-spin mr-2" />}
+              <Trash2 size={20} className="mr-2" />
+              <span>Delete Account</span>
             </Button>
           </div>
         </div>
@@ -144,6 +215,72 @@ export default function ProfileCard() {
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       />
+
+      {/* Delete Account Alert Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Account</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  By clicking Delete Account, it will:
+                </p>
+                <div className="mt-4 grid gap-3">
+                  <div className="flex items-start gap-2">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-red-500/60" />
+                    <span className="text-sm text-muted-foreground">
+                      Remove access to all purchased mock test series
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-red-500/60" />
+                    <span className="text-sm text-muted-foreground">
+                      Delete your test history and all saved progress
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-red-500/60" />
+                    <span className="text-sm text-muted-foreground">
+                      Disable access to all app features and settings
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-4 rounded-md bg-amber-50 p-3">
+                  <span className="text-sm font-medium text-amber-700">
+                    Your account will enter a 90-day recovery period. Contact
+                    our support team during this time if you wish to recover
+                    your account.
+                  </span>
+                </div>
+                <div className="mt-2 rounded-md bg-slate-50 p-3">
+                  <span className="text-sm text-slate-600">
+                    <strong>Note:</strong> After 90 days, all data will be
+                    permanently deleted and cannot be recovered.
+                  </span>
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="animate-spin mr-2" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete Account"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -208,7 +208,13 @@ export function AuthProvider({ children }) {
 
         toast.success("Successfully Logged In");
       } catch (error) {
-        toast.error(error.message);
+        if (error.code === 401) {
+          toast.error(
+            "Your account has been deactivated currently. You will be blocked from any personal access to the platform. You can re-activate your account by contacting the admin."
+          );
+        } else {
+          toast.error(error.message);
+        }
       }
     },
     [init]
