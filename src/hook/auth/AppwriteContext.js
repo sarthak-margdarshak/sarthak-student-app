@@ -133,13 +133,9 @@ export function AuthProvider({ children }) {
     try {
       let x = await appwriteAccount.get();
       if (x.prefs?.photo) {
-        x.prefs.photo = appwriteStorage.getFilePreview(
+        x.prefs.photo = appwriteStorage.getFileView(
           APPWRITE_API.buckets.sarthakDatalakeBucket,
-          x.prefs?.photo,
-          undefined,
-          undefined,
-          undefined,
-          20
+          x.prefs?.photo
         );
       }
 
@@ -179,13 +175,9 @@ export function AuthProvider({ children }) {
         await appwriteAccount.createEmailPasswordSession(email, password);
         const x = await appwriteAccount.get();
         if (x.prefs?.photo) {
-          x.prefs.photo = appwriteStorage.getFilePreview(
+          x.prefs.photo = appwriteStorage.getFileView(
             APPWRITE_API.buckets.sarthakDatalakeBucket,
-            x.prefs?.photo,
-            undefined,
-            undefined,
-            undefined,
-            20
+            x.prefs?.photo
           );
         }
 
@@ -255,13 +247,9 @@ export function AuthProvider({ children }) {
       });
 
       let x = await appwriteAccount.get();
-      x.prefs.photo = appwriteStorage.getFilePreview(
+      x.prefs.photo = appwriteStorage.getFileView(
         APPWRITE_API.buckets.sarthakDatalakeBucket,
-        x.prefs?.photo,
-        undefined,
-        undefined,
-        undefined,
-        20
+        x.prefs?.photo
       );
 
       dispatch({
