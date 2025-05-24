@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { appwriteDatabases } from "@/hook/auth/AppwriteContext";
+import { appwriteDatabases, getUserName } from "@/hook/auth/AppwriteContext";
 import { APPWRITE_API, TEST_STATUS } from "@/config-global";
 import { toast } from "sonner";
 import { PieChart } from "@/components/ui/pie-chart";
@@ -45,6 +45,7 @@ export default function TestReport({ attempt }) {
   const [isRankingOpen, setIsRankingOpen] = useState(false);
   const [rankings, setRankings] = useState([]);
   const [userRank, setUserRank] = useState(null);
+  const [userNames, setUserNames] = useState({});
   const { setCurrentPageName } = useAppContent();
   const { user } = useAuthContext();
 
@@ -98,12 +99,31 @@ export default function TestReport({ attempt }) {
           )
         ).documents;
 
-        // Find user's rank
-        const rank = attempts.findIndex((a) => a.studentId === user.$id) + 1;
+        // Process attempts to keep only the first/best attempt per student
+        const uniqueAttempts = attempts.reduce((acc, current) => {
+          if (!acc.some((attempt) => attempt.studentId === current.studentId)) {
+            acc.push(current);
+          }
+          return acc;
+        }, []);
+
+        // Find user's rank in unique attempts
+        const rank =
+          uniqueAttempts.findIndex((a) => a.studentId === user.$id) + 1;
         setUserRank(rank);
 
-        // Store rankings data
-        setRankings(attempts);
+        // Store unique rankings data
+        setRankings(uniqueAttempts);
+
+        // Fetch user names for all unique attempts
+        const names = {};
+        await Promise.all(
+          uniqueAttempts.map(async (attempt) => {
+            const name = await getUserName(attempt.studentId);
+            names[attempt.studentId] = name;
+          })
+        );
+        setUserNames(names);
       } catch (error) {
         toast.error("Error loading report: " + error.message);
       } finally {
@@ -201,7 +221,6 @@ export default function TestReport({ attempt }) {
                 <TableRow>
                   <TableHead className="w-16">Rank</TableHead>
                   <TableHead>Student</TableHead>
-                  <TableHead className="text-right">Marks</TableHead>
                   <TableHead className="text-right">Percentage</TableHead>
                 </TableRow>
               </TableHeader>
@@ -214,9 +233,8 @@ export default function TestReport({ attempt }) {
                     }
                   >
                     <TableCell className="font-medium">#{index + 1}</TableCell>
-                    <TableCell>{rank.studentId}</TableCell>
-                    <TableCell className="text-right">
-                      {rank.obtained_marks}/{rank.total_marks}
+                    <TableCell>
+                      {userNames[rank.studentId] || rank.studentId}
                     </TableCell>
                     <TableCell className="text-right">
                       {rank.percentage_marks}%

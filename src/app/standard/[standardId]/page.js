@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAppContent } from "@/hook/app/useAppContent";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
@@ -20,6 +19,7 @@ import { PATH_PAGE } from "@/routes/paths";
 import ImageWithOverlayText from "@/components/sections/app/image-with-overlay-text";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ShinyButton } from "@/components/magicui/shiny-button";
 
 export default function StandardPage() {
   const { setCurrentPageName, standards, products, subjects } = useAppContent();
@@ -105,7 +105,7 @@ export default function StandardPage() {
             <CardContent></CardContent>
             <CardFooter>
               <Link href={PATH_PAGE.subject(subjectId)}>
-                <Button className="w-full">Explore</Button>
+                <ShinyButton className="w-full">Explore</ShinyButton>
               </Link>
             </CardFooter>
           </Card>

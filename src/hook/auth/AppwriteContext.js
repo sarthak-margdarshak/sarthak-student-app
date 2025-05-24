@@ -99,6 +99,36 @@ export const downloadMockTest = async (mockTestId) => {
   });
 };
 
+// Function to get user name from cache or fetch from Appwrite
+export const getUserName = async (userId) => {
+  // Try to get from localStorage first
+  const cachedName = localStorage.getItem(`user_name_${userId}`);
+  if (cachedName) {
+    return cachedName;
+  }
+
+  try {
+    // If not in cache, fetch from Appwrite
+    const response = await appwriteFunction.createExecution(
+      APPWRITE_API.functions.sarthakAPI,
+      JSON.stringify({ userId }),
+      false,
+      "/user/fetch/id"
+    );
+    const data = JSON.parse(response.responseBody);
+
+    if (data.status === "success" && data.user?.name) {
+      // Store in localStorage for future use
+      localStorage.setItem(`user_name_${userId}`, data.user.name);
+      return data.user.name;
+    }
+    return userId; // Fallback to userId if name not found
+  } catch (error) {
+    console.error("Error fetching user name:", error);
+    return userId; // Fallback to userId
+  }
+};
+
 const initialState = {
   user: null,
   login: async () => {},
