@@ -9,13 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAppContent } from "@/hook/app/useAppContent";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { PATH_PAGE } from "@/routes/paths";
+import { ShinyButton } from "@/components/magicui/shiny-button";
 
 export default function StandardCards() {
   const { standards } = useAppContent();
@@ -59,7 +59,7 @@ export default function StandardCards() {
             <CardContent></CardContent>
             <CardFooter>
               <Link href={PATH_PAGE.standard(standard[0])}>
-                <Button className="w-full">Explore</Button>
+                <ShinyButton className="w-full">Explore</ShinyButton>
               </Link>
             </CardFooter>
           </Card>
