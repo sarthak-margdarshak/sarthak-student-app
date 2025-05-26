@@ -36,6 +36,7 @@ import {
 import { Query } from "appwrite";
 import { useAuthContext } from "@/hook/auth/useAuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
 
 export default function TestReport({ attempt }) {
   const [loading, setLoading] = useState(true);
@@ -201,17 +202,22 @@ export default function TestReport({ attempt }) {
   return (
     <div className="container max-w-4xl py-6 space-y-6 mt-20">
       {/* Floating Ranking Button */}
-      <Button
+      <ShimmerButton
         onClick={() => setIsRankingOpen(true)}
-        className="fixed top-24 right-4 z-50 gap-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-lg"
+        className="fixed top-24 right-4 z-50 gap-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold shadow-lg"
+        shimmerColor="#ffffff"
+        shimmerDuration="2s"
+        shimmerSize="0.1em"
       >
-        <Trophy className="h-4 w-4" />
-        Rank #{userRank}
-      </Button>
+        <div className="flex items-center gap-2">
+          <Trophy className="h-4 w-4" />
+          <span>Rank #{userRank}</span>
+        </div>
+      </ShimmerButton>
 
       {/* Rankings Dialog */}
       <Dialog open={isRankingOpen} onOpenChange={setIsRankingOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh] rounded-lg">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Test Rankings</DialogTitle>
           </DialogHeader>

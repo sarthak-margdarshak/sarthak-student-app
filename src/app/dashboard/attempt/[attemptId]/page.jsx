@@ -113,7 +113,7 @@ export default function AttemptPage() {
 
   // If test is under evaluation, show evaluation progress
   if (attempt?.status === TEST_STATUS.IN_EVALUATION) {
-    return <TestEvaluation />;
+    return <TestEvaluation attempt={attempt} />;
   }
 
   // If test is already completed, show result card
