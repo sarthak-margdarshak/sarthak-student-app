@@ -27,7 +27,7 @@ import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
-import MockTestCard from "@/components/sections/dashboard/mock-test-card";
+import NestedMockTestAccordion from "@/components/sections/dashboard/nested-mock-test-accordion";
 import { appwriteDatabases } from "@/hook/auth/AppwriteContext";
 import { APPWRITE_API } from "@/config-global";
 import { ID, Query } from "appwrite";
@@ -45,6 +45,163 @@ export default function ProductViewPage() {
   const [product, setProduct] = useState({});
   const [enrolled, setEnrolled] = useState(false);
   const [placingOrder, setPlacingOrder] = useState(false);
+  const [organizedMockTests, setOrganizedMockTests] = useState({});
+  const [loadingMockTests, setLoadingMockTests] = useState(false);
+  const [bookIndexList, setBookIndexList] = useState({});
+  const [productLevel, setProductLevel] = useState("standard");
+
+  // Function to organize mock tests by standard, subject, chapter, and concept
+  const organizeMockTests = async (mockTestIds) => {
+    console.log(localStorage.getItem(`organizedMockTests_${productId}`));
+    if (localStorage.getItem(`organizedMockTests_${productId}`)) {
+      const x = JSON.parse(
+        localStorage.getItem(`organizedMockTests_${productId}`)
+      );
+      setOrganizedMockTests(x.organized);
+      setBookIndexList(x.bookIndexList);
+      return;
+    }
+    setLoadingMockTests(true);
+    try {
+      let organized = {};
+      let tmpBookIndexList = {};
+
+      for (const mockTestId of mockTestIds) {
+        // Download mock test data
+        const mockTest = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.mockTest,
+          mockTestId
+        );
+
+        let conceptId = null;
+        let chapterId = null;
+        let subjectId = null;
+        let standardId = null;
+
+        if (mockTest?.concept) {
+          conceptId = mockTest.concept?.$id;
+          chapterId = mockTest.chapter?.$id;
+          subjectId = mockTest.subject?.$id;
+          standardId = mockTest.standard?.$id;
+          tmpBookIndexList = {
+            ...tmpBookIndexList,
+            [mockTest.concept?.$id]: mockTest.concept,
+            [mockTest.chapter?.$id]: mockTest.chapter,
+            [mockTest.subject?.$id]: mockTest.subject,
+            [mockTest.standard?.$id]: mockTest.standard,
+          };
+        } else {
+          if (mockTest?.chapter) {
+            chapterId = mockTest.chapter?.$id;
+            subjectId = mockTest.subject?.$id;
+            standardId = mockTest.standard?.$id;
+            tmpBookIndexList = {
+              ...tmpBookIndexList,
+              [mockTest.chapter?.$id]: mockTest.chapter,
+              [mockTest.subject?.$id]: mockTest.subject,
+              [mockTest.standard?.$id]: mockTest.standard,
+            };
+          } else {
+            if (mockTest?.subject) {
+              subjectId = mockTest.subject?.$id;
+              standardId = mockTest.standard?.$id;
+              tmpBookIndexList = {
+                ...tmpBookIndexList,
+                [mockTest.subject?.$id]: mockTest.subject,
+                [mockTest.standard?.$id]: mockTest.standard,
+              };
+            } else {
+              standardId = mockTest.standard?.$id;
+              tmpBookIndexList = {
+                ...tmpBookIndexList,
+                [mockTest.standard?.$id]: mockTest.standard,
+              };
+            }
+          }
+        }
+
+        if (standardId && !organized[standardId]) {
+          organized[standardId] = {
+            subjects: {},
+            mockTests: [],
+          };
+        }
+        if (subjectId && !organized[standardId].subjects[subjectId]) {
+          organized[standardId].subjects[subjectId] = {
+            chapters: {},
+            mockTests: [],
+          };
+        }
+        if (
+          chapterId &&
+          !organized[standardId].subjects[subjectId].chapters[chapterId]
+        ) {
+          organized[standardId].subjects[subjectId].chapters[chapterId] = {
+            concepts: {},
+            mockTests: [],
+          };
+        }
+        if (
+          conceptId &&
+          !organized[standardId].subjects[subjectId].chapters[chapterId]
+            .concepts[conceptId]
+        ) {
+          organized[standardId].subjects[subjectId].chapters[
+            chapterId
+          ].concepts[conceptId] = {
+            mockTests: [],
+          };
+        }
+
+        if (conceptId) {
+          organized[standardId].subjects[subjectId].chapters[
+            chapterId
+          ].concepts[conceptId].mockTests = [
+            ...organized[standardId].subjects[subjectId].chapters[chapterId]
+              .concepts[conceptId].mockTests,
+            mockTestId,
+          ];
+        } else {
+          if (chapterId) {
+            organized[standardId].subjects[subjectId].chapters[
+              chapterId
+            ].mockTests = [
+              ...organized[standardId].subjects[subjectId].chapters[chapterId]
+                .mockTests,
+              mockTestId,
+            ];
+          } else {
+            if (subjectId) {
+              organized[standardId].subjects[subjectId].mockTests = [
+                ...organized[standardId].subjects[subjectId].mockTests,
+                mockTestId,
+              ];
+            } else {
+              organized[standardId].mockTests = [
+                ...organized[standardId].mockTests,
+                mockTestId,
+              ];
+            }
+          }
+        }
+      }
+      setBookIndexList(tmpBookIndexList);
+      setOrganizedMockTests(organized);
+      setLoadingMockTests(false);
+      localStorage.setItem(
+        `organizedMockTests_${productId}`,
+        JSON.stringify({
+          organized: organized,
+          bookIndexList: tmpBookIndexList,
+        })
+      );
+    } catch (error) {
+      console.error("Error organizing mock tests:", error);
+      toast.error("Failed to load mock tests");
+      setLoadingMockTests(false);
+    }
+  };
 
   useEffect(() => {
     const updateViews = async () => {
@@ -60,6 +217,13 @@ export default function ProductViewPage() {
       }
       setProduct(products[id]);
       setCurrentPageName(products[id]?.name);
+
+      if (products[id]?.subject) {
+        setProductLevel("subject");
+      } else {
+        setProductLevel("standard");
+      }
+      await organizeMockTests(products[id]?.mockTest);
     };
 
     updateViews();
@@ -203,6 +367,47 @@ export default function ProductViewPage() {
 
       {!enrolled ? (
         <div>
+          <div className="w-full h-1 bg-gray-200 mt-4"></div>
+
+          <div className="flex items-center justify-between mt-4 mb-4">
+            <div className="group relative flex items-center rounded-full px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f] ">
+              <span
+                className={cn(
+                  "absolute inset-0 block h-full w-full animate-gradient rounded-[inherit] bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:300%_100%] p-[1px]"
+                )}
+                style={{
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "destination-out",
+                  mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  maskComposite: "subtract",
+                  WebkitClipPath: "padding-box",
+                }}
+              />
+              🔍 <hr className="mx-2 h-4 w-px shrink-0 bg-neutral-500" />
+              <AnimatedGradientText className="text-sm font-bold">
+                Preview Mock Test Structure
+              </AnimatedGradientText>
+              <ChevronRight className="ml-1 size-4 stroke-neutral-500 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+            </div>
+          </div>
+
+          {loadingMockTests ? (
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="h-6 w-6 animate-spin mr-2" />
+              <span>Loading mock test structure...</span>
+            </div>
+          ) : (
+            <div className="opacity-60">
+              <NestedMockTestAccordion
+                organizedMockTests={organizedMockTests}
+                bookIndexList={bookIndexList}
+                productId={productId}
+                className="mt-4"
+              />
+            </div>
+          )}
+
           <div className="mb-8"></div>
           <div className="fixed bottom-0 left-0 right-0 p-4 z-50 flex justify-center">
             <NeonGradientCard className="max-w-sm items-center justify-center text-center">
@@ -244,21 +449,26 @@ export default function ProductViewPage() {
               />
               🎉 <hr className="mx-2 h-4 w-px shrink-0 bg-neutral-500" />
               <AnimatedGradientText className="text-sm font-bold">
-                Mock Tests
+                Organized Mock Tests
               </AnimatedGradientText>
               <ChevronRight className="ml-1 size-4 stroke-neutral-500 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-1 mb-1">
-            {product?.mockTest?.map((test) => (
-              <MockTestCard
-                mockTestId={test}
-                key={test}
-                productId={productId}
-              />
-            ))}
-          </div>
+          {loadingMockTests ? (
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="h-6 w-6 animate-spin mr-2" />
+              <span>Organizing mock tests...</span>
+            </div>
+          ) : (
+            <NestedMockTestAccordion
+              organizedMockTests={organizedMockTests}
+              bookIndexList={bookIndexList}
+              productId={productId}
+              productLevel={productLevel}
+              className="mt-1"
+            />
+          )}
         </div>
       )}
     </div>
