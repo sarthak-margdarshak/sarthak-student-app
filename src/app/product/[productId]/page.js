@@ -252,7 +252,11 @@ export default function ProductViewPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-1 mb-1">
             {product?.mockTest?.map((test) => (
-              <MockTestCard mockTestId={test} key={test} />
+              <MockTestCard
+                mockTestId={test}
+                key={test}
+                productId={productId}
+              />
             ))}
           </div>
         </div>

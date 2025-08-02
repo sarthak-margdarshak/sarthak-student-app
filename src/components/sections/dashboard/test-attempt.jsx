@@ -129,6 +129,7 @@ export default function TestAttempt({ attemptObj }) {
           status: TEST_STATUS.IN_EVALUATION,
           test_ended_by: actionBy,
           test_ended: new Date(),
+          evaluationDate: new Date(),
         }
       );
 

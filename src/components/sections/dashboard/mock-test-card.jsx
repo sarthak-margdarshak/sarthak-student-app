@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { downloadMockTest } from "@/hook/auth/AppwriteContext";
 import { ArrowUpRight } from "lucide-react";
 
-export default function MockTestCard({ mockTestId }) {
+export default function MockTestCard({ mockTestId, productId }) {
   const [loading, setLoading] = useState(true);
   const [mockTest, setMockTest] = useState({});
   const [isDownloaded, setIsDownloaded] = useState(false);
@@ -30,7 +30,9 @@ export default function MockTestCard({ mockTestId }) {
       title={!isDownloaded ? "Downloading test content..." : "Start test"}
     >
       <Link
-        href={isDownloaded ? PATH_DASHBOARD.mockTest(mockTestId) : "#"}
+        href={
+          isDownloaded ? PATH_DASHBOARD.mockTest(mockTestId, productId) : "#"
+        }
         className={`group ${!isDownloaded ? "pointer-events-none" : ""}`}
       >
         <div

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   appwriteDatabases,
   downloadMockTest,
@@ -11,11 +11,12 @@ import { ID, Query } from "appwrite";
 import { Button } from "@/components/ui/button";
 import { useAppContent } from "@/hook/app/useAppContent";
 import { useAuthContext } from "@/hook/auth/useAuthContext";
+import { labels } from "@/lib/labels";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CloudIcon } from "lucide-react";
+import { CloudIcon, Lock, AlertTriangle, Home, ArrowLeft } from "lucide-react";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import {
   LineChart,
@@ -39,11 +40,18 @@ import {
 
 export default function MockTestPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setCurrentPageName } = useAppContent();
   const { user } = useAuthContext();
   const [mockTestId, setMockTestId] = useState(
     window.location.pathname.split("/")[3]
   );
+
+  // Get productId from search parameters
+  const productId = searchParams.get("productId");
+
+  // Check if user has subscription for this product
+  const [hasSubscription, setHasSubscription] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [attempts, setAttempts] = useState([]);
@@ -55,6 +63,19 @@ export default function MockTestPage() {
   useEffect(() => {
     // Fetch mock test details and attempts
     const fetchMockTestAndAttempts = async () => {
+      const c =
+        user &&
+        productId &&
+        user.labels.findIndex(
+          (label) =>
+            label === labels.founder ||
+            label === labels.admin ||
+            label === productId
+        ) !== -1;
+      setHasSubscription(c);
+      if (!c) {
+        return;
+      }
       const id = window.location.pathname.split("/")[3];
       setMockTestId(id);
       try {
@@ -143,6 +164,73 @@ export default function MockTestPage() {
       createNewAttempt();
     }
   };
+
+  // Check if productId is null or user doesn't have subscription - show blocked access page
+  if (!productId || !hasSubscription) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-md w-full mx-4">
+          <Card className="p-8 text-center shadow-2xl border-red-200 dark:border-red-800 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                  <Lock className="w-10 h-10 text-red-600 dark:text-red-400" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-4 h-4 text-white" />
+                </div>
+              </div>
+            </div>
+
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              Access Blocked
+            </h1>
+
+            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+              {!productId
+                ? "You don't have permission to access this mock test. This content requires a valid mock test series subscription."
+                : "You don't have an active subscription for this mock test series. Please purchase the series to access this content."}
+            </p>
+
+            <div className="space-y-3">
+              {productId && (
+                <Button
+                  onClick={() => router.push(`/product/${productId}`)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Home className="w-4 h-4 mr-2" />
+                  View Product Details
+                </Button>
+              )}
+
+              <Button
+                onClick={() => router.push(PATH_DASHBOARD.root)}
+                className="w-full bg-red-600 hover:bg-red-700 text-white"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Go to Dashboard
+              </Button>
+
+              <Button
+                onClick={() => router.back()}
+                variant="outline"
+                className="w-full border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Go Back
+              </Button>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Need help? Contact support for assistance.
+              </p>
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
