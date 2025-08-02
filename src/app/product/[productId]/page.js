@@ -346,9 +346,7 @@ export default function ProductViewPage() {
         </div>
       </div>
 
-      <div
-        className={cn("flex flex-col ml-8 gap-2 mt-2", enrolled ? "" : "mb-80")}
-      >
+      <div className="flex flex-col ml-8 gap-2 mt-2">
         <div>
           👉{" "}
           <Badge variant="destructive">{`${product?.mockTest?.length} Mock Tests Inside`}</Badge>
@@ -367,8 +365,6 @@ export default function ProductViewPage() {
 
       {!enrolled ? (
         <div>
-          <div className="w-full h-1 bg-gray-200 mt-4"></div>
-
           <div className="flex items-center justify-between mt-4 mb-4">
             <div className="group relative flex items-center rounded-full px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f] ">
               <span
@@ -386,7 +382,7 @@ export default function ProductViewPage() {
               />
               🔍 <hr className="mx-2 h-4 w-px shrink-0 bg-neutral-500" />
               <AnimatedGradientText className="text-sm font-bold">
-                Preview Mock Test Structure
+                Preview Mock Test
               </AnimatedGradientText>
               <ChevronRight className="ml-1 size-4 stroke-neutral-500 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
             </div>
@@ -395,7 +391,7 @@ export default function ProductViewPage() {
           {loadingMockTests ? (
             <div className="flex items-center justify-center p-8">
               <Loader2 className="h-6 w-6 animate-spin mr-2" />
-              <span>Loading mock test structure...</span>
+              <span>Loading mock tests...</span>
             </div>
           ) : (
             <div className="opacity-60">
@@ -408,7 +404,6 @@ export default function ProductViewPage() {
             </div>
           )}
 
-          <div className="mb-8"></div>
           <div className="fixed bottom-0 left-0 right-0 p-4 z-50 flex justify-center">
             <NeonGradientCard className="max-w-sm items-center justify-center text-center">
               <div className="grid grid-cols-2">
@@ -454,7 +449,6 @@ export default function ProductViewPage() {
               <ChevronRight className="ml-1 size-4 stroke-neutral-500 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
             </div>
           </div>
-
 
           {loadingMockTests ? (
             <div className="flex items-center justify-center p-8">
