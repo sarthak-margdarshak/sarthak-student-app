@@ -26,7 +26,8 @@ export const PATH_DASHBOARD = {
   profile: path(ROOTS_DASHBOARD, "/profile"),
   purchased: path(ROOTS_DASHBOARD, "/purchased"),
   attempt: (attemptId) => path(ROOTS_DASHBOARD, `/attempt/${attemptId}`),
-  mockTest: (mockTestId) => path(ROOTS_DASHBOARD, `/mockTest/${mockTestId}`),
+  mockTest: (mockTestId, productId) =>
+    path(ROOTS_DASHBOARD, `/mockTest/${mockTestId}?productId=${productId}`),
   orders: {
     root: path(ROOTS_DASHBOARD, "/orders"),
     view: (id) => path(ROOTS_DASHBOARD, `/orders/${id}`),

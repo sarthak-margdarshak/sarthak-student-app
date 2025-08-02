@@ -1,6 +1,9 @@
 import { APPWRITE_API } from "@/config-global";
 import { useAppContent } from "@/hook/app/useAppContent";
-import { appwriteFunction } from "@/hook/auth/AppwriteContext";
+import {
+  appwriteDatabases,
+  appwriteFunction,
+} from "@/hook/auth/AppwriteContext";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -28,7 +31,7 @@ export default function TestEvaluation({ attempt }) {
 
   useEffect(() => {
     // Get test end time from attempt object
-    const testEndTime = attempt?.test_ended || new Date().getTime();
+    const testEndTime = attempt?.$updatedAt || new Date().getTime();
 
     // Check every minute if 15 minutes have passed
     const interval = setInterval(() => {
@@ -52,8 +55,17 @@ export default function TestEvaluation({ attempt }) {
     return () => clearInterval(interval);
   }, [attempt]);
 
-  const handleReEvaluate = () => {
+  const handleReEvaluate = async () => {
     try {
+      await appwriteDatabases.updateDocument(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.mockTestAttempts,
+        attempt?.$id,
+        {
+          evaluationDate: new Date(),
+        }
+      );
+
       appwriteFunction.createExecution(
         APPWRITE_API.functions.sarthakAPI,
         JSON.stringify({
@@ -64,10 +76,10 @@ export default function TestEvaluation({ attempt }) {
       );
 
       toast.success("Re-evaluation started successfully");
+      setShowReEvaluate(false);
     } catch (error) {
       toast.error(error.message);
     }
-    setShowReEvaluate(false);
   };
 
   return (
