@@ -102,12 +102,17 @@ export default function OrderPage() {
         id
       );
       setOrder(x);
+      setCreatingOrder(x?.orderId === null || x?.orderId === "");
       setCurrentPageName(x?.orderId);
 
       appwriteClient.subscribe(
         `databases.${APPWRITE_API.databaseId}.collections.${APPWRITE_API.collections.orders}.documents.${id}`,
         (response) => {
           setOrder(response.payload);
+          setCreatingOrder(
+            (response.payload?.orderId === null ||
+              response.payload?.orderId) === ""
+          );
         }
       );
 
@@ -317,16 +322,16 @@ export default function OrderPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Order Details</h1>
-          <Skeleton className="h-50 w-full mt-5" />
-          <Skeleton className="h-50 w-full mt-5" />
-          <Skeleton className="h-50 w-full mt-5" />
+          <Skeleton className="h-50 w-full mt-2" />
+          <Skeleton className="h-50 w-full mt-2" />
+          <Skeleton className="h-50 w-full mt-2" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-4">
       <Script
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
@@ -335,7 +340,7 @@ export default function OrderPage() {
         <h1 className="text-3xl font-bold mb-6">Order Details</h1>
 
         {/* Order Status Card */}
-        <Card className="mb-8">
+        <Card className="mb-2 bg-slate-100">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Order #{order?.orderId}</CardTitle>
@@ -404,16 +409,15 @@ export default function OrderPage() {
             </div>
           </CardContent>
 
-          <CardFooter className="bg-gray-50 rounded-b-lg">
+          <div className="bg-slate-300 rounded p-2 m-1">
             {order?.status === "success" && (
               <div className="w-full flex items-center justify-between">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-800">
                   Thank you for your purchase!
                 </p>
                 <Button
-                  variant="outline"
                   size="sm"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-red-800"
                   onClick={handleDownloadInvoice}
                 >
                   <FileText className="h-4 w-4" />
@@ -421,26 +425,42 @@ export default function OrderPage() {
                 </Button>
               </div>
             )}
+
             {order?.status === "processing" && (
               <p className="text-sm text-gray-500">
                 We are validating your payment. Stay tuned!
               </p>
             )}
+
             {order?.status !== "success" && order?.status !== "processing" && (
-              <Button
-                onClick={handleOpenPaymentDialog}
-                className="w-full sm:w-auto"
-              >
-                {order?.status === "created"
-                  ? "Proceed to Payment"
-                  : "Retry Payment"}
-              </Button>
+              <div className="w-full flex items-center justify-between">
+                <p className="text-sm text-gray-800">Click here to purchase!</p>
+                <Button
+                  size="sm"
+                  onClick={handleOpenPaymentDialog}
+                  className="flex items-center gap-2 bg-red-800"
+                  disabled={creatingOrder}
+                >
+                  {order?.status === "created"
+                    ? "Proceed to Payment"
+                    : "Retry Payment"}
+                </Button>
+              </div>
             )}
-          </CardFooter>
+
+            {order?.status !== "success" &&
+              order?.status !== "processing" &&
+              creatingOrder && (
+                <span className="text-sm text-gray-500 italic mt-1">
+                  We are analysing your order. Just hang on a min. If it's too
+                  much time, please refresh the page.
+                </span>
+              )}
+          </div>
         </Card>
 
         {/* Order Items Card */}
-        <Card className="mb-8">
+        <Card className="mb-2 bg-slate-100">
           <CardHeader>
             <CardTitle>Order Item</CardTitle>
             <CardDescription>1 item in your order</CardDescription>
@@ -467,10 +487,11 @@ export default function OrderPage() {
         </Card>
 
         {/* Order Summary Card */}
-        <Card>
+        <Card className="bg-rose-50 mb-5">
           <CardHeader>
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>
+
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between">
@@ -494,12 +515,16 @@ export default function OrderPage() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="bg-gray-50 rounded-b-lg flex justify-between">
+
+          <CardFooter className="rounded justify-between">
             <Button variant="outline" onClick={() => router.back()}>
               Back
             </Button>
             {order?.status !== "success" && order?.status !== "processing" && (
-              <Button onClick={handleOpenPaymentDialog}>
+              <Button
+                onClick={handleOpenPaymentDialog}
+                disabled={creatingOrder}
+              >
                 {order?.status === "created"
                   ? "Proceed to Payment"
                   : "Retry Payment"}

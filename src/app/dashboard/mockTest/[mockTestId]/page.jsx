@@ -293,12 +293,12 @@ export default function MockTestPage() {
       <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Choose Test Mode</AlertDialogTitle>
+            <AlertDialogTitle>Start Mock Test</AlertDialogTitle>
             <AlertDialogDescription>
               <p>Are you sure to make an attempt of this test?</p>
               <p>
                 1. After clicking on Start Test, you will be redirected to the
-                test page.
+                attempt page.
               </p>
               <p>
                 2. First Instructions will appear, read those carefully and then

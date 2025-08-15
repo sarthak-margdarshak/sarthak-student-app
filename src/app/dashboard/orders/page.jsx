@@ -46,9 +46,9 @@ export default function OrdersListPage() {
 
   if (loading) {
     return (
-      <div className="mt-20 mx-4 sm:mx-6 md:mx-12 lg:mx-24 xl:mx-32 container mx-auto p-6">
-        <div className="space-y-4">
-          {[...Array(3)].map((_, index) => (
+      <div className="mt-20 mx-1 sm:mx-4 md:mx-10 lg:mx-24 xl:mx-32 container mx-auto">
+        <div className="space-y-1">
+          {[...Array(5)].map((_, index) => (
             <Skeleton key={index} className="h-24 w-full" />
           ))}
         </div>
@@ -57,8 +57,8 @@ export default function OrdersListPage() {
   }
 
   return (
-    <div className="mt-20 container mx-auto p-6">
-      <div className="space-y-4">
+    <div className="mt-20 container mx-auto">
+      <div className="space-y-1">
         {orders.map((order) => (
           <Link href={`/dashboard/orders/${order.$id}`} key={order.$id}>
             <Card

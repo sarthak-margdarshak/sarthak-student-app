@@ -95,8 +95,8 @@ export default function ProfileCard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <main className="container mx-auto px-4">
+    <div>
+      <main className="container">
         <div className="max-w-3xl mx-auto">
           {/* Profile Card with beautiful gradient background */}
           <div className="rounded-2xl shadow-md overflow-hidden mb-8">
@@ -137,14 +137,14 @@ export default function ProfileCard() {
                 </div>
               </div>
             </div>
+            <div className="w-full h-0.5 bg-slate-300 mt-2"></div>
 
             {/* White bottom section */}
-            <div className="bg-white p-6 rounded-b-2xl">
-              <div className="w-full h-1 bg-gray-100 mb-6"></div>
+            <div className="bg-white p-2 rounded-b-2xl">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Orders */}
                 <Link href={PATH_DASHBOARD.orders.root} className="group">
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md hover:border-blue-100 hover:scale-102">
+                  <div className="bg-slate-100 rounded-xl shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md hover:border-blue-100 hover:scale-102">
                     <div className="flex items-center gap-4">
                       <div className="p-3 rounded-full bg-blue-50 text-blue-600 group-hover:bg-blue-100 transition-colors">
                         <Package size={24} />
@@ -163,7 +163,7 @@ export default function ProfileCard() {
 
                 {/* Purchased */}
                 <Link href={PATH_DASHBOARD.purchased} className="group">
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md hover:border-green-100 hover:scale-102">
+                  <div className="bg-slate-100 rounded-xl shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md hover:border-green-100 hover:scale-102">
                     <div className="flex items-center gap-4">
                       <div className="p-3 rounded-full bg-green-50 text-green-600 group-hover:bg-green-100 transition-colors">
                         <ShoppingCart size={24} />

@@ -14,7 +14,7 @@ export default function AppPage() {
   }, []);
 
   return (
-    <div className="mt-20">
+    <div className="mt-20 mb-5">
       <AppProductCarousel />
 
       <StandardCards />
