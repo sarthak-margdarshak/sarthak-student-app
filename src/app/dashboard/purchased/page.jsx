@@ -69,7 +69,7 @@ export default function PurchasedPage() {
         {purchasedProducts?.map((product) => (
           <ImageWithOverlayText
             key={product.$id}
-            src={product.images[0]}
+            images={product.images}
             title={product.name}
             subheader={product.description}
             productID={product.$id}

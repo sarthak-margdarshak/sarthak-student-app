@@ -4,57 +4,40 @@ import { PATH_PAGE } from "@/routes/paths";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ShinyButton } from "@/components/magicui/shiny-button";
 
-const ImageWithOverlayText = ({ src, title, subheader, productID }) => {
+const ImageWithOverlayText = ({ images, title, subheader, productID }) => {
   return (
     <Link href={PATH_PAGE.product(productID)}>
-      <div className="relative w-full h-64 md:h-96 overflow-hidden rounded-lg group transition-transform duration-300 hover:scale-[1.02]">
-        <Image
-          src={src}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          priority
-          unoptimized={src.startsWith("https://")}
-        />
-
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to top right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 30%, rgba(0,0,0,0) 70%)",
-              backdropFilter: "blur(20px)",
-              WebkitMaskImage:
-                "linear-gradient(to top right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)",
-              maskImage:
-                "linear-gradient(to top right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)",
-            }}
-          ></div>
-
-          <div
-            className="absolute bottom-0 left-0 w-full h-full"
-            style={{
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              WebkitMaskImage:
-                "linear-gradient(to top right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0) 60%)",
-              maskImage:
-                "linear-gradient(to top right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0) 60%)",
-            }}
-          ></div>
-        </div>
-
-        <div className="absolute bottom-4 left-4 text-white">
+      <Card className="relative overflow-hidden bg-rose-50">
+        <CardContent>
+          <div className="relative w-full overflow-hidden rounded-lg group flex justify-center p-2 mb-4">
+            <div className="flex gap-4 overflow-x-auto py-2">
+              {images?.map((src, index) => (
+                <Image
+                  key={index}
+                  src={src}
+                  alt={`${title} image ${index + 1}`}
+                  width={120}
+                  height={80}
+                  className="object-cover rounded-md flex-shrink-0 h-50 w-auto"
+                  priority={index === 0}
+                  unoptimized={src.startsWith("https://")}
+                />
+              ))}
+            </div>
+          </div>
           <h2 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-2">
             {title}
             <ChevronRight className="w-6 h-6 animate-[pulse-x_1.5s_ease-in-out_infinite]" />
           </h2>
-          <p className="text-sm md:text-base max-w-md line-clamp-2 mr-20">
+          <p className="text-sm md:text-base max-w-md line-clamp-2">
             {subheader}
           </p>
-        </div>
-      </div>
+          <ShinyButton className="w-full bg-slate-800 m-1">Explore</ShinyButton>
+        </CardContent>
+      </Card>
     </Link>
   );
 };

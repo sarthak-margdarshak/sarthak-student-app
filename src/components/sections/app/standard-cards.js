@@ -3,7 +3,6 @@
 import { ShineBorder } from "@/components/magicui/shine-border";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -50,16 +49,18 @@ export default function StandardCards() {
 
       <div className="mt-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Object.entries(standards)?.map((standard) => (
-          <Card key={standard[0]} className="relative overflow-hidden">
+          <Card
+            key={standard[0]}
+            className="relative overflow-hidden bg-slate-100"
+          >
             <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
             <CardHeader>
               <CardTitle>{standard[1]?.name}</CardTitle>
               <CardDescription>Mock Test Series</CardDescription>
             </CardHeader>
-            <CardContent></CardContent>
             <CardFooter>
               <Link href={PATH_PAGE.standard(standard[0])}>
-                <ShinyButton className="w-full">Explore</ShinyButton>
+                <ShinyButton className="w-full bg-red-800">Explore</ShinyButton>
               </Link>
             </CardFooter>
           </Card>

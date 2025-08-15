@@ -29,7 +29,7 @@ export function AppProductCarousel() {
             <ImageWithOverlayText
               title={products[item]?.name}
               subheader={products[item]?.description}
-              src={products[item]?.images[0]}
+              images={products[item]?.images}
               productID={item}
             />
           </CarouselItem>
