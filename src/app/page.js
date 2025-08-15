@@ -24,7 +24,7 @@ export default function AppPage() {
       const conf = document.createElement("script");
       const script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = `//www.profitabledisplaynetwork.com/${atOptions.key}/invoke.js`;
+      script.src = `//notorietyinflected.com/${atOptions.key}/invoke.js`;
       conf.innerHTML = `atOptions = ${JSON.stringify(atOptions)}`;
 
       banner.current.append(conf);
