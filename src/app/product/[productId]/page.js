@@ -33,6 +33,7 @@ import { APPWRITE_API } from "@/config-global";
 import { ID, Query } from "appwrite";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import ImagePortal from "@/components/sections/dashboard/image-portal";
 
 export default function ProductViewPage() {
   const { setCurrentPageName, products } = useAppContent();
@@ -49,10 +50,18 @@ export default function ProductViewPage() {
   const [loadingMockTests, setLoadingMockTests] = useState(false);
   const [bookIndexList, setBookIndexList] = useState({});
   const [productLevel, setProductLevel] = useState("standard");
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  function chunkArray(arr, chunkSize) {
+    const result = [];
+    for (let i = 0; i < arr.length; i += chunkSize) {
+      result.push(arr.slice(i, i + chunkSize));
+    }
+    return result;
+  }
 
   // Function to organize mock tests by standard, subject, chapter, and concept
   const organizeMockTests = async (mockTestIds) => {
-    console.log(localStorage.getItem(`organizedMockTests_${productId}`));
     if (localStorage.getItem(`organizedMockTests_${productId}`)) {
       const x = JSON.parse(
         localStorage.getItem(`organizedMockTests_${productId}`)
@@ -66,13 +75,21 @@ export default function ProductViewPage() {
       let organized = {};
       let tmpBookIndexList = {};
 
+      let mockTests = [];
+      let chunkedMockTests = chunkArray(mockTestIds, 100);
+      for (const chunk of chunkedMockTests) {
+        const x = (
+          await appwriteDatabases.listDocuments(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.mockTest,
+            [Query.equal("$id", chunk), Query.limit(100)]
+          )
+        ).documents;
+        mockTests = [...mockTests, ...x];
+      }
+
       for (const mockTestId of mockTestIds) {
-        // Download mock test data
-        const mockTest = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.mockTest,
-          mockTestId
-        );
+        const mockTest = mockTests.find((v, i) => v.$id === mockTestId);
 
         let conceptId = null;
         let chapterId = null;
@@ -186,6 +203,7 @@ export default function ProductViewPage() {
           }
         }
       }
+
       setBookIndexList(tmpBookIndexList);
       setOrganizedMockTests(organized);
       setLoadingMockTests(false);
@@ -277,6 +295,11 @@ export default function ProductViewPage() {
 
   return (
     <div className="mt-20">
+      <ImagePortal
+        imageUrl={selectedImage}
+        onClose={() => setSelectedImage(null)}
+      />
+
       {/**
        * 1. Carousel
        * 2. Series Name
@@ -296,7 +319,10 @@ export default function ProductViewPage() {
         <CarouselContent>
           {product?.images?.map((item, index) => (
             <CarouselItem key={item}>
-              <div className="relative w-full h-64 md:h-96 overflow-hidden rounded-lg">
+              <div
+                className="relative w-full h-64 md:h-96 overflow-hidden rounded-lg"
+                onClick={() => setSelectedImage(item)}
+              >
                 <Image
                   src={item}
                   alt={item}
@@ -310,6 +336,9 @@ export default function ProductViewPage() {
           ))}
         </CarouselContent>
       </Carousel>
+      <p className="text-center text-sm text-gray-500 mt-2 italic">
+        Click on an image to view full screen
+      </p>
 
       <Card className="mt-2 relative overflow-hidden">
         <CardHeader>
@@ -453,7 +482,10 @@ export default function ProductViewPage() {
           {loadingMockTests ? (
             <div className="flex items-center justify-center p-8">
               <Loader2 className="h-6 w-6 animate-spin mr-2" />
-              <span>Organizing mock tests...</span>
+              <span>
+                Downloading and Organising mock tests for you. It may take upto
+                40 seconds. Please wait.....
+              </span>
             </div>
           ) : (
             <NestedMockTestAccordion

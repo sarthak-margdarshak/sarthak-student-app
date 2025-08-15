@@ -30,7 +30,7 @@ const NestedMockTestAccordion = ({
   }
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("space-y-4 mb-4", className)}>
       {Object.entries(organizedMockTests).map(([standardId, standardData]) => {
         const standard = bookIndexList[standardId];
 
@@ -42,7 +42,6 @@ const NestedMockTestAccordion = ({
                 {Object.entries(standardData.subjects).map(
                   ([subjectId, subjectData]) => {
                     const subject = bookIndexList[subjectId];
-
                     return (
                       <AccordionItem
                         key={subjectId}
@@ -57,7 +56,13 @@ const NestedMockTestAccordion = ({
                               {subjectData.mockTests.length +
                                 Object.values(subjectData.chapters).reduce(
                                   (acc, chapter) =>
-                                    acc + chapter.mockTests.length,
+                                    acc +
+                                    chapter.mockTests.length +
+                                    Object.values(chapter.concepts).reduce(
+                                      (acc1, concept) =>
+                                        acc1 + concept.mockTests.length,
+                                      0
+                                    ),
                                   0
                                 )}
                             </Badge>
