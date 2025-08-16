@@ -4,7 +4,6 @@ import { AppProductCarousel } from "@/components/sections/app/app-product-carous
 import StandardCards from "@/components/sections/app/standard-cards";
 import { useAppContent } from "@/hook/app/useAppContent";
 import { useEffect, useRef } from "react";
-import Script from "next/script";
 
 export default function AppPage() {
   const { setCurrentPageName } = useAppContent();
@@ -37,35 +36,6 @@ export default function AppPage() {
     <div className="mt-20 mb-5">
       <AppProductCarousel />
 
-      <div
-        className="mx-2 my-5 border border-gray-200 justify-center items-center text-white text-center"
-        style={{
-          height: 50, // <== these may be different
-
-          width: 320, // <== these may be different
-
-          marginLeft: "0.5rem",
-
-          marginRight: "0.5rem",
-
-          marginTop: "1.25rem",
-
-          marginBottom: "1.25rem",
-
-          color: "#ffffff",
-
-          textAlign: "center",
-
-          justifyContent: "center",
-
-          alignItems: "center",
-
-          borderWidth: "1px",
-
-          borderColor: "#E5E7EB",
-        }}
-        ref={banner}
-      ></div>
       <StandardCards />
     </div>
   );
