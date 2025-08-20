@@ -7,6 +7,7 @@ import Navbar from "@/components/nav-bar";
 import { AppContentProvider } from "@/hook/app/AppContentProvider";
 import { AuthProvider } from "@/hook/auth/AppwriteContext";
 import { Toaster } from "@/components/ui/sonner";
+import Script from "next/script";
 
 const laila = Laila({
   weight: ["300", "400", "500", "600", "700"],
@@ -27,6 +28,11 @@ export default function RootLayout({ children }) {
           content="An app for students to appear mock-test of any competitive exam."
         />
         <meta name="apple-mobile-web-app-title" content="Sarthak" />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3463000892258610"
+          crossOrigin="anonymous" // Important for AdSense
+        />
       </head>
       <body className={`${laila.className} antialiased`}>
         <AuthProvider>
