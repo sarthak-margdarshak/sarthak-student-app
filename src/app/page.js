@@ -44,11 +44,9 @@ export default function AppPage() {
 
       <ins
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={{ display: "block", width: "728px", height: "90px" }}
         data-ad-client="ca-pub-3463000892258610"
         data-ad-slot="8084736432"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
       ></ins>
 
       <StandardCards />
