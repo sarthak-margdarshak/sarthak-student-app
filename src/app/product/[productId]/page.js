@@ -25,7 +25,7 @@ import { useAuthContext } from "@/hook/auth/useAuthContext";
 import { labels } from "@/lib/labels";
 import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight, Loader2, ArrowDown } from "lucide-react"; // Import ArrowDown
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import NestedMockTestAccordion from "@/components/sections/dashboard/nested-mock-test-accordion";
 import { appwriteDatabases } from "@/hook/auth/AppwriteContext";
@@ -51,6 +51,32 @@ export default function ProductViewPage() {
   const [bookIndexList, setBookIndexList] = useState({});
   const [productLevel, setProductLevel] = useState("standard");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showScrollDown, setShowScrollDown] = useState(false); // State for scroll button
+
+  // Effect for showing/hiding the scroll down button
+  useEffect(() => {
+    const handleScroll = () => {
+      const isAtBottom =
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 1;
+      setShowScrollDown(!isAtBottom);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Function to smoothly scroll to the bottom
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  };
 
   function chunkArray(arr, chunkSize) {
     const result = [];
@@ -244,6 +270,12 @@ export default function ProductViewPage() {
       await organizeMockTests(products[id]?.mockTest);
     };
 
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error("Adsense error:", err);
+    }
+
     updateViews();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -392,6 +424,19 @@ export default function ProductViewPage() {
         )}
       </div>
 
+      <div className="w-full h-1 bg-gray-200 mt-4"></div>
+
+      <div className="m-2">
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-3463000892258610"
+          data-ad-slot="8084736432"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+      </div>
+
       {!enrolled ? (
         <div>
           <div className="flex items-center justify-between mt-4 mb-4">
@@ -497,6 +542,18 @@ export default function ProductViewPage() {
             />
           )}
         </div>
+      )}
+
+      {/* Conditionally render the floating scroll-down button */}
+      {showScrollDown && (
+        <Button
+          onClick={scrollToBottom}
+          className="fixed bottom-20 right-4 z-50 rounded-full h-14 w-14 shadow-lg"
+          variant="secondary"
+          aria-label="Scroll to bottom"
+        >
+          <ArrowDown className="h-6 w-6" />
+        </Button>
       )}
     </div>
   );
