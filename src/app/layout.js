@@ -8,6 +8,10 @@ import { AppContentProvider } from "@/hook/app/AppContentProvider";
 import { AuthProvider } from "@/hook/auth/AppwriteContext";
 import { Toaster } from "@/components/ui/sonner";
 import Script from "next/script";
+import { useEffect, useState } from "react";
+import { APPWRITE_API } from "@/config-global";
+import Maintenance from "@/components/maintenance";
+import { Client, Databases } from "appwrite";
 
 const laila = Laila({
   weight: ["300", "400", "500", "600", "700"],
@@ -15,6 +19,23 @@ const laila = Laila({
 });
 
 export default function RootLayout({ children }) {
+  const [underMaintenance, setUnderMaintenance] = useState(false);
+
+  useEffect(() => {
+    const checkMaintenanceMode = async () => {
+      const client = new Client()
+        .setEndpoint(APPWRITE_API.backendUrl)
+        .setProject(APPWRITE_API.projectId);
+      const databases = new Databases(client);
+      const metadataContent = await databases.getDocument(
+        APPWRITE_API.databaseId,
+        APPWRITE_API.collections.metadata,
+        APPWRITE_API.documents.metadataContentDoc
+      );
+      setUnderMaintenance(metadataContent?.maintenance);
+    };
+    checkMaintenanceMode();
+  }, []);
   return (
     <html lang="en" data-theme="light" style={{ colorScheme: "light" }}>
       <head>
@@ -35,16 +56,20 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${laila.className} antialiased`}>
-        <AuthProvider>
-          <AppContentProvider>
-            <ThemeProvider>
-              <Navbar />
-              <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                {children}
-              </main>
-            </ThemeProvider>
-          </AppContentProvider>
-        </AuthProvider>
+        {underMaintenance ? (
+          <Maintenance />
+        ) : (
+          <AuthProvider>
+            <AppContentProvider>
+              <ThemeProvider>
+                <Navbar />
+                <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                  {children}
+                </main>
+              </ThemeProvider>
+            </AppContentProvider>
+          </AuthProvider>
+        )}
         <Toaster />
       </body>
     </html>
