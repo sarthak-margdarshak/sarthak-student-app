@@ -115,6 +115,12 @@ export function AppContentProvider({ children }) {
           tempProductsID.push(product.$id);
         }
 
+        product.standard = await appwriteDatabases.getDocument(
+          APPWRITE_API.databaseId,
+          APPWRITE_API.collections.bookIndex,
+          product.standardId
+        );
+
         if (tempStandards[product.standard.$id] === undefined) {
           tempStandards[product.standard.$id] = {
             name: product.standard["standard"],
@@ -123,7 +129,13 @@ export function AppContentProvider({ children }) {
           };
         }
 
-        if (product.subject !== null) {
+        if (product.subjectId !== null) {
+          product.subject = await appwriteDatabases.getDocument(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.bookIndex,
+            product.subjectId
+          );
+
           tempStandards[product.standard.$id].subjects.push(
             product.subject.$id
           );

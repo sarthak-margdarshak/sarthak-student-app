@@ -11,7 +11,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import { APPWRITE_API } from "@/config-global";
 import Maintenance from "@/components/maintenance";
-import { Client, Databases } from "appwrite";
+import { Client, Databases, Query } from "appwrite";
 
 const laila = Laila({
   weight: ["300", "400", "500", "600", "700"],
@@ -30,9 +30,10 @@ export default function RootLayout({ children }) {
       const metadataContent = await databases.getDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.metadata,
-        APPWRITE_API.documents.metadataContentDoc
+        APPWRITE_API.documents.metadataContentDoc,
+        [Query.select("student_maintenance")]
       );
-      setUnderMaintenance(metadataContent?.maintenance);
+      setUnderMaintenance(metadataContent?.student_maintenance);
     };
     checkMaintenanceMode();
   }, []);

@@ -59,6 +59,8 @@ export default function AppPage() {
     <div className="mt-20 mb-5">
       <AppProductCarousel />
 
+      <StandardCards />
+
       <div className="m-2">
         <ins
           className="adsbygoogle"
@@ -69,8 +71,6 @@ export default function AppPage() {
           data-full-width-responsive="true"
         ></ins>
       </div>
-
-      <StandardCards />
 
       {/* Conditionally render the floating button */}
       {showScrollDown && (

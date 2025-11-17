@@ -111,6 +111,38 @@ export default function ProductViewPage() {
             [Query.equal("$id", chunk), Query.limit(100)]
           )
         ).documents;
+
+        x.forEach(async (mt) => {
+          if (mt.conceptId) {
+            mt.concept = await appwriteDatabases.getDocument(
+              APPWRITE_API.databaseId,
+              APPWRITE_API.collections.bookIndex,
+              mt.conceptId
+            );
+          }
+          if (mt.chapterId) {
+            mt.chapter = await appwriteDatabases.getDocument(
+              APPWRITE_API.databaseId,
+              APPWRITE_API.collections.bookIndex,
+              mt.chapterId
+            );
+          }
+          if (mt.subjectId) {
+            mt.subject = await appwriteDatabases.getDocument(
+              APPWRITE_API.databaseId,
+              APPWRITE_API.collections.bookIndex,
+              mt.subjectId
+            );
+          }
+          if (mt.standardId) {
+            mt.standard = await appwriteDatabases.getDocument(
+              APPWRITE_API.databaseId,
+              APPWRITE_API.collections.bookIndex,
+              mt.standardId
+            );
+          }
+        });
+
         mockTests = [...mockTests, ...x];
       }
 
@@ -426,17 +458,6 @@ export default function ProductViewPage() {
 
       <div className="w-full h-1 bg-gray-200 mt-4"></div>
 
-      <div className="m-2">
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-3463000892258610"
-          data-ad-slot="8084736432"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-      </div>
-
       {!enrolled ? (
         <div>
           <div className="flex items-center justify-between mt-4 mb-4">
@@ -543,6 +564,17 @@ export default function ProductViewPage() {
           )}
         </div>
       )}
+
+      <div className="m-2">
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-3463000892258610"
+          data-ad-slot="8084736432"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+      </div>
 
       {/* Conditionally render the floating scroll-down button */}
       {showScrollDown && (
