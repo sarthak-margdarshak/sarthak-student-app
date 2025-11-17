@@ -112,36 +112,47 @@ export default function ProductViewPage() {
           )
         ).documents;
 
-        x.forEach(async (mt) => {
+        for (const mt of x) {
           if (mt.conceptId) {
             mt.concept = await appwriteDatabases.getDocument(
               APPWRITE_API.databaseId,
               APPWRITE_API.collections.bookIndex,
               mt.conceptId
             );
+          } else {
+            mt.concept = null;
           }
+
           if (mt.chapterId) {
             mt.chapter = await appwriteDatabases.getDocument(
               APPWRITE_API.databaseId,
               APPWRITE_API.collections.bookIndex,
               mt.chapterId
             );
+          } else {
+            mt.chapter = null;
           }
+
           if (mt.subjectId) {
             mt.subject = await appwriteDatabases.getDocument(
               APPWRITE_API.databaseId,
               APPWRITE_API.collections.bookIndex,
               mt.subjectId
             );
+          } else {
+            mt.subject = null;
           }
+
           if (mt.standardId) {
             mt.standard = await appwriteDatabases.getDocument(
               APPWRITE_API.databaseId,
               APPWRITE_API.collections.bookIndex,
               mt.standardId
             );
+          } else {
+            mt.standard = null;
           }
-        });
+        }
 
         mockTests = [...mockTests, ...x];
       }
