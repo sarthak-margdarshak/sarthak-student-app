@@ -101,61 +101,72 @@ export default function ProductViewPage() {
       let organized = {};
       let tmpBookIndexList = {};
 
-      let mockTests = [];
-      let chunkedMockTests = chunkArray(mockTestIds, 100);
-      for (const chunk of chunkedMockTests) {
-        const x = (
-          await appwriteDatabases.listDocuments(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.mockTest,
-            [Query.equal("$id", chunk), Query.limit(100)]
-          )
-        ).documents;
-
-        for (const mt of x) {
-          if (mt.conceptId) {
-            mt.concept = await appwriteDatabases.getDocument(
+      let chunkedMockTests = chunkArray(mockTestIds, 1);
+      var z = await Promise.allSettled(
+        chunkedMockTests.map(async (chunk) => {
+          const x = (
+            await appwriteDatabases.listDocuments(
               APPWRITE_API.databaseId,
-              APPWRITE_API.collections.bookIndex,
-              mt.conceptId
-            );
-          } else {
-            mt.concept = null;
-          }
+              APPWRITE_API.collections.mockTest,
+              [Query.equal("$id", chunk), Query.limit(100)]
+            )
+          ).documents;
 
-          if (mt.chapterId) {
-            mt.chapter = await appwriteDatabases.getDocument(
-              APPWRITE_API.databaseId,
-              APPWRITE_API.collections.bookIndex,
-              mt.chapterId
-            );
-          } else {
-            mt.chapter = null;
-          }
+          var y = await Promise.allSettled(
+            x.map(async (mt) => {
+              if (mt.conceptId) {
+                mt.concept = await appwriteDatabases.getDocument(
+                  APPWRITE_API.databaseId,
+                  APPWRITE_API.collections.bookIndex,
+                  mt.conceptId
+                );
+              } else {
+                mt.concept = null;
+              }
 
-          if (mt.subjectId) {
-            mt.subject = await appwriteDatabases.getDocument(
-              APPWRITE_API.databaseId,
-              APPWRITE_API.collections.bookIndex,
-              mt.subjectId
-            );
-          } else {
-            mt.subject = null;
-          }
+              if (mt.chapterId) {
+                mt.chapter = await appwriteDatabases.getDocument(
+                  APPWRITE_API.databaseId,
+                  APPWRITE_API.collections.bookIndex,
+                  mt.chapterId
+                );
+              } else {
+                mt.chapter = null;
+              }
 
-          if (mt.standardId) {
-            mt.standard = await appwriteDatabases.getDocument(
-              APPWRITE_API.databaseId,
-              APPWRITE_API.collections.bookIndex,
-              mt.standardId
-            );
-          } else {
-            mt.standard = null;
-          }
-        }
+              if (mt.subjectId) {
+                mt.subject = await appwriteDatabases.getDocument(
+                  APPWRITE_API.databaseId,
+                  APPWRITE_API.collections.bookIndex,
+                  mt.subjectId
+                );
+              } else {
+                mt.subject = null;
+              }
 
-        mockTests = [...mockTests, ...x];
-      }
+              if (mt.standardId) {
+                mt.standard = await appwriteDatabases.getDocument(
+                  APPWRITE_API.databaseId,
+                  APPWRITE_API.collections.bookIndex,
+                  mt.standardId
+                );
+              } else {
+                mt.standard = null;
+              }
+
+              return mt;
+            })
+          );
+
+          return y.map((res) => res.value);
+        })
+      );
+
+      let mockTests = z
+        .map((res) => res.value)
+        .flatMap((mts) => {
+          return [...mts];
+        });
 
       for (const mockTestId of mockTestIds) {
         const mockTest = mockTests.find((v, i) => v.$id === mockTestId);
