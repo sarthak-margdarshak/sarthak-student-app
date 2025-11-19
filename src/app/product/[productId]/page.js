@@ -88,10 +88,9 @@ export default function ProductViewPage() {
 
   // Function to organize mock tests by standard, subject, chapter, and concept
   const organizeMockTests = async (mockTestIds) => {
-    if (localStorage.getItem(`organizedMockTests_${productId}`)) {
-      const x = JSON.parse(
-        localStorage.getItem(`organizedMockTests_${productId}`)
-      );
+    const id = window.location.pathname.split("/")[2];
+    if (localStorage.getItem(`organizedMockTests_${id}`)) {
+      const x = JSON.parse(localStorage.getItem(`organizedMockTests_${id}`));
       setOrganizedMockTests(x.organized);
       setBookIndexList(x.bookIndexList);
       return;
@@ -288,7 +287,7 @@ export default function ProductViewPage() {
       setOrganizedMockTests(organized);
       setLoadingMockTests(false);
       localStorage.setItem(
-        `organizedMockTests_${productId}`,
+        `organizedMockTests_${id}`,
         JSON.stringify({
           organized: organized,
           bookIndexList: tmpBookIndexList,

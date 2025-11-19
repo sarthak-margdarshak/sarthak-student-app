@@ -24,6 +24,12 @@ export default function StandardPage() {
     };
 
     updateViews();
+
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error("Adsense error:", err);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -70,6 +76,17 @@ export default function StandardPage() {
           </div>
         </div>
       )}
+
+      <div className="m-2">
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-3463000892258610"
+          data-ad-slot="8084736432"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+      </div>
     </div>
   );
 }
