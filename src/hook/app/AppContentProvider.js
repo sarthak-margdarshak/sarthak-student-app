@@ -106,21 +106,46 @@ export function AppContentProvider({ children }) {
         ]
       );
 
-      let tempProductsID = [];
+      const tempProductsID = tempProducts.documents.slice(0, 3).map((p) => p.$id);
+
+      const processedProducts = await Promise.all(
+        tempProducts.documents.map(async (product) => {
+          const standard = await appwriteDatabases.getDocument(
+            APPWRITE_API.databaseId,
+            APPWRITE_API.collections.bookIndex,
+            product.standardId
+          );
+
+          let subject = null;
+          if (product.subjectId !== null) {
+            subject = await appwriteDatabases.getDocument(
+              APPWRITE_API.databaseId,
+              APPWRITE_API.collections.bookIndex,
+              product.subjectId
+            );
+          }
+
+          const images = product.images.map((image) =>
+            appwriteStorage.getFileDownload(
+              APPWRITE_API.buckets.sarthakDatalakeBucket,
+              image
+            )
+          );
+
+          return {
+            ...product,
+            standard,
+            subject,
+            images,
+          };
+        })
+      );
+
       let tempStandards = {};
       let tempSubjects = {};
       let productsFinal = {};
-      for (const product of tempProducts.documents) {
-        if (tempProductsID.length < 3) {
-          tempProductsID.push(product.$id);
-        }
 
-        product.standard = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.bookIndex,
-          product.standardId
-        );
-
+      processedProducts.forEach((product) => {
         if (tempStandards[product.standard.$id] === undefined) {
           tempStandards[product.standard.$id] = {
             name: product.standard["standard"],
@@ -129,13 +154,7 @@ export function AppContentProvider({ children }) {
           };
         }
 
-        if (product.subjectId !== null) {
-          product.subject = await appwriteDatabases.getDocument(
-            APPWRITE_API.databaseId,
-            APPWRITE_API.collections.bookIndex,
-            product.subjectId
-          );
-
+        if (product.subject) {
           tempStandards[product.standard.$id].subjects.push(
             product.subject.$id
           );
@@ -150,15 +169,8 @@ export function AppContentProvider({ children }) {
           tempStandards[product.standard.$id].productIDs.push(product.$id);
         }
 
-        const x = product.images.map((image) =>
-          appwriteStorage.getFileDownload(
-            APPWRITE_API.buckets.sarthakDatalakeBucket,
-            image
-          )
-        );
-
-        productsFinal[product.$id] = { ...product, images: x };
-      }
+        productsFinal[product.$id] = product;
+      });
 
       for (let i in tempStandards) {
         tempStandards[i].subjects = [...new Set(tempStandards[i].subjects)];
