@@ -4,44 +4,38 @@ importScripts(
 );
 
 // Replace these with your own Firebase config keys...
-const getConfigFromUrl = () => {
-  const params = new URL(location.href).searchParams;
-  return {
-    apiKey: params.get("apiKey"),
-    authDomain: params.get("authDomain"),
-    projectId: params.get("projectId"),
-    storageBucket: params.get("storageBucket"),
-    messagingSenderId: params.get("messagingSenderId"),
-    appId: params.get("appId"),
-    measurementId: params.get("measurementId"),
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCVzedNcjWgV61KbceNTj83ZL3OjO5NVdo",
+  authDomain: "sarthak-push-notifications.firebaseapp.com",
+  projectId: "sarthak-push-notifications",
+  storageBucket: "sarthak-push-notifications.firebasestorage.app",
+  messagingSenderId: "199578191076",
+  appId: "1:199578191076:web:e1937dc0f8d128aa0518f1",
+  measurementId: "G-Z6FMYPPE65",
 };
-const firebaseConfig = getConfigFromUrl();
 
-if (firebaseConfig.apiKey) {
-  firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
-  const messaging = firebase.messaging();
+const messaging = firebase.messaging();
 
-  messaging.onBackgroundMessage((payload) => {
-    console.log(
-      "[firebase-messaging-sw.js] Received background message ",
-      payload
-    );
+messaging.onBackgroundMessage((payload) => {
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
 
-    // payload.fcmOptions?.link comes from our backend API route handle
-    // payload.data.link comes from the Firebase Console where link is the 'key'
-    const link = payload.fcmOptions?.link || payload.data?.link;
+  // payload.fcmOptions?.link comes from our backend API route handle
+  // payload.data.link comes from the Firebase Console where link is the 'key'
+  const link = payload.fcmOptions?.link || payload.data?.link;
 
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-      body: payload.notification.body,
-      icon: "./favicon/favicon-180x180.png",
-      data: { url: link },
-    };
-    self.registration.showNotification(notificationTitle, notificationOptions);
-  });
-}
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: "./favicon/favicon-180x180.png",
+    data: { url: link },
+  };
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
 
 self.addEventListener("notificationclick", function (event) {
   console.log("[firebase-messaging-sw.js] Notification click received.");
