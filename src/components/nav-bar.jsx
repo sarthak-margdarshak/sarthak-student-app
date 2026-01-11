@@ -9,12 +9,13 @@ import { useAuthContext } from "@/hook/auth/useAuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const Navbar = () => {
   const { currentPage } = useAppContent();
   const { user } = useAuthContext();
   const router = useRouter();
+  const pathname = usePathname();
 
   if (currentPage === "attempPage") {
     return null; // Don't render the navbar on the attempt page
@@ -75,12 +76,14 @@ const Navbar = () => {
               </Link>
             </div>
           ) : (
-            <Button
-              variant="outline"
-              onClick={() => router.push(PATH_AUTH.login)}
-            >
-              <LogIn />
-            </Button>
+            !pathname.includes(PATH_AUTH.login) && (
+              <Button
+                variant="outline"
+                onClick={() => router.push(PATH_AUTH.login)}
+              >
+                <LogIn />
+              </Button>
+            )
           )}
         </div>
       </div>

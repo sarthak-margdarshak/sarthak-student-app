@@ -6,6 +6,7 @@ import { useAppContent } from "@/hook/app/useAppContent";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"; // Assuming this is the correct path for your shadcn Button
 import { ArrowDown } from "lucide-react"; // Importing an icon for the button
+import AuthGuard from "@/hook/auth/AuthGuard";
 
 export default function AppPage() {
   const { setCurrentPageName } = useAppContent();
@@ -56,33 +57,35 @@ export default function AppPage() {
   };
 
   return (
-    <div className="mt-20 mb-5">
-      <AppProductCarousel />
+    <AuthGuard>
+      <div className="mt-20 mb-5">
+        <AppProductCarousel />
 
-      <StandardCards />
+        <StandardCards />
 
-      <div className="m-2">
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-3463000892258610"
-          data-ad-slot="8084736432"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
+        <div className="m-2">
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block" }}
+            data-ad-client="ca-pub-3463000892258610"
+            data-ad-slot="8084736432"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+        </div>
+
+        {/* Conditionally render the floating button */}
+        {showScrollDown && (
+          <Button
+            onClick={scrollToBottom}
+            className="fixed bottom-4 right-4 z-50 rounded-full h-14 w-14 shadow-lg"
+            variant="secondary"
+            aria-label="Scroll to bottom"
+          >
+            <ArrowDown className="h-6 w-6" />
+          </Button>
+        )}
       </div>
-
-      {/* Conditionally render the floating button */}
-      {showScrollDown && (
-        <Button
-          onClick={scrollToBottom}
-          className="fixed bottom-4 right-4 z-50 rounded-full h-14 w-14 shadow-lg"
-          variant="secondary"
-          aria-label="Scroll to bottom"
-        >
-          <ArrowDown className="h-6 w-6" />
-        </Button>
-      )}
-    </div>
+    </AuthGuard>
   );
 }
