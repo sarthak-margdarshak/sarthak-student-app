@@ -26,6 +26,7 @@ export function AppProductCarousel() {
       setLoading(false);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useAppContent } from "@/hook/app/useAppContent";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
@@ -15,9 +16,22 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { PATH_PAGE } from "@/routes/paths";
 import { ShinyButton } from "@/components/magicui/shiny-button";
+import { useEffect, useState } from "react";
 
 export default function StandardCards() {
-  const { standards } = useAppContent();
+  const { getAvailableStandards } = useAppContent();
+  const [standards, setStandards] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStandards = async () => {
+      const tmpStandards = await getAvailableStandards();
+      setStandards(tmpStandards);
+      setLoading(false);
+    };
+    fetchStandards();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getAvailableStandards]);
 
   return (
     <div>
@@ -48,23 +62,40 @@ export default function StandardCards() {
       </div>
 
       <div className="mt-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {Object.entries(standards)?.map((standard) => (
-          <Card
-            key={standard[0]}
-            className="relative overflow-hidden bg-slate-100"
-          >
-            <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
-            <CardHeader>
-              <CardTitle>{standard[1]?.name}</CardTitle>
-              <CardDescription>Mock Test Series</CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Link href={PATH_PAGE.standard(standard[0])}>
-                <ShinyButton className="w-full bg-red-800">Explore</ShinyButton>
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
+        {loading
+          ? Array.from({ length: 5 }).map((_, index) => (
+            <Card
+              key={index}
+              className="relative overflow-hidden bg-slate-100"
+            >
+              <CardHeader>
+                <Skeleton className="h-6 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-1/2" />
+              </CardHeader>
+              <CardFooter>
+                <Skeleton className="h-9 w-full rounded-md" />
+              </CardFooter>
+            </Card>
+          ))
+          : standards?.map((standard) => (
+            <Card
+              key={standard.$id}
+              className="relative overflow-hidden bg-slate-100"
+            >
+              <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
+              <CardHeader>
+                <CardTitle>{standard?.standard}</CardTitle>
+                <CardDescription>Mock Test Series</CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <Link href={PATH_PAGE.standard(standard.$id)}>
+                  <ShinyButton className="w-full bg-red-800">
+                    Explore
+                  </ShinyButton>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
       </div>
     </div>
   );
