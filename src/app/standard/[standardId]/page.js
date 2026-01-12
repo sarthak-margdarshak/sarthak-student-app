@@ -46,7 +46,6 @@ export default function StandardPage() {
       const tmpIDs = z.map(async (p) => await getProduct(p))
       const tmpProducts = await Promise.all(tmpIDs)
       setProducts(tmpProducts);
-      console.log(tmpProducts);
 
       setLoading(false);
     };
