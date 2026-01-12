@@ -7,7 +7,7 @@ import { ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShinyButton } from "@/components/magicui/shiny-button";
 
-const ImageWithOverlayText = ({ images, title, subheader, productID }) => {
+const ImageWithOverlayText = ({ images, title, subheader, productID, availableLang }) => {
   return (
     <Link href={PATH_PAGE.product(productID)}>
       <Card className="relative overflow-hidden bg-rose-50">
@@ -35,6 +35,20 @@ const ImageWithOverlayText = ({ images, title, subheader, productID }) => {
           <p className="text-sm md:text-base max-w-md line-clamp-2">
             {subheader}
           </p>
+
+          {availableLang && availableLang.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2 bg-white/40 p-2 rounded-lg backdrop-blur-sm border border-white/20">
+              <span className="text-xs font-medium text-slate-600 mr-1">Available in:</span>
+              {availableLang.map((lang) => (
+                <span
+                  key={lang}
+                  className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-sm"
+                >
+                  {lang.toUpperCase()}
+                </span>
+              ))}
+            </div>
+          )}
           <ShinyButton className="w-full bg-slate-800 m-1">Explore</ShinyButton>
         </CardContent>
       </Card>

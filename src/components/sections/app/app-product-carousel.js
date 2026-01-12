@@ -63,12 +63,13 @@ export function AppProductCarousel() {
           </CarouselItem>
         ) : (
           top5Products?.map((item, index) => (
-            <CarouselItem key={item}>
+            <CarouselItem key={index}>
               <ImageWithOverlayText
                 title={item?.name}
                 subheader={item?.description}
                 images={item?.images}
                 productID={item?.$id}
+                availableLang={item?.availableLang}
               />
             </CarouselItem>
           ))
