@@ -8,8 +8,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, FileText, Layers, Target } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { BookOpen, FileText, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MockTestCard from "./mock-test-card";
 
@@ -17,7 +17,6 @@ const NestedMockTestAccordion = ({
   organizedMockTests,
   bookIndexList,
   productId,
-  productLevel,
   className,
 }) => {
   if (!organizedMockTests || Object.keys(organizedMockTests).length === 0) {
@@ -172,40 +171,40 @@ const NestedMockTestAccordion = ({
                                             {/* Chapter Level Mock Tests */}
                                             {chapterData.mockTests.length >
                                               0 && (
-                                              <AccordionItem
-                                                value="chapter-tests"
-                                                className="border rounded-lg bg-gray-50/50 dark:bg-gray-900/50"
-                                              >
-                                                <AccordionTrigger className="px-1 hover:no-underline">
-                                                  <div className="flex items-center gap-2">
-                                                    <Target className="h-4 w-4 text-red-600" />
-                                                    <span>Miscellaneous</span>
-                                                    <Badge
-                                                      variant="outline"
-                                                      className="ml-2"
-                                                    >
-                                                      {
-                                                        chapterData.mockTests
-                                                          .length
-                                                      }
-                                                    </Badge>
-                                                  </div>
-                                                </AccordionTrigger>
-                                                <AccordionContent className="px-1">
-                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                    {chapterData.mockTests.map(
-                                                      (testId) => (
-                                                        <MockTestCard
-                                                          key={testId}
-                                                          mockTestId={testId}
-                                                          productId={productId}
-                                                        />
-                                                      )
-                                                    )}
-                                                  </div>
-                                                </AccordionContent>
-                                              </AccordionItem>
-                                            )}
+                                                <AccordionItem
+                                                  value="chapter-tests"
+                                                  className="border rounded-lg bg-gray-50/50 dark:bg-gray-900/50"
+                                                >
+                                                  <AccordionTrigger className="px-1 hover:no-underline">
+                                                    <div className="flex items-center gap-2">
+                                                      <Target className="h-4 w-4 text-red-600" />
+                                                      <span>Miscellaneous</span>
+                                                      <Badge
+                                                        variant="outline"
+                                                        className="ml-2"
+                                                      >
+                                                        {
+                                                          chapterData.mockTests
+                                                            .length
+                                                        }
+                                                      </Badge>
+                                                    </div>
+                                                  </AccordionTrigger>
+                                                  <AccordionContent className="px-1">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                      {chapterData.mockTests.map(
+                                                        (testId) => (
+                                                          <MockTestCard
+                                                            key={testId}
+                                                            mockTestId={testId}
+                                                            productId={productId}
+                                                          />
+                                                        )
+                                                      )}
+                                                    </div>
+                                                  </AccordionContent>
+                                                </AccordionItem>
+                                              )}
                                           </div>
                                         </Accordion>
                                       </AccordionContent>

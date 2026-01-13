@@ -3,5 +3,5 @@
 import AuthGuard from "@/hook/auth/AuthGuard";
 
 export default function ProductLayout({ children }) {
-    return <AuthGuard>{children}</AuthGuard>;
+  return <AuthGuard>{children}</AuthGuard>;
 }
