@@ -25,9 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function StandardPage() {
   const { getAvailableSubjects, getBookIndex, getProduct, getProducts, setCurrentPageName } = useAppContent();
 
-  const [standardId, setStandardId] = useState(
-    window.location.pathname.split("/")[2]
-  );
+  const [standardId, setStandardId] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

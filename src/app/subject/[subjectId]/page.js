@@ -12,9 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function StandardPage() {
   const { getBookIndex, getProduct, getProducts, setCurrentPageName } = useAppContent();
 
-  const [subjectId, setSubjectId] = useState(
-    window.location.pathname.split("/")[2]
-  );
+  const [subjectId, setSubjectId] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
