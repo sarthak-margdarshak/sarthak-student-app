@@ -218,7 +218,7 @@ export default function MockTestPage() {
         currLang={currLang}
       />
 
-      <MockTestAttemptsList attempts={attempts} />
+      <MockTestAttemptsList attempts={attempts} currLang={currLang} />
 
       <MockTestProgress attempts={attempts} />
     </div>
