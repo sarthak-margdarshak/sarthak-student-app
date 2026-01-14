@@ -140,7 +140,7 @@ export default function Instructions({ lang = "en" }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {instructionsList.map((item, index) => {
           const Icon = item.icon;
-          const content = item[lang];
+          const content = isHindi ? item.hi : item.en;
 
           return (
             <div key={index} className="flex gap-4 p-4 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
