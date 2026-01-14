@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import {
   appwriteClient,
   appwriteDatabases,
-  downloadMockTest,
 } from "@/hook/auth/AppwriteContext";
 import { APPWRITE_API } from "@/config-global";
 import { TEST_STATUS } from "@/config-global";
@@ -13,26 +12,24 @@ import TestReport from "@/components/sections/dashboard/test-report";
 import TestEvaluation from "@/components/sections/dashboard/test-evaluation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { useSearchParams } from "next/navigation";
 
 export default function AttemptPage() {
-  const [attemptId, setAttemptId] = useState(
-    window.location.pathname.split("/")[3]
-  );
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [attempt, setAttempt] = useState(null);
+  const lang = searchParams.get("lang");
 
   useEffect(() => {
     const fetchAttempt = async () => {
-      const id = window.location.pathname.split("/")[3];
-      setAttemptId(id);
+      const attemptId = window.location.pathname.split("/")[3];
       try {
         const attemptData = await appwriteDatabases.getDocument(
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.mockTestAttempts,
-          id
+          attemptId
         );
         setAttempt(attemptData);
-        await downloadMockTest(attemptData.mockTestId);
       } catch (error) {
         console.error("Error fetching attempt:", error);
       } finally {
@@ -40,7 +37,7 @@ export default function AttemptPage() {
       }
 
       appwriteClient.subscribe(
-        `databases.${APPWRITE_API.databaseId}.collections.${APPWRITE_API.collections.mockTestAttempts}.documents.${id}`,
+        `databases.${APPWRITE_API.databaseId}.collections.${APPWRITE_API.collections.mockTestAttempts}.documents.${attemptId}`,
         (response) => {
           if (response.payload.status !== TEST_STATUS.IN_PROGRESS) {
             setAttempt(response.payload);
@@ -121,5 +118,5 @@ export default function AttemptPage() {
     return <TestReport attempt={attempt} />;
   }
 
-  return <TestAttempt attemptObj={attempt} />;
+  return <TestAttempt attemptObj={attempt} lang={lang} />;
 }

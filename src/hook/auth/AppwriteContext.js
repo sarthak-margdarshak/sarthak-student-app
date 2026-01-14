@@ -6,7 +6,6 @@ import {
   Databases,
   Functions,
   ID,
-  Query,
   Storage,
 } from "appwrite";
 import {
@@ -36,72 +35,6 @@ export const appwriteAccount = new Account(appwriteClient);
 export const appwriteFunction = new Functions(appwriteClient);
 export const appwriteStorage = new Storage(appwriteClient);
 export const appwriteDatabases = new Databases(appwriteClient);
-
-// Download a single mock test and its questions
-export const downloadMockTest = async (mockTestId) => {
-  // Fetch mock test details
-  let mockTest = null;
-  if (!localStorage.getItem(`mock_test_${mockTestId}`)) {
-    mockTest = await appwriteDatabases.getDocument(
-      APPWRITE_API.databaseId,
-      APPWRITE_API.collections.mockTest,
-      mockTestId,
-      [
-        Query.select([
-          "$id",
-          "name",
-          "description",
-          "level",
-          "questions",
-          "duration",
-        ]),
-      ]
-    );
-    localStorage.setItem(`mock_test_${mockTestId}`, JSON.stringify(mockTest));
-  } else {
-    mockTest = JSON.parse(localStorage.getItem(`mock_test_${mockTestId}`));
-  }
-
-  // Fetch questions without answers
-  mockTest.questions.forEach(async (questionId) => {
-    // Check if the question is already downloaded in local storage
-    if (!localStorage.getItem(`question_${questionId}`)) {
-      const question = await appwriteDatabases.getDocument(
-        APPWRITE_API.databaseId,
-        APPWRITE_API.collections.questions,
-        questionId,
-        [
-          Query.select([
-            "$id",
-            "qnId",
-            "contentQuestion",
-            "coverQuestion",
-            "contentOptions",
-            "coverOptions",
-          ]),
-        ]
-      );
-
-      if (question.coverQuestion) {
-        question.coverQuestion = appwriteStorage.getFileView(
-          APPWRITE_API.buckets.sarthakDatalakeBucket,
-          question.coverQuestion
-        );
-      }
-
-      for (let i in question.coverOptions) {
-        if (question.coverOptions[i]) {
-          question.coverOptions[i] = appwriteStorage.getFileView(
-            APPWRITE_API.buckets.sarthakDatalakeBucket,
-            question.coverOptions[i]
-          );
-        }
-      }
-
-      localStorage.setItem(`question_${questionId}`, JSON.stringify(question));
-    }
-  });
-};
 
 // Function to get user name from cache or fetch from Appwrite
 export const getUserName = async (userId) => {
@@ -159,9 +92,9 @@ async function getNotificationPermissionAndToken() {
 
 const initialState = {
   user: null,
-  login: async () => {},
-  logout: async () => {},
-  updateProfileImage: async () => {},
+  login: async () => { },
+  logout: async () => { },
+  updateProfileImage: async () => { },
 };
 
 const reducer = (state, action) => {

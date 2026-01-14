@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,8 @@ import {
   CreditCard,
   FileText,
   ShoppingBag,
+  ExternalLink,
+  ChevronRight,
 } from "lucide-react";
 import { useAuthContext } from "@/hook/auth/useAuthContext";
 import { useAppContent } from "@/hook/app/useAppContent";
@@ -29,6 +32,7 @@ import {
   timeAgo,
   appwriteStorage,
 } from "@/hook/auth/AppwriteContext";
+import { PATH_PAGE } from "@/routes/paths";
 import { APPWRITE_API, RAZORPAY_API } from "@/config-global";
 import {
   AlertDialog,
@@ -48,11 +52,9 @@ import confetti from "canvas-confetti";
 export default function OrderPage() {
   const router = useRouter();
   const { user } = useAuthContext();
-  const { setCurrentPageName, products } = useAppContent();
+  const { setCurrentPageName, getProduct } = useAppContent();
 
-  const [orderId, setOrderId] = useState(
-    window.location.pathname.split("/")[3]
-  );
+  const [orderId, setOrderId] = useState(null);
   const [order, setOrder] = useState(null);
   const [product, setProduct] = useState(null);
   const [creatingOrder, setCreatingOrder] = useState(false);
@@ -93,7 +95,6 @@ export default function OrderPage() {
 
   useEffect(() => {
     const updateViews = async () => {
-      setLoading(true);
       const id = window.location.pathname.split("/")[3];
       setOrderId(id);
       const x = await appwriteDatabases.getDocument(
@@ -116,7 +117,7 @@ export default function OrderPage() {
         }
       );
 
-      setProduct(products[x?.productId]);
+      setProduct(await getProduct(x?.productId));
       setLoading(false);
     };
 
@@ -355,11 +356,9 @@ export default function OrderPage() {
             </div>
             <div className="flex items-center gap-2">
               <div
-                className={`w-3 h-3 rounded-full ${
-                  statusConfig[order?.status]?.color
-                } ${
-                  order?.status === "processing" ? "animate-pulse-custom" : ""
-                }`}
+                className={`w-3 h-3 rounded-full ${statusConfig[order?.status]?.color
+                  } ${order?.status === "processing" ? "animate-pulse-custom" : ""
+                  }`}
                 style={{
                   animation:
                     order?.status === "processing"
@@ -468,16 +467,30 @@ export default function OrderPage() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={product?.images[0]}
-                    alt={product?.name}
-                    className="w-16 h-16 rounded object-cover"
-                  />
-                  <div>
-                    <p className="font-medium">{product?.name}</p>
+                <Link
+                  href={PATH_PAGE.product(product?.$id)}
+                  className="flex items-center gap-4 group cursor-pointer border border-transparent hover:border-blue-200 hover:bg-blue-50/50 p-3 -ml-3 rounded-xl transition-all duration-300 relative overflow-hidden"
+                >
+                  <div className="relative h-16 w-16 rounded-lg overflow-hidden border border-slate-200 shadow-sm shrink-0 group-hover:shadow-md transition-shadow">
+                    <img
+                      src={product?.images[0]}
+                      alt={product?.name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
                   </div>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-slate-800 group-hover:text-blue-700 transition-colors truncate">
+                      {product?.name}
+                    </p>
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1 group-hover:text-blue-600 transition-colors font-medium">
+                      <span>View Mock Test Series</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </div>
+                  </div>
+                  <div className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-blue-500 mr-2">
+                    <ChevronRight className="h-5 w-5" />
+                  </div>
+                </Link>
                 <p className="font-medium">
                   ₹{(order?.amount_total / 100)?.toFixed(2)}
                 </p>

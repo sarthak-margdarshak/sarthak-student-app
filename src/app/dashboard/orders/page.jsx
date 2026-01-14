@@ -13,7 +13,7 @@ import { Query } from "appwrite";
 export default function OrdersListPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { products, setCurrentPageName } = useAppContent();
+  const { setCurrentPageName, getProduct } = useAppContent();
 
   // Status color mapping
   const statusConfig = {
@@ -28,12 +28,16 @@ export default function OrdersListPage() {
 
     const fetchOrders = async () => {
       try {
-        const response = await appwriteDatabases.listDocuments(
+        var tempOrders = (await appwriteDatabases.listDocuments(
           APPWRITE_API.databaseId,
           APPWRITE_API.collections.orders,
-          [Query.orderDesc("$createdAt")]
-        );
-        setOrders(response.documents);
+          [Query.orderDesc("$createdAt"), Query.limit(100)]
+        )).documents;
+        tempOrders = await Promise.all(tempOrders.map(async (y) => {
+          const x = await getProduct(y.productId);
+          return { ...y, product: x };
+        }));
+        setOrders(tempOrders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -62,10 +66,9 @@ export default function OrdersListPage() {
         {orders.map((order) => (
           <Link href={`/dashboard/orders/${order.$id}`} key={order.$id}>
             <Card
-              className={`m-2 p-4 cursor-pointer transition-all duration-200 ${
-                statusConfig[order.status]?.bg ||
+              className={`m-2 p-4 cursor-pointer transition-all duration-200 ${statusConfig[order.status]?.bg ||
                 "bg-gray-100 hover:bg-gray-200"
-              }`}
+                }`}
             >
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
@@ -75,7 +78,7 @@ export default function OrdersListPage() {
                     </p>
                   </div>
                   <p className="font-medium">
-                    {products[order.productId]?.name || "Unknown Product"}
+                    {order.product?.name || "Unknown Product"}
                   </p>
                   <p className="text-xs text-gray-500">
                     {new Date(order.$createdAt).toLocaleDateString("en-IN", {
@@ -94,8 +97,8 @@ export default function OrdersListPage() {
                       order.status === "success"
                         ? "default"
                         : order.status === "failed"
-                        ? "destructive"
-                        : "secondary"
+                          ? "destructive"
+                          : "secondary"
                     }
                   >
                     {statusConfig[order.status]?.text || "Unknown Status"}

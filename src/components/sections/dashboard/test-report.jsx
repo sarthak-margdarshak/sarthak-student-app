@@ -37,8 +37,10 @@ import { Query } from "appwrite";
 import { useAuthContext } from "@/hook/auth/useAuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ShimmerButton } from "@/components/magicui/shimmer-button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function TestReport({ attempt }) {
+export default function TestReport({ attempt, lang }) {
   const [loading, setLoading] = useState(true);
   const [mockTest, setMockTest] = useState(null);
   const [pieData, setPieData] = useState([]);
@@ -47,8 +49,9 @@ export default function TestReport({ attempt }) {
   const [rankings, setRankings] = useState([]);
   const [userRank, setUserRank] = useState(null);
   const [userNames, setUserNames] = useState({});
-  const { setCurrentPageName } = useAppContent();
+  const { setCurrentPageName, getMockTest } = useAppContent();
   const { user } = useAuthContext();
+  const [currLang, setCurrLang] = useState(lang || "en");
 
   useEffect(() => {
     const fetchAttemptData = async () => {
@@ -72,11 +75,7 @@ export default function TestReport({ attempt }) {
           },
         ]);
 
-        const x = await appwriteDatabases.getDocument(
-          APPWRITE_API.databaseId,
-          APPWRITE_API.collections.mockTest,
-          attempt.mockTestId
-        );
+        const x = await getMockTest(attempt.mockTestId);
         setMockTest(x);
         setCurrentPageName(`${x?.name} - Test Report`);
 
@@ -133,7 +132,7 @@ export default function TestReport({ attempt }) {
     };
 
     fetchAttemptData();
-  }, [attempt, setCurrentPageName]);
+  }, [attempt, setCurrentPageName, getMockTest, user.$id]);
 
   if (loading) {
     return (
@@ -253,147 +252,133 @@ export default function TestReport({ attempt }) {
         </DialogContent>
       </Dialog>
 
-      {/* Test Overview */}
-      <Card className="p-6">
-        <h1 className="text-2xl font-semibold mb-2">{mockTest?.name}</h1>
-        <p className="text-gray-600 mb-6">{mockTest?.description}</p>
+      {/* Test Overview Header */}
+      <Card className="p-6 border-l-4 border-l-blue-600 shadow-sm">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-500">
+              {mockTest[currLang]?.name || mockTest.name}
+            </h1>
+            {/* Description removed as per request */}
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-blue-500" />
-            <div>
-              <div className="text-sm text-gray-500">Time Spent</div>
-              <div className="font-medium">
-                {hours > 0 ? `${hours}h ` : ""}
-                {minutes}m {seconds}s
-              </div>
+          {mockTest?.availableLang?.length > 0 && (
+            <div className="flex gap-2">
+              {mockTest.availableLang.map((l) => (
+                <Button
+                  key={l}
+                  variant={currLang === l ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrLang(l)}
+                  className="uppercase"
+                >
+                  {l}
+                </Button>
+              ))}
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Award className="h-5 w-5 text-blue-500" />
-            <div>
-              <div className="text-sm text-gray-500">Score</div>
-              <div className="font-medium">
-                {attempt.obtained_marks} / {attempt.total_marks}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Badge
-              variant={
-                attempt.percentage_marks >= 40 ? "success" : "destructive"
-              }
-            >
-              {attempt.percentage_marks}%
-            </Badge>
-            <span className="text-sm text-gray-500">
-              {attempt.percentage_marks >= 40 ? "Passed" : "Failed"}
-            </span>
-          </div>
+          )}
         </div>
       </Card>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Question Stats */}
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Question Statistics</h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <span>Correct Answers</span>
-              </div>
-              <span className="font-medium">{attempt.correct_questions}</span>
-            </div>
+      <Tabs defaultValue="statistics" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="statistics">Statistics & Analysis</TabsTrigger>
+          <TabsTrigger value="review">Question Review</TabsTrigger>
+        </TabsList>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <XCircle className="h-5 w-5 text-red-500" />
-                <span>Incorrect Answers</span>
+        <TabsContent value="statistics" className="space-y-6 mt-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-3 gap-2 md:gap-4">
+            <Card className="p-4 flex flex-col items-center justify-center text-center">
+              <Clock className="h-8 w-8 text-blue-500 mb-2" />
+              <div className="text-sm text-gray-500">Time Spent</div>
+              <div className="font-semibold text-lg">
+                {hours > 0 ? `${hours}h ` : ""}
+                {minutes}m {seconds}s
               </div>
-              <span className="font-medium">{attempt.incorrect_questions}</span>
-            </div>
+            </Card>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <HelpCircle className="h-5 w-5 text-yellow-500" />
-                <span>Skipped Questions</span>
+            <Card className="p-4 flex flex-col items-center justify-center text-center">
+              <Award className="h-8 w-8 text-blue-500 mb-2" />
+              <div className="text-sm text-gray-500">Score</div>
+              <div className="font-semibold text-lg">
+                {attempt.obtained_marks} / {attempt.total_marks}
               </div>
-              <span className="font-medium">{attempt.skipped_questions}</span>
+            </Card>
+
+            <Card className="p-4 flex flex-col items-center justify-center text-center">
+              <Badge
+                className="mb-2 text-lg px-4 py-1"
+                variant={
+                  attempt.percentage_marks >= 40 ? "success" : "destructive"
+                }
+              >
+                {attempt.percentage_marks}%
+              </Badge>
+              <span className="text-sm text-gray-500">
+                {attempt.percentage_marks >= 40 ? "Result: Passed" : "Result: Failed"}
+              </span>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Question Stats */}
+            <Card className="p-6">
+              <h2 className="text-lg font-semibold mb-4">Question Statistics</h2>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    <span>Correct Answers</span>
+                  </div>
+                  <span className="font-medium">{attempt.correct_questions}</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-5 w-5 text-red-500" />
+                    <span>Incorrect Answers</span>
+                  </div>
+                  <span className="font-medium">{attempt.incorrect_questions}</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <HelpCircle className="h-5 w-5 text-yellow-500" />
+                    <span>Skipped Questions</span>
+                  </div>
+                  <span className="font-medium">{attempt.skipped_questions}</span>
+                </div>
+              </div>
+            </Card>
+
+            {/* Performance Chart */}
+            <Card className="p-6">
+              <h2 className="text-lg font-semibold mb-4">Performance Overview</h2>
+              <div className="w-full aspect-square max-h-[300px] mx-auto">
+                <PieChart data={pieData} />
+              </div>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="review" className="space-y-6 mt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <div className="w-full sm:w-auto">
+              <Select value={filter} onValueChange={setFilter}>
+                <SelectTrigger className="w-full sm:w-[180px] bg-white">
+                  <SelectValue placeholder="Filter questions" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Questions</SelectItem>
+                  <SelectItem value="correct">Correct Only</SelectItem>
+                  <SelectItem value="incorrect">Incorrect Only</SelectItem>
+                  <SelectItem value="skipped">Skipped Only</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        </Card>
 
-        {/* Performance Chart */}
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Performance Overview</h2>
-          <div className="w-full aspect-square">
-            <PieChart data={pieData} />
-          </div>
-        </Card>
-      </div>
-
-      {/* Questions */}
-      <Card className="p-2">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <h2 className="text-xl font-semibold underline">Questions Review</h2>
-          <div className="grid grid-cols-2 sm:flex gap-2">
-            <Button
-              variant={filter === "all" ? "default" : "outline"}
-              onClick={() => setFilter("all")}
-              size="sm"
-              className="w-full sm:w-auto text-xs sm:text-sm"
-            >
-              All
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setFilter("correct")}
-              size="sm"
-              className={`w-full sm:w-auto text-xs sm:text-sm ${
-                filter === "correct"
-                  ? "bg-green-500 text-white hover:bg-green-600 border-green-500"
-                  : "text-green-500 border-green-500 hover:bg-green-50"
-              }`}
-            >
-              <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-              <span className="hidden sm:inline">Correct</span>
-              <span className="sm:hidden">Right</span>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setFilter("incorrect")}
-              size="sm"
-              className={`w-full sm:w-auto text-xs sm:text-sm ${
-                filter === "incorrect"
-                  ? "bg-red-500 text-white hover:bg-red-600 border-red-500"
-                  : "text-red-500 border-red-500 hover:bg-red-50"
-              }`}
-            >
-              <XCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-              <span className="hidden sm:inline">Incorrect</span>
-              <span className="sm:hidden">Wrong</span>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setFilter("skipped")}
-              size="sm"
-              className={`w-full sm:w-auto text-xs sm:text-sm ${
-                filter === "skipped"
-                  ? "bg-yellow-500 text-white hover:bg-yellow-600 border-yellow-500"
-                  : "text-yellow-500 border-yellow-500 hover:bg-yellow-50"
-              }`}
-            >
-              <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-              <span className="hidden sm:inline">Skipped</span>
-              <span className="sm:hidden">Skip</span>
-            </Button>
-          </div>
-        </div>
-        <ScrollArea className="h-full">
           <div className="space-y-8">
             {(() => {
               const filteredQuestions = mockTest.questions.filter(
@@ -423,14 +408,15 @@ export default function TestReport({ attempt }) {
                       questionId={questionId}
                       userAnswer={attempt.marked_answers[originalIndex]}
                       questionIndex={originalIndex + 1}
+                      lang={currLang}
                     />
                   </div>
                 );
               });
             })()}
           </div>
-        </ScrollArea>
-      </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

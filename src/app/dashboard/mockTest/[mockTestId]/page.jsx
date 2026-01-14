@@ -24,9 +24,7 @@ export default function MockTestPage() {
   const searchParams = useSearchParams();
   const { getMockTest, setCurrentPageName } = useAppContent();
   const { user } = useAuthContext();
-  const [mockTestId, setMockTestId] = useState(
-    window.location.pathname.split("/")[3]
-  );
+  const [mockTestId, setMockTestId] = useState(null);
   const productId = searchParams.get("productId");
   const [hasSubscription, setHasSubscription] = useState(false);
   const [loading, setLoading] = useState(true);

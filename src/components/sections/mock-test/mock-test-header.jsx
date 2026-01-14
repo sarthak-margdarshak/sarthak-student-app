@@ -94,7 +94,7 @@ export default function MockTestHeader({
         }
       );
 
-      router.push(PATH_DASHBOARD.attempt(attempt.$id));
+      router.push(PATH_DASHBOARD.attempt(attempt.$id, currLang));
       setIsCreatingAttempt(false);
     } catch (error) {
       console.error("Error creating attempt:", error);
@@ -209,16 +209,32 @@ export default function MockTestHeader({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Start Mock Test</AlertDialogTitle>
-            <AlertDialogDescription>
-              <p>Are you sure to make an attempt of this test?</p>
-              <p>
-                1. After clicking on Start Test, you will be redirected to the
-                attempt page.
-              </p>
-              <p>
-                2. First Instructions will appear, read those carefully and then
-                click on Start Test button to start the test.
-              </p>
+            <AlertDialogDescription asChild>
+              <div className="flex flex-col gap-4 py-2">
+                <div className="flex items-center gap-3 text-base font-semibold text-gray-900">
+                  <CloudIcon className="w-5 h-5 text-blue-500" />
+                  Ready to begin your assessment?
+                </div>
+
+                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 space-y-3">
+                  <div className="flex gap-3 items-start">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold shrink-0 mt-0.5">
+                      1
+                    </div>
+                    <span className="text-sm text-gray-600 leading-relaxed">
+                      You will be redirected to a dedicated attempt page.
+                    </span>
+                  </div>
+                  <div className="flex gap-3 items-start">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold shrink-0 mt-0.5">
+                      2
+                    </div>
+                    <span className="text-sm text-gray-600 leading-relaxed">
+                      Detailed instructions will appear first. Read them carefully before clicking <b>Start Test</b>.
+                    </span>
+                  </div>
+                </div>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

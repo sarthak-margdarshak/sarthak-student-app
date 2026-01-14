@@ -89,6 +89,7 @@ export class ProviderHelper {
       delete question.$collectionId;
       delete question.$databaseId;
       delete question.$permissions;
+      delete question.$sequence;
 
       // 4. Resolve Images (Cover Question)
       if (question?.coverQuestion) {

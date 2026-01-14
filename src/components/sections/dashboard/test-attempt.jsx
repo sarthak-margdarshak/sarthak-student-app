@@ -27,20 +27,25 @@ import { APPWRITE_API, TEST_STATUS } from "@/config-global";
 import { toast } from "sonner";
 import Instructions from "./instructions";
 import { useAppContent } from "@/hook/app/useAppContent";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, Clock, HelpCircle } from "lucide-react";
 import ReactKatex from "@pkasila/react-katex";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function TestAttempt({ attemptObj }) {
-  const { setCurrentPageName } = useAppContent();
+export default function TestAttempt({ attemptObj, lang }) {
+  const { setCurrentPageName, getQuestion, getMockTest } = useAppContent();
   const [attempt, setAttempt] = useState(attemptObj);
-  const [mockTest, setMockTest] = useState({});
+  const [mockTest, setMockTest] = useState(
+    localStorage.getItem(`mock_test_${attemptObj.mockTestId}`)
+      ? JSON.parse(localStorage.getItem(`mock_test_${attemptObj.mockTestId}`))
+      : {}
+  );
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [testPage, setTestPage] = useState(0); // 0: instructions, 1: test, 2: submitting, 3: submitted
   const [questionGridOpen, setQuestionGridOpen] = useState(false);
   const [confirmExitOpen, setConfirmExitOpen] = useState(false);
+  const [currLang, setCurrLang] = useState(lang);
 
   // Initialize timer
   const time = new Date();
@@ -59,23 +64,17 @@ export default function TestAttempt({ attemptObj }) {
       setCurrentPageName("attempPage");
       setLoading(true);
       try {
-        const x = JSON.parse(
-          localStorage.getItem(`mock_test_${attemptObj.mockTestId}`)
-        );
+        const x = await getMockTest(attemptObj.mockTestId);
         setMockTest(x);
-        const loadedQuestions = [];
-        for (let questionId of x.questions) {
-          loadedQuestions.push(
-            JSON.parse(localStorage.getItem(`question_${questionId}`))
-          );
-        }
+        const loadedQuestions = await Promise.all(
+          x.questions.map(async (questionId) => await getQuestion(questionId))
+        );
         setQuestions(loadedQuestions);
       } catch (error) {
         toast.error(error.message);
       }
       setLoading(false);
     };
-
     fetchTestData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -227,6 +226,8 @@ export default function TestAttempt({ attemptObj }) {
           )}
 
           <div className="flex items-center gap-4">
+
+
             <div className="text-sm">
               <div>Time Remaining</div>
               <div className="font-mono">
@@ -249,22 +250,49 @@ export default function TestAttempt({ attemptObj }) {
 
       {/* Main Content */}
       <div className="container max-w-4xl py-6 px-4 w-full">
+        {mockTest?.availableLang?.length > 0 && (
+          <div className="flex gap-2 justify-end mb-4">
+            {mockTest.availableLang.map((l) => (
+              <Button
+                key={l}
+                variant={currLang === l ? "default" : "outline"}
+                size="sm"
+                onClick={() => setCurrLang(l)}
+                className="uppercase"
+              >
+                {l}
+              </Button>
+            ))}
+          </div>
+        )}
+
         {testPage === 0 && (
           <div className="space-y-6">
-            <Card className="p-6">
-              <h1 className="text-xl font-semibold mb-2">{mockTest.name}</h1>
-              <p className="text-gray-600">{mockTest.description}</p>
-              <div className="flex gap-4 mt-4">
-                <div className="text-sm text-gray-600">
-                  Duration: {mockTest.duration} minutes
-                </div>
-                <div className="text-sm text-gray-600">
-                  Questions: {mockTest.questions?.length}
+            <Card className="p-6 border-l-4 border-l-blue-600 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-5">
+                <LayoutGrid className="w-32 h-32" />
+              </div>
+              <div className="relative z-10">
+                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-500 mb-2">
+                  {mockTest[currLang]?.name || mockTest.name}
+                </h1>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  {mockTest[currLang]?.description || mockTest.description}
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-100">
+                    <Clock className="w-4 h-4" />
+                    {mockTest.duration} Minutes
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-medium border border-purple-100">
+                    <HelpCircle className="w-4 h-4" />
+                    {mockTest.questions?.length} Questions
+                  </div>
                 </div>
               </div>
             </Card>
 
-            <Instructions />
+            <Instructions lang={currLang} />
 
             <div className="flex justify-end">
               <Button size="lg" onClick={startTest}>
@@ -304,7 +332,9 @@ export default function TestAttempt({ attemptObj }) {
                       </div>
 
                       <div className="prose max-w-none mb-8">
-                        <ReactKatex>{question.contentQuestion}</ReactKatex>
+                        <ReactKatex>
+                          {question[currLang]?.contentQuestion || question.contentQuestion}
+                        </ReactKatex>
                         {question.coverQuestion && (
                           <div className="mt-4">
                             <img
@@ -317,15 +347,14 @@ export default function TestAttempt({ attemptObj }) {
                       </div>
 
                       <div className="space-y-4">
-                        {question.contentOptions.map((option, optionIndex) => (
+                        {(question[currLang]?.contentOptions || question.contentOptions).map((option, optionIndex) => (
                           <Card
                             key={optionIndex}
-                            className={`p-4 cursor-pointer transition ${
-                              attempt.marked_answers[index] ===
+                            className={`p-4 cursor-pointer transition ${attempt.marked_answers[index] ===
                               String.fromCharCode(65 + optionIndex)
-                                ? "border-blue-500 bg-blue-50"
-                                : "hover:border-gray-300"
-                            }`}
+                              ? "border-blue-500 bg-blue-50"
+                              : "hover:border-gray-300"
+                              }`}
                             onClick={() =>
                               changeAnswer(
                                 index,
@@ -393,8 +422,8 @@ export default function TestAttempt({ attemptObj }) {
                           key={index}
                           variant={
                             answer === "" ||
-                            answer === null ||
-                            answer === undefined
+                              answer === null ||
+                              answer === undefined
                               ? "outline"
                               : "default"
                           }
