@@ -647,6 +647,7 @@ export default function ProductView({ productId }) {
           organizedMockTests={organizedMockTests}
           bookIndexList={bookIndexList}
           productId={productId}
+          lang={currLang}
           className="mt-1 mb-50"
         />
       )}

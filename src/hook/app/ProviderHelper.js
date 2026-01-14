@@ -215,21 +215,33 @@ export class ProviderHelper {
       }
 
       // 2. Fetch Document
-      const mockTest = await appwriteDatabases.getDocument(
+      var mockTest = await appwriteDatabases.getDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.mockTest,
         mockTestId
       );
 
       // 3. Cleanup
+      delete mockTest.$createdAt;
+      delete mockTest.$sequence;
       delete mockTest.$collectionId;
       delete mockTest.$databaseId;
       delete mockTest.$permissions;
+      delete mockTest.approvedAt;
       delete mockTest.creator;
       delete mockTest.updater;
       delete mockTest.approver;
+      delete mockTest.products;
 
       // 4. Fetch Translations
+      mockTest.availableLang = mockTest.translatedLang || [];
+      if (mockTest.lang) {
+        mockTest.availableLang = [mockTest.lang, ...mockTest.availableLang];
+        mockTest[mockTest.lang] = {
+          name: mockTest.name,
+          description: mockTest.description,
+        };
+      }
       if (mockTest.translatedLang && mockTest.translatedLang.length > 0) {
         for (let lang of mockTest.translatedLang) {
           const langRes = await appwriteDatabases.listDocuments(

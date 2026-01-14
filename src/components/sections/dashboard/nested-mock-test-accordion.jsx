@@ -17,6 +17,7 @@ const NestedMockTestAccordion = ({
   organizedMockTests,
   bookIndexList,
   productId,
+  lang,
   className,
 }) => {
   if (!organizedMockTests || Object.keys(organizedMockTests).length === 0) {
@@ -155,6 +156,7 @@ const NestedMockTestAccordion = ({
                                                               mockTestId={
                                                                 testId
                                                               }
+                                                              lang={lang}
                                                               productId={
                                                                 productId
                                                               }
@@ -197,6 +199,7 @@ const NestedMockTestAccordion = ({
                                                           <MockTestCard
                                                             key={testId}
                                                             mockTestId={testId}
+                                                            lang={lang}
                                                             productId={productId}
                                                           />
                                                         )
@@ -234,6 +237,7 @@ const NestedMockTestAccordion = ({
                                         <MockTestCard
                                           key={testId}
                                           mockTestId={testId}
+                                          lang={lang}
                                           productId={productId}
                                         />
                                       ))}
@@ -268,6 +272,7 @@ const NestedMockTestAccordion = ({
                           <MockTestCard
                             key={testId}
                             mockTestId={testId}
+                            lang={lang}
                             productId={productId}
                           />
                         ))}
