@@ -64,11 +64,10 @@ export class ProviderHelper {
       }
 
       // 2. Fetch Document
-      const question = await appwriteDatabases.getDocument(
+      var question = await appwriteDatabases.getDocument(
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.questions,
-        questionId,
-        [Query.select(["qnId"])]
+        questionId
       );
 
       // 3. Security & Cleanup (Remove Answers & Metadata)
@@ -116,6 +115,15 @@ export class ProviderHelper {
         }
       }
       question.coverOptions = options;
+
+      question.availableLang = question.translatedLang || [];
+      if (question.lang) {
+        question.availableLang = [question.lang, ...question.availableLang];
+        question[question.lang] = {
+          contentOptions: question.contentOptions,
+          contentQuestion: question.contentQuestion,
+        };
+      }
 
       // 6. Fetch Translations
       if (question.translatedLang && question.translatedLang.length > 0) {

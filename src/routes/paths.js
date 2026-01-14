@@ -25,9 +25,14 @@ export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD, // redirect to profile
   profile: path(ROOTS_DASHBOARD, "/profile"),
   purchased: path(ROOTS_DASHBOARD, "/purchased"),
-  attempt: (attemptId) => path(ROOTS_DASHBOARD, `/attempt/${attemptId}`),
-  mockTest: (mockTestId, productId) =>
-    path(ROOTS_DASHBOARD, `/mockTest/${mockTestId}?productId=${productId}`),
+  attempt: (attemptId, lang) =>
+    lang
+      ? path(ROOTS_DASHBOARD, `/attempt/${attemptId}?lang=${lang}`)
+      : path(ROOTS_DASHBOARD, `/attempt/${attemptId}`),
+  mockTest: (mockTestId, productId, lang) =>
+    lang
+      ? path(ROOTS_DASHBOARD, `/mockTest/${mockTestId}?productId=${productId}&lang=${lang}`)
+      : path(ROOTS_DASHBOARD, `/mockTest/${mockTestId}?productId=${productId}`),
   orders: {
     root: path(ROOTS_DASHBOARD, "/orders"),
     view: (id) => path(ROOTS_DASHBOARD, `/orders/${id}`),

@@ -10,7 +10,11 @@ import { useAppContent } from "@/hook/app/useAppContent";
 export default function MockTestCard({ mockTestId, productId, lang }) {
   const { getMockTest } = useAppContent();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(
+    localStorage.getItem(`mock_test_${mockTestId}`)
+      ? false
+      : true
+  );
   const [mockTest, setMockTest] = useState(
     localStorage.getItem(`mock_test_${mockTestId}`)
       ? JSON.parse(localStorage.getItem(`mock_test_${mockTestId}`))
@@ -19,7 +23,6 @@ export default function MockTestCard({ mockTestId, productId, lang }) {
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
       const x = await getMockTest(mockTestId);
       setMockTest(x);
       setLoading(false);
@@ -30,7 +33,7 @@ export default function MockTestCard({ mockTestId, productId, lang }) {
 
   return (
     <Link
-      href={PATH_DASHBOARD.mockTest(mockTestId, productId)}
+      href={PATH_DASHBOARD.mockTest(mockTestId, productId, lang)}
       className="group"
     >
       <div

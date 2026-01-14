@@ -56,7 +56,11 @@ export default function ProductView({ productId }) {
       : {}
   );
   const [currLang, setCurrLang] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(
+    localStorage.getItem(`product_${productId}`)
+      ? false
+      : true
+  );
   const [enrolled, setEnrolled] = useState(false);
   const [placingOrder, setPlacingOrder] = useState(false);
   const [organizedMockTests, setOrganizedMockTests] = useState({});
