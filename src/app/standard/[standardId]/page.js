@@ -16,34 +16,30 @@ import { AnimatedGradientText } from "@/components/magicui/animated-gradient-tex
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { PATH_PAGE } from "@/routes/paths";
-import ImageWithOverlayText from "@/components/sections/app/image-with-overlay-text";
+import ProductCard from "@/components/sections/product/product-card";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { ShinyButton } from "@/components/magicui/shiny-button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function StandardPage() {
-  const { getAvailableSubjects, getBookIndex, getProduct, getProducts, setCurrentPageName } = useAppContent();
+  const { getAvailableSubjects, getBookIndex, getProducts, setCurrentPageName } = useAppContent();
 
-  const [standardId, setStandardId] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const id = window.location.pathname.split("/")[2];
-      setStandardId(id);
-      const x = await getBookIndex(id);
+      const standardId = window.location.pathname.split("/")[2];
+      const x = await getBookIndex(standardId);
       setCurrentPageName(x?.standard);
 
-      const y = await getAvailableSubjects(id);
+      const y = await getAvailableSubjects(standardId);
       setSubjects(y);
 
-      const z = await getProducts(id);
-      const tmpIDs = z.map(async (p) => await getProduct(p))
-      const tmpProducts = await Promise.all(tmpIDs)
-      setProducts(tmpProducts);
+      const z = await getProducts(standardId);
+      setProducts(z);
 
       setLoading(false);
     };
@@ -141,13 +137,9 @@ export default function StandardPage() {
 
               <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {products?.map((product) => (
-                  <ImageWithOverlayText
-                    key={product.$id}
-                    images={product?.images}
-                    title={product?.name}
-                    subheader={product?.description}
-                    productID={product.$id}
-                    availableLang={product?.availableLang}
+                  <ProductCard
+                    key={product}
+                    productId={product}
                   />
                 ))}
               </div>

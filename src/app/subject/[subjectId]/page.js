@@ -5,29 +5,25 @@ import { cn } from "@/lib/utils";
 import { useAppContent } from "@/hook/app/useAppContent";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { ChevronRight } from "lucide-react";
-import ImageWithOverlayText from "@/components/sections/app/image-with-overlay-text";
+import ProductCard from "@/components/sections/product/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function StandardPage() {
-  const { getBookIndex, getProduct, getProducts, setCurrentPageName } = useAppContent();
+  const { getBookIndex, getProducts, setCurrentPageName } = useAppContent();
 
-  const [subjectId, setSubjectId] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const updateViews = async () => {
-      const id = window.location.pathname.split("/")[2];
-      setSubjectId(id);
-      const x = await getBookIndex(id);
+      const subjectId = window.location.pathname.split("/")[2];
+      const x = await getBookIndex(subjectId);
       const y = await getBookIndex(x?.standard)
       setCurrentPageName(y?.standard + " ▶ " + x?.subject);
 
-      const z = await getProducts(id);
-      const tmpIDs = z.map(async (p) => await getProduct(p))
-      const tmpProducts = await Promise.all(tmpIDs)
-      setProducts(tmpProducts);
+      const z = await getProducts(subjectId);
+      setProducts(z);
       setLoading(false);
     };
 
@@ -97,13 +93,9 @@ export default function StandardPage() {
 
             <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {products?.map((product) => (
-                <ImageWithOverlayText
-                  key={product.$id}
-                  images={product?.images}
-                  title={product?.name}
-                  subheader={product?.description}
-                  productID={product.$id}
-                  availableLang={product?.availableLang}
+                <ProductCard
+                  key={product}
+                  productId={product}
                 />
               ))}
             </div>
