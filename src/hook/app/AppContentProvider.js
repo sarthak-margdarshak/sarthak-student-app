@@ -52,6 +52,10 @@ export function AppContentProvider({ children }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      if (!localStorage.getItem("old_variables_deleted")) {
+        localStorage.clear();
+        localStorage.setItem("old_variables_deleted", "true");
+      }
       setLoading(false);
     };
     fetchData();
