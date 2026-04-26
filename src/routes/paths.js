@@ -25,6 +25,7 @@ export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD, // redirect to profile
   profile: path(ROOTS_DASHBOARD, "/profile"),
   purchased: path(ROOTS_DASHBOARD, "/purchased"),
+  attempts: path(ROOTS_DASHBOARD, "/attempt"),
   attempt: (attemptId, lang) =>
     lang
       ? path(ROOTS_DASHBOARD, `/attempt/${attemptId}?lang=${lang}`)

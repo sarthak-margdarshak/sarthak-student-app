@@ -12,11 +12,25 @@ import { useEffect, useState } from "react";
 import { APPWRITE_API } from "@/config-global";
 import Maintenance from "@/components/maintenance";
 import { Client, Databases, Query } from "appwrite";
+import { useAuthContext } from "@/hook/auth/useAuthContext";
+import { usePathname } from "next/navigation";
 
 const laila = Laila({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin", "devanagari"],
 });
+
+import { DockNavigation } from "@/components/dock-navigation";
+
+function ConditionalDockNavigation() {
+  const { user } = useAuthContext();
+  const pathname = usePathname();
+  const isAttemptRoute = pathname?.startsWith("/dashboard/attempt/");
+
+  if (!user || isAttemptRoute) return null;
+
+  return <DockNavigation />;
+}
 
 export default function RootLayout({ children }) {
   const [underMaintenance, setUnderMaintenance] = useState(false);
@@ -64,9 +78,10 @@ export default function RootLayout({ children }) {
             <AppContentProvider>
               <ThemeProvider>
                 <Navbar />
-                <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-32">
                   {children}
                 </main>
+                <ConditionalDockNavigation />
               </ThemeProvider>
             </AppContentProvider>
           </AuthProvider>
