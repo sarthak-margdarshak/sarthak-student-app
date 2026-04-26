@@ -27,6 +27,7 @@ export default function MockTestHeader({
   mockTest,
   inProgressAttempt,
   mockTestId,
+  productId,
   currLang,
 }) {
   const { getBookIndex, getQuestion } = useAppContent();
@@ -84,6 +85,7 @@ export default function MockTestHeader({
         ID.unique(),
         {
           mockTestId: mockTestId,
+          productId: productId || null,
           studentId: user.$id,
           status: TEST_STATUS.CREATED,
           marked_answers: emptyAnswers,

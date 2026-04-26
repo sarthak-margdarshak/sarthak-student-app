@@ -215,6 +215,7 @@ export default function MockTestPage() {
         mockTest={mockTest}
         inProgressAttempt={inProgressAttempt}
         mockTestId={mockTestId}
+        productId={productId}
         currLang={currLang}
       />
 
