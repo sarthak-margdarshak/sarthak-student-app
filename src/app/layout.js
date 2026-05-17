@@ -7,7 +7,7 @@ import Navbar from "@/components/nav-bar";
 import { AppContentProvider } from "@/hook/app/AppContentProvider";
 import { AuthProvider } from "@/hook/auth/AppwriteContext";
 import { Toaster } from "@/components/ui/sonner";
-import Script from "next/script";
+// import Script from "next/script";
 import { useEffect, useState } from "react";
 import { APPWRITE_API } from "@/config-global";
 import Maintenance from "@/components/maintenance";
@@ -20,14 +20,16 @@ const laila = Laila({
   subsets: ["latin", "devanagari"],
 });
 
-import { DockNavigation } from "@/components/dock-navigation";
+import {
+  DockNavigation,
+  isDockRoute,
+} from "@/components/dock-navigation";
 
 function ConditionalDockNavigation() {
   const { user } = useAuthContext();
   const pathname = usePathname();
-  const isAttemptRoute = pathname?.startsWith("/dashboard/attempt/");
 
-  if (!user || isAttemptRoute) return null;
+  if (!user || !isDockRoute(pathname)) return null;
 
   return <DockNavigation />;
 }
@@ -45,7 +47,7 @@ export default function RootLayout({ children }) {
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.metadata,
         APPWRITE_API.documents.metadataContentDoc,
-        [Query.select("student_maintenance")]
+        [Query.select("student_maintenance")],
       );
       setUnderMaintenance(metadataContent?.student_maintenance);
     };
@@ -64,11 +66,13 @@ export default function RootLayout({ children }) {
           content="An app for students to appear mock-test of any competitive exam."
         />
         <meta name="apple-mobile-web-app-title" content="Sarthak" />
+        {/* AdSense disabled
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3463000892258610"
-          crossOrigin="anonymous" // Important for AdSense
+          crossOrigin="anonymous"
         />
+        */}
       </head>
       <body className={`${laila.className} antialiased`}>
         {underMaintenance ? (

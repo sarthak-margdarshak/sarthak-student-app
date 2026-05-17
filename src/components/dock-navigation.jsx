@@ -7,6 +7,18 @@ import { Dock, DockIcon } from "@/components/magicui/dock";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
+/** Routes where the bottom dock is shown (one per dock button). */
+export const DOCK_ROUTES = [
+    "/",
+    "/dashboard/purchased",
+    "/dashboard/attempt",
+    "/dashboard/orders",
+];
+
+export function isDockRoute(pathname) {
+    return Boolean(pathname && DOCK_ROUTES.includes(pathname));
+}
+
 function DockNavItem({
     href,
     title,
@@ -71,14 +83,14 @@ export function DockNavigation() {
                         title="Your Attempt History"
                         label="Attempts"
                         Icon={History}
-                        active={pathname?.startsWith("/dashboard/attempt")}
+                        active={isActive("/dashboard/attempt")}
                     />
                     <DockNavItem
                         href="/dashboard/orders"
                         title="Your Order History"
                         label="Orders"
                         Icon={ReceiptText}
-                        active={pathname?.startsWith("/dashboard/orders")}
+                        active={isActive("/dashboard/orders")}
                     />
                 </Dock>
             </div>
