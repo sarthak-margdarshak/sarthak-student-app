@@ -55,7 +55,7 @@ export default function StandardPage() {
   }, []);
 
   return (
-    <div className="mt-20">
+    <div className="mt-20 pb-8">
       {loading ? (
         <div className="space-y-8">
           {/* Product Skeleton */}
@@ -190,16 +190,6 @@ export default function StandardPage() {
         </>
       )}
 
-      <div className="m-2">
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-3463000892258610"
-          data-ad-slot="8084736432"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-      </div>
     </div>
   );
 }

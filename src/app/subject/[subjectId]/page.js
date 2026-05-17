@@ -38,7 +38,7 @@ export default function StandardPage() {
   }, []);
 
   return (
-    <div className="mt-20">
+    <div className="mt-20 pb-8">
       {loading ? (
         <div>
           <div className="z-10 flex items-center mt-4 mb-4">
@@ -103,16 +103,6 @@ export default function StandardPage() {
         )
       )}
 
-      <div className="m-2">
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-3463000892258610"
-          data-ad-slot="8084736432"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   appwriteClient,
   appwriteDatabases,
@@ -12,15 +12,42 @@ import TestReport from "@/components/sections/dashboard/test-report";
 import TestEvaluation from "@/components/sections/dashboard/test-evaluation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function AttemptPage() {
+function AttemptPageLoading() {
+  return (
+    <div className="container mx-auto p-8">
+      <div className="flex flex-col items-center space-y-8">
+        <div className="w-full max-w-3xl space-y-4">
+          <Skeleton className="h-8 w-2/3" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+        <Card className="w-full max-w-3xl">
+          <CardHeader>
+            <Skeleton className="h-6 w-48" />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-4 w-full" />
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function AttemptPageContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [attempt, setAttempt] = useState(null);
   const lang = searchParams.get("lang");
 
   useEffect(() => {
+    let unsubscribe;
+
     const fetchAttempt = async () => {
       const attemptId = window.location.pathname.split("/")[3];
       try {
@@ -36,87 +63,55 @@ export default function AttemptPage() {
         setLoading(false);
       }
 
-      appwriteClient.subscribe(
+      unsubscribe = appwriteClient.subscribe(
         `databases.${APPWRITE_API.databaseId}.collections.${APPWRITE_API.collections.mockTestAttempts}.documents.${attemptId}`,
         (response) => {
-          if (response.payload.status !== TEST_STATUS.IN_PROGRESS) {
-            setAttempt(response.payload);
-          }
+          setAttempt(response.payload);
         }
       );
     };
 
     fetchAttempt();
+
+    return () => {
+      unsubscribe?.();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
+    return <AttemptPageLoading />;
+  }
+
+  if (!attempt) {
     return (
       <div className="container mx-auto p-8">
-        <div className="flex flex-col items-center space-y-8">
-          {/* Header Skeleton */}
-          <div className="w-full max-w-3xl space-y-4">
-            <Skeleton className="h-8 w-2/3" />
-            <Skeleton className="h-4 w-1/2" />
-          </div>
-
-          {/* Main Content Card */}
-          <Card className="w-full max-w-3xl">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-48" />
-                  <Skeleton className="h-4 w-32" />
-                </div>
-                <Skeleton className="h-12 w-12 rounded-full" />
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Question Section Skeletons */}
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="space-y-3">
-                  <Skeleton className="h-4 w-full" />
-                  <div className="pl-4 space-y-2">
-                    {[1, 2, 3, 4].map((j) => (
-                      <Skeleton key={j} className="h-3 w-2/3" />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Loading Indicator */}
-          <div className="flex flex-col items-center space-y-4">
-            <div className="relative h-16 w-16">
-              <div className="absolute inset-0 animate-ping rounded-full bg-red-400 opacity-20"></div>
-              <div className="relative flex h-full items-center justify-center rounded-full bg-red-500">
-                <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
-              </div>
-            </div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-red-600">
-                Loading Test Data
-              </h3>
-              <p className="text-sm text-gray-500">
-                Please wait while we prepare your test report/environment...
-              </p>
-            </div>
-          </div>
-        </div>
+        <Card className="max-w-lg mx-auto p-6 text-center space-y-4">
+          <h2 className="text-lg font-semibold">Could not load this attempt</h2>
+          <p className="text-sm text-gray-500">
+            The attempt may have been removed or you may not have access to it.
+          </p>
+          <Button onClick={() => router.back()}>Go back</Button>
+        </Card>
       </div>
     );
   }
 
-  // If test is under evaluation, show evaluation progress
-  if (attempt?.status === TEST_STATUS.IN_EVALUATION) {
+  if (attempt.status === TEST_STATUS.IN_EVALUATION) {
     return <TestEvaluation attempt={attempt} />;
   }
 
-  // If test is already completed, show result card
-  if (attempt?.status === TEST_STATUS.COMPLETED) {
+  if (attempt.status === TEST_STATUS.COMPLETED) {
     return <TestReport attempt={attempt} />;
   }
 
   return <TestAttempt attemptObj={attempt} lang={lang} />;
+}
+
+export default function AttemptPage() {
+  return (
+    <Suspense fallback={<AttemptPageLoading />}>
+      <AttemptPageContent />
+    </Suspense>
+  );
 }

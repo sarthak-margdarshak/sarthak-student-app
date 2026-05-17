@@ -32,13 +32,21 @@ import ReactKatex from "@pkasila/react-katex";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+function readCachedMockTest(mockTestId) {
+  if (!mockTestId) return {};
+  try {
+    const cached = localStorage.getItem(`mock_test_${mockTestId}`);
+    return cached ? JSON.parse(cached) : {};
+  } catch {
+    return {};
+  }
+}
+
 export default function TestAttempt({ attemptObj, lang }) {
   const { setCurrentPageName, getQuestion, getMockTest } = useAppContent();
   const [attempt, setAttempt] = useState(attemptObj);
-  const [mockTest, setMockTest] = useState(
-    localStorage.getItem(`mock_test_${attemptObj.mockTestId}`)
-      ? JSON.parse(localStorage.getItem(`mock_test_${attemptObj.mockTestId}`))
-      : {}
+  const [mockTest, setMockTest] = useState(() =>
+    readCachedMockTest(attemptObj?.mockTestId),
   );
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,9 +57,11 @@ export default function TestAttempt({ attemptObj, lang }) {
 
   // Initialize timer
   const time = new Date();
-  time.setSeconds(
-    time.getSeconds() + parseInt(attemptObj.time_remaining_in_seconds)
+  const remainingSeconds = Math.max(
+    0,
+    Number.parseInt(attemptObj?.time_remaining_in_seconds, 10) || 0,
   );
+  time.setSeconds(time.getSeconds() + remainingSeconds);
   const { totalSeconds, seconds, minutes, hours, start, pause } = useTimer({
     expiryTimestamp: time,
     autoStart: false,
@@ -65,13 +75,28 @@ export default function TestAttempt({ attemptObj, lang }) {
       setLoading(true);
       try {
         const x = await getMockTest(attemptObj.mockTestId);
+        if (!x?.questions?.length) {
+          toast.error(
+            "Mock test questions are not available. Go back and open the test again.",
+          );
+          return;
+        }
         setMockTest(x);
-        const loadedQuestions = await Promise.all(
-          x.questions.map(async (questionId) => await getQuestion(questionId))
+        const results = await Promise.allSettled(
+          x.questions.map((questionId) => getQuestion(questionId)),
         );
+        const loadedQuestions = results
+          .map((result) =>
+            result.status === "fulfilled" ? result.value : null,
+          )
+          .filter(Boolean);
+        if (loadedQuestions.length === 0) {
+          toast.error("Failed to load test questions. Please try again.");
+          return;
+        }
         setQuestions(loadedQuestions);
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.message || "Failed to load the test.");
       }
       setLoading(false);
     };
@@ -80,6 +105,8 @@ export default function TestAttempt({ attemptObj, lang }) {
   }, []);
 
   useEffect(() => {
+    if (testPage !== 1) return;
+
     const saveProgress = async () => {
       await appwriteDatabases.updateDocument(
         APPWRITE_API.databaseId,
@@ -88,17 +115,19 @@ export default function TestAttempt({ attemptObj, lang }) {
         {
           marked_answers: attempt?.marked_answers,
           time_remaining_in_seconds: totalSeconds,
-          status: "in_progress",
-        }
+          status: TEST_STATUS.IN_PROGRESS,
+        },
       );
-      console.log("Progress saved successfully");
     };
-    if (totalSeconds !== 0) {
-      saveProgress();
+
+    if (totalSeconds > 0) {
+      saveProgress().catch((error) => {
+        console.error("Error saving test progress:", error);
+      });
     } else {
       submitTest("system");
     }
-  }, [attempt?.marked_answers, totalSeconds]);
+  }, [attempt?.marked_answers, totalSeconds, testPage]);
 
   const startTest = async () => {
     setTestPage(1);
@@ -108,7 +137,7 @@ export default function TestAttempt({ attemptObj, lang }) {
         APPWRITE_API.databaseId,
         APPWRITE_API.collections.mockTestAttempts,
         attempt.$id,
-        { status: "in_progress" }
+        { status: TEST_STATUS.IN_PROGRESS },
       );
     }
     start();
@@ -129,7 +158,7 @@ export default function TestAttempt({ attemptObj, lang }) {
           test_ended_by: actionBy,
           test_ended: new Date(),
           evaluationDate: new Date(),
-        }
+        },
       );
 
       // TODO: Call function to evaluate test and update results
@@ -139,7 +168,7 @@ export default function TestAttempt({ attemptObj, lang }) {
           attemptId: attempt.$id,
         }),
         true,
-        "/mockTest/evaluate"
+        "/mockTest/evaluate",
       );
 
       toast.success("Test submitted successfully");
@@ -226,8 +255,6 @@ export default function TestAttempt({ attemptObj, lang }) {
           )}
 
           <div className="flex items-center gap-4">
-
-
             <div className="text-sm">
               <div>Time Remaining</div>
               <div className="font-mono">
@@ -333,7 +360,8 @@ export default function TestAttempt({ attemptObj, lang }) {
 
                       <div className="prose max-w-none mb-8">
                         <ReactKatex>
-                          {question[currLang]?.contentQuestion || question.contentQuestion}
+                          {question[currLang]?.contentQuestion ||
+                            question.contentQuestion}
                         </ReactKatex>
                         {question.coverQuestion && (
                           <div className="mt-4">
@@ -347,18 +375,22 @@ export default function TestAttempt({ attemptObj, lang }) {
                       </div>
 
                       <div className="space-y-4">
-                        {(question[currLang]?.contentOptions || question.contentOptions).map((option, optionIndex) => (
+                        {(
+                          question[currLang]?.contentOptions ||
+                          question.contentOptions
+                        ).map((option, optionIndex) => (
                           <Card
                             key={optionIndex}
-                            className={`p-4 cursor-pointer transition ${attempt.marked_answers[index] ===
+                            className={`p-4 cursor-pointer transition ${
+                              attempt.marked_answers[index] ===
                               String.fromCharCode(65 + optionIndex)
-                              ? "border-blue-500 bg-blue-50"
-                              : "hover:border-gray-300"
-                              }`}
+                                ? "border-blue-500 bg-blue-50"
+                                : "hover:border-gray-300"
+                            }`}
                             onClick={() =>
                               changeAnswer(
                                 index,
-                                String.fromCharCode(65 + optionIndex)
+                                String.fromCharCode(65 + optionIndex),
                               )
                             }
                           >
@@ -373,7 +405,7 @@ export default function TestAttempt({ attemptObj, lang }) {
                                     <img
                                       src={question.coverOptions[optionIndex]}
                                       alt={`Option ${String.fromCharCode(
-                                        65 + optionIndex
+                                        65 + optionIndex,
                                       )} illustration`}
                                       className="max-w-full rounded-lg"
                                     />
@@ -422,8 +454,8 @@ export default function TestAttempt({ attemptObj, lang }) {
                           key={index}
                           variant={
                             answer === "" ||
-                              answer === null ||
-                              answer === undefined
+                            answer === null ||
+                            answer === undefined
                               ? "outline"
                               : "default"
                           }

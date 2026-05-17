@@ -22,12 +22,12 @@ import { ID } from "appwrite";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useAuthContext } from "@/hook/auth/useAuthContext";
 import { useAppContent } from "@/hook/app/useAppContent";
+import { toast } from "sonner";
 
 export default function MockTestHeader({
   mockTest,
   inProgressAttempt,
   mockTestId,
-  productId,
   currLang,
 }) {
   const { getBookIndex, getQuestion } = useAppContent();
@@ -73,11 +73,24 @@ export default function MockTestHeader({
 
   // Create new attempt
   const createNewAttempt = async () => {
+    if (!user?.$id) {
+      toast.error("Please sign in to start the test.");
+      return false;
+    }
+
+    if (!mockTestId) {
+      toast.error("Mock test is still loading. Please try again.");
+      return false;
+    }
+
     try {
       setIsCreatingAttempt(true);
-      // Initialize arrays with correct length based on questions from either source
       const questionsCount = mockTest.questions?.length || 0;
       const emptyAnswers = new Array(questionsCount).fill("");
+      const durationSeconds = Math.max(
+        1,
+        Math.floor(Number(mockTest.duration) || 0) * 60,
+      );
 
       const attempt = await appwriteDatabases.createDocument(
         APPWRITE_API.databaseId,
@@ -85,21 +98,25 @@ export default function MockTestHeader({
         ID.unique(),
         {
           mockTestId: mockTestId,
-          productId: productId || null,
           studentId: user.$id,
           status: TEST_STATUS.CREATED,
           marked_answers: emptyAnswers,
-          duration_in_seconds: mockTest.duration * 60,
-          time_remaining_in_seconds: mockTest.duration * 60,
+          duration_in_seconds: durationSeconds,
+          time_remaining_in_seconds: durationSeconds,
           total_marks: questionsCount || 0,
           lang: currLang,
-        }
+        },
       );
 
       router.push(PATH_DASHBOARD.attempt(attempt.$id, currLang));
-      setIsCreatingAttempt(false);
+      return true;
     } catch (error) {
       console.error("Error creating attempt:", error);
+      toast.error(
+        error.message || "Could not start the test. Please try again.",
+      );
+      return false;
+    } finally {
       setIsCreatingAttempt(false);
     }
   };
@@ -113,12 +130,12 @@ export default function MockTestHeader({
     }
   };
 
-  const startTest = (isDummy) => {
+  const startTest = async (isDummy) => {
     if (isDummy) {
       router.push(PATH_DASHBOARD.attempt("dummy"));
-    } else {
-      createNewAttempt();
+      return true;
     }
+    return createNewAttempt();
   };
 
   return (
@@ -129,7 +146,12 @@ export default function MockTestHeader({
             <h1 className="text-2xl font-bold">
               {mockTest?.[currLang]?.name || mockTest?.name}
             </h1>
-            <Button disabled={!isDownloaded} onClick={handleAttempt} size="lg" className="px-8">
+            <Button
+              disabled={!isDownloaded}
+              onClick={handleAttempt}
+              size="lg"
+              className="px-8"
+            >
               {inProgressAttempt ? "Resume Test" : "Start Test"}
             </Button>
           </div>
@@ -154,12 +176,13 @@ export default function MockTestHeader({
             {mockTest?.level && (
               <Badge
                 variant="outline"
-                className={`text-sm ${mockTest.level.toLowerCase() === "easy"
-                  ? "bg-green-100 text-green-800 border-green-200"
-                  : mockTest.level.toLowerCase() === "medium"
-                    ? "bg-yellow-100 text-yellow-800 border-yellow-200"
-                    : "bg-red-100 text-red-800 border-red-200"
-                  }`}
+                className={`text-sm ${
+                  mockTest.level.toLowerCase() === "easy"
+                    ? "bg-green-100 text-green-800 border-green-200"
+                    : mockTest.level.toLowerCase() === "medium"
+                      ? "bg-yellow-100 text-yellow-800 border-yellow-200"
+                      : "bg-red-100 text-red-800 border-red-200"
+                }`}
               >
                 Level: {mockTest?.level}
               </Badge>
@@ -232,7 +255,8 @@ export default function MockTestHeader({
                       2
                     </div>
                     <span className="text-sm text-gray-600 leading-relaxed">
-                      Detailed instructions will appear first. Read them carefully before clicking <b>Start Test</b>.
+                      Detailed instructions will appear first. Read them
+                      carefully before clicking <b>Start Test</b>.
                     </span>
                   </div>
                 </div>
@@ -244,9 +268,12 @@ export default function MockTestHeader({
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => {
-                startTest(false);
-                setDialogOpen(false);
+              onClick={async (e) => {
+                e.preventDefault();
+                const started = await startTest(false);
+                if (started) {
+                  setDialogOpen(false);
+                }
               }}
               className="bg-green-500 hover:bg-green-600"
               disabled={isCreatingAttempt}

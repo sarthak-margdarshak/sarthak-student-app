@@ -677,16 +677,7 @@ export default function ProductView({ productId }) {
         </div>
       }
 
-      <div className="m-2">
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-3463000892258610"
-          data-ad-slot="8084736432"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-      </div>
+      <div className="m-2 pb-24" aria-hidden />
 
       {/* Conditionally render the floating scroll-down button */}
       {showScrollDown && (

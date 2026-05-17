@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  appwriteDatabases,
-} from "@/hook/auth/AppwriteContext";
+import { appwriteDatabases } from "@/hook/auth/AppwriteContext";
 import { APPWRITE_API, TEST_STATUS } from "@/config-global";
 import { Query } from "appwrite";
 import { Button } from "@/components/ui/button";
@@ -43,7 +41,7 @@ export default function MockTestPage() {
           (label) =>
             label === labels.founder ||
             label === labels.admin ||
-            label === productId
+            label === productId,
         ) !== -1;
       setHasSubscription(c);
       if (!c) {
@@ -65,14 +63,14 @@ export default function MockTestPage() {
             Query.equal("mockTestId", id),
             Query.orderDesc("$createdAt"),
             Query.limit(100),
-          ]
+          ],
         );
 
         // Find any in-progress or created attempt
         const inProgress = attemptsData.documents.find(
           (attempt) =>
             attempt.status === TEST_STATUS.IN_PROGRESS ||
-            attempt.status === TEST_STATUS.CREATED
+            attempt.status === TEST_STATUS.CREATED,
         );
         setInProgressAttempt(inProgress);
         setAttempts(attemptsData.documents);
@@ -186,14 +184,17 @@ export default function MockTestPage() {
                   key={lang}
                   onClick={() => {
                     setCurrLang(lang);
-                    setCurrentPageName(mockTest?.[lang]?.name || mockTest?.name);
+                    setCurrentPageName(
+                      mockTest?.[lang]?.name || mockTest?.name,
+                    );
                   }}
                   className={`
                     relative px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300
                     uppercase tracking-wide
-                    ${currLang === lang
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105"
-                      : "bg-white text-gray-600 hover:bg-white/80 hover:text-blue-600 shadow-sm"
+                    ${
+                      currLang === lang
+                        ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105"
+                        : "bg-white text-gray-600 hover:bg-white/80 hover:text-blue-600 shadow-sm"
                     }
                   `}
                 >
@@ -215,7 +216,6 @@ export default function MockTestPage() {
         mockTest={mockTest}
         inProgressAttempt={inProgressAttempt}
         mockTestId={mockTestId}
-        productId={productId}
         currLang={currLang}
       />
 
